@@ -354,6 +354,37 @@ void read_initial_model_state(FILE                *init_state,
 	    nrerror("End of model state file found unexpectedly");
 	}
       }
+
+      /* Read Tfoliage */
+      if ( options.BINARY_STATE_FILE ) {
+        if ( fread( &energy[veg][band].Tfoliage, sizeof(double), 1, init_state ) != 1 )
+          nrerror("End of model state file found unexpectedly");
+      }
+      else {
+        if ( fscanf(init_state," %lf", &energy[veg][band].Tfoliage) == EOF )
+        nrerror("End of model state file found unexpectedly");
+      }
+
+      /* Read outgoing longwave from understory */
+      if ( options.BINARY_STATE_FILE ) {
+        if ( fread( &energy[veg][band].LongUnderOut, sizeof(double), 1, init_state ) != 1 )
+          nrerror("End of model state file found unexpectedly");
+      }
+      else {
+        if ( fscanf(init_state," %lf", &energy[veg][band].LongUnderOut) == EOF )
+        nrerror("End of model state file found unexpectedly");
+      }
+
+      /* Read thermal flux through the snowpack */
+      if ( options.BINARY_STATE_FILE ) {
+        if ( fread( &energy[veg][band].snow_flux, sizeof(double), 1, init_state ) != 1 )
+          nrerror("End of model state file found unexpectedly");
+      }
+      else {
+        if ( fscanf(init_state," %lf", &energy[veg][band].snow_flux) == EOF )
+        nrerror("End of model state file found unexpectedly");
+      }
+
     }
   }
   if ( options.LAKES ) {

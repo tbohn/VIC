@@ -132,7 +132,10 @@ void write_model_state(all_vars_struct    *all_vars,
     Nbytes += (Nveg+1) * Nbands * sizeof(int) // last_snow
 	       + (Nveg+1) * Nbands * sizeof(char) // MELTING
 	       + (Nveg+1) * Nbands * sizeof(double) * 9 // other snow parameters
-	       + (Nveg+1) * Nbands * options.Nnode * sizeof(double); // soil temperatures
+	       + (Nveg+1) * Nbands * options.Nnode * sizeof(double) // soil temperatures
+	       + (Nveg+1) * Nbands * sizeof(double) // energy.Tfoliage
+	       + (Nveg+1) * Nbands * sizeof(double) // energy.LongUnderOut
+	       + (Nveg+1) * Nbands * sizeof(double); // energy.snow_flux
     if ( options.LAKES ) {
       /* Lake/wetland tiles have lake-specific state vars */
       Nbytes += sizeof(int) // activenod
@@ -296,6 +299,24 @@ void write_model_state(all_vars_struct    *all_vars,
 		  filep->statefile );
 	else
 	  fprintf( filep->statefile, " %f", energy[veg][band].T[nidx] );
+
+      /* Write Tfoliage */
+      if ( options.BINARY_STATE_FILE )
+        fwrite( &energy[veg][band].Tfoliage, sizeof(double), 1, filep->statefile );
+      else
+        fprintf( filep->statefile, " %f", energy[veg][band].Tfoliage );
+
+      /* Write LongUnderOut */
+      if ( options.BINARY_STATE_FILE )
+        fwrite( &energy[veg][band].LongUnderOut, sizeof(double), 1, filep->statefile );
+      else
+        fprintf( filep->statefile, " %f", energy[veg][band].LongUnderOut );
+
+      /* Write snow_flux */
+      if ( options.BINARY_STATE_FILE )
+        fwrite( &energy[veg][band].snow_flux, sizeof(double), 1, filep->statefile );
+      else
+        fprintf( filep->statefile, " %f", energy[veg][band].snow_flux );
 
       if ( !options.BINARY_STATE_FILE ) fprintf( filep->statefile, "\n" );
       
