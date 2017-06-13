@@ -548,6 +548,7 @@ print_option(option_struct *option)
     printf("\tLAI_SRC            : %d\n", option->LAI_SRC);
     printf("\tLAKE_PROFILE       : %d\n", option->LAKE_PROFILE);
     printf("\tORGANIC_FRACT      : %d\n", option->ORGANIC_FRACT);
+    printf("\tNEW_SNOW_ALB_SUPPLIED  : %d\n", option->NEW_SNOW_ALB_SUPPLIED);
     printf("\tBINARY_STATE_FILE  : %d\n", option->BINARY_STATE_FILE);
     printf("\tINIT_STATE         : %d\n", option->INIT_STATE);
     printf("\tSAVE_STATE         : %d\n", option->SAVE_STATE);

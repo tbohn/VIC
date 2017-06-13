@@ -189,6 +189,7 @@ void initialize_global() {
   options.GRID_DECIMAL          = 2;
   options.JULY_TAVG_SUPPLIED    = FALSE;
   options.LAI_SRC               = FROM_VEGLIB;
+  options.NEW_SNOW_ALB_SUPPLIED = FALSE;
   options.ORGANIC_FRACT         = FALSE;
   options.VEGCOVER_SRC          = FROM_VEGLIB;
   options.VEGLIB_PHOTO          = FALSE;

@@ -352,14 +352,15 @@ double solve_snow(char                 overstory,
         // ignore effects of snow dropping from canopy; only consider fresh snow from sky
         snow->last_snow++;
         snow->albedo = snow_albedo( *snowfall, snow->swq, snow->depth,
-				    snow->albedo, snow->coldcontent, (double)dt, 
+				    snow->coldcontent,
+                                    soil_con->new_snow_albedo, (double)dt, 
 				    snow->last_snow, snow->MELTING); 
         (*AlbedoUnder) = (*coverage * snow->albedo + (1. - *coverage) * BareAlbedo);
       }
       else {
         // set snow albedo to new snow albedo
         snow->last_snow = 0;
-        snow->albedo = NEW_SNOW_ALB;
+        snow->albedo = soil_con->new_snow_albedo;
         (*AlbedoUnder) = snow->albedo;
       }
       (*NetShortSnow) = (1.0 - *AlbedoUnder) * (*ShortUnderIn);

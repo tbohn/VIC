@@ -634,6 +634,22 @@ soil_con_struct read_soilparam(FILE *soilparam,
         temp.avgJulyAirTemp = tempdbl;
       }
 
+      /* If specified, read cell new snow albedo in the final
+         column of the soil parameter file */
+      if (options.NEW_SNOW_ALB_SUPPLIED) {
+        token = strtok (NULL, delimiters);
+        while (token != NULL && (length=strlen(token))==0) token = strtok (NULL, delimiters);
+        if( token == NULL ) {
+          sprintf(ErrStr,"ERROR: Can't find values for new_snow_albedo in soil file\n");
+          nrerror(ErrStr);
+        }
+        sscanf(token, "%lf", &tempdbl);
+        temp.new_snow_albedo = tempdbl;
+      }
+      else {
+        temp.new_snow_albedo = NEW_SNOW_ALB;
+      }
+
       /*******************************************
         End of soil parameters for this grid cell
       *******************************************/

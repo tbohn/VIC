@@ -325,6 +325,10 @@ void display_current_settings(int                 mode,
     fprintf(stderr,"ORGANIC_FRACT\t\tTRUE\n");
   else
     fprintf(stderr,"ORGANIC_FRACT\t\tFALSE\n");
+  if (options.NEW_SNOW_ALB_SUPPLIED)
+    fprintf(stderr,"NEW_SNOW_ALB_SUPPLIED\t\tTRUE\n");
+  else
+    fprintf(stderr,"NEW_SNOW_ALB_SUPPLIED\t\tFALSE\n");
 
   fprintf(stderr,"\n");
   fprintf(stderr,"Input Veg Data:\n");

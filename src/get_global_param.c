@@ -578,6 +578,11 @@ global_param_struct get_global_param(filenames_struct *names,
         if(strcasecmp("FALSE",flgstr)==0) options.ORGANIC_FRACT=FALSE;
         else options.ORGANIC_FRACT=TRUE;
       }
+      else if(strcasecmp("NEW_SNOW_ALB_SUPPLIED",optstr)==0) {
+        sscanf(cmdstr,"%*s %s",flgstr);
+        if(strcasecmp("FALSE",flgstr)==0) options.NEW_SNOW_ALB_SUPPLIED=FALSE;
+        else options.NEW_SNOW_ALB_SUPPLIED=TRUE;
+      }
       else if(strcasecmp("VEGLIB",optstr)==0) {
         sscanf(cmdstr,"%*s %s",names->veglib);
       }

@@ -245,7 +245,8 @@ int solve_lake(double             snowfall,
      * -------------------------------------------------------------------- */
 
     alblake(Tcutoff, tair, &lake->SAlbedo, &tempalbs, &albi, &albw, snowfall,
-	    lake_snow->coldcontent, dt, &lake_snow->last_snow, 
+	    lake_snow->coldcontent, soil_con.new_snow_albedo,
+            dt, &lake_snow->last_snow, 
 	    lake_snow->swq, lake_snow->depth, &lake_snow->MELTING,
 	    dmy.day_in_year, (double)soil_con.lat);
 
@@ -643,6 +644,7 @@ void alblake (double  Tcutoff,
 	      float  *albw, 
 	      double  newsnow, 
 	      double  coldcontent, 
+	      double  new_snow_albedo, 
 	      int     dt, 
 	      int    *last_snow, 
 	      double  swq,
@@ -718,9 +720,9 @@ void alblake (double  Tcutoff,
 
   // compute snow surface albedo
   if(swq > 0.0)
-    *snowalbedo = snow_albedo(newsnow, swq, depth, *snowalbedo, coldcontent, dt, *last_snow, *MELTING);
+    *snowalbedo = snow_albedo(newsnow, swq, depth, coldcontent, new_snow_albedo, dt, *last_snow, *MELTING);
   else if(swq == 0.0 && newsnow > 0.0)
-    *snowalbedo = NEW_SNOW_ALB;
+    *snowalbedo = new_snow_albedo;
   else
     *snowalbedo = 0.0;
 

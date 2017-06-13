@@ -235,9 +235,9 @@ double new_snow_density(double air_temp) {
 
 double snow_albedo(double new_snow,
                    double swq,
-                   double depth,
-                   double albedo,
+                   double depth, // not used
                    double cold_content,
+                   double new_snow_albedo,
                    double dt,
                    int    last_snow,
 		   char   MELTING) {
@@ -262,22 +262,23 @@ double snow_albedo(double new_snow,
 **********************************************************************/
 
   extern option_struct   options;
+  double albedo;
 
   /** New Snow **/
-  if(new_snow > TraceSnow  && cold_content < 0.0 ) albedo = NEW_SNOW_ALB;
+  if(new_snow > TraceSnow  && cold_content < 0.0 ) albedo = new_snow_albedo;
 
   /** Aged Snow **/
   else if(swq > 0.0) {
 
     /* Accumulation season */
     if ( cold_content < 0.0 && !MELTING )
-      albedo = NEW_SNOW_ALB*pow(SNOW_ALB_ACCUM_A, 
+      albedo = new_snow_albedo*pow(SNOW_ALB_ACCUM_A, 
 			  pow((double)last_snow * dt / 24.,
 			      SNOW_ALB_ACCUM_B));
 
     /* Melt Season */
     else
-      albedo = NEW_SNOW_ALB*pow(SNOW_ALB_THAW_A, 
+      albedo = new_snow_albedo*pow(SNOW_ALB_THAW_A, 
 			  pow((double)last_snow * dt / 24.,
 			      SNOW_ALB_THAW_B));
   }
