@@ -342,8 +342,9 @@ set_output_var(stream_struct     *stream,
     int                    found = false;
 
     if (varnum >= stream->nvars) {
-        log_err("Invalid varnum %zu, must be less than the number of variables "
-                "in the stream %zu", varnum, stream->nvars);
+        log_err(
+            "Invalid varnum %zu, must be less than the number of variables "
+            "in the stream %zu", varnum, stream->nvars);
     }
     // Find the output varid by looping through out_metadata, comparing to varname
     for (varid = 0; varid < N_OUTVAR_TYPES; varid++) {

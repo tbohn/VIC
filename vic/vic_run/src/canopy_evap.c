@@ -120,7 +120,7 @@ canopy_evap(layer_data_struct *layer,
 
     /* compute fraction of canopy that is dry */
     if (veg_var->Wdmax > 0) {
-        *dryFrac = 1.0 - f * pow((tmp_Wdew / veg_var->Wdmax), (2.0 / 3.0));
+        *dryFrac = 1.0 - f *pow((tmp_Wdew / veg_var->Wdmax), (2.0 / 3.0));
     }
     else {
         *dryFrac = 0;
@@ -367,7 +367,6 @@ transpiration(layer_data_struct *layer,
        Evapotranspiration is restricted by low soil moisture. Evaporation
        is computed independantly from each soil layer.
     *********************************************************************/
-
     else {
         /* Initialize conductances for aggregation over soil layers */
         gc = 0;

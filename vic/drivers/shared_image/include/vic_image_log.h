@@ -50,33 +50,38 @@
 // Error Level is always active
 #ifdef NO_LINENOS
 #define log_ncerr(e, M, ...) print_trace(); fprintf(LOG_DEST, \
-                                                    "[ERROR] errno: %s: " M "\n", \
+                                                    "[ERROR] errno: %s: " M \
+                                                    "\n", \
                                                     clean_ncerrno(e), \
                                                     ## __VA_ARGS__); \
-    exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE)
 #else
-#define log_ncerr(e, M, ...) print_trace(); fprintf(LOG_DEST, \
-                                                    "[ERROR] %s:%d: errno: %s: " M " \n", \
-                                                    __FILE__, __LINE__, \
-                                                    clean_ncerrno(e), \
-                                                    ## __VA_ARGS__); \
-    exit(EXIT_FAILURE);
+#define log_ncerr(e, M, ...) print_trace(); fprintf( \
+        LOG_DEST, \
+        "[ERROR] %s:%d: errno: %s: " \
+        M " \n", \
+        __FILE__, __LINE__, \
+        clean_ncerrno(e), \
+        ## __VA_ARGS__); \
+    exit(EXIT_FAILURE)
 #endif
 
 #define check_nc_status(A, M, ...) if (A != NC_NOERR) {log_ncerr(A, M, \
                                                                  ## __VA_ARGS__); \
-                                                       errno = 0; exit( \
-                                                           EXIT_FAILURE);}
+                                                       errno = 0; \
+                                                       exit(EXIT_FAILURE); }
 
 #define log_mpi_err(e, M, ...) print_trace(); \
     print_mpi_error_str(e); fprintf(LOG_DEST, \
                                     "[ERROR] %s:%d: errno: %d: " M " \n", \
                                     __FILE__, __LINE__, e, \
                                     ## __VA_ARGS__); \
-    MPI_Abort(MPI_COMM_VIC, e);
+    MPI_Abort(MPI_COMM_VIC, e)
 
-#define check_mpi_status(A, M, ...) if (A != MPI_SUCCESS) {log_mpi_err(A, M, \
-                                                                       ## __VA_ARGS__); \
+#define check_mpi_status(A, M, ...) if (A != MPI_SUCCESS) {log_mpi_err( \
+                                                               A, M, \
+                                                               ## \
+                                                               __VA_ARGS__); \
                                                            errno = 0; MPI_Abort( \
                                                                MPI_COMM_VIC, A); \
 }

@@ -419,9 +419,10 @@ vic_init(void)
                 options.Nlayer);
     }
     if (options.Nlayer > MAX_LAYERS) {
-        log_err("Global file wants more soil moisture layers (%zu) than "
-                "are defined by MAX_LAYERS (%d).  Edit vic_driver_shared.h and "
-                "recompile.", options.Nlayer, MAX_LAYERS);
+        log_err(
+            "Global file wants more soil moisture layers (%zu) than "
+            "are defined by MAX_LAYERS (%d).  Edit vic_driver_shared.h and "
+            "recompile.", options.Nlayer, MAX_LAYERS);
     }
 
     // latitude and longitude
@@ -1206,7 +1207,8 @@ vic_init(void)
                 // library
                 found = false;
                 for (k = 0; k < options.NVEGTYPES; k++) {
-                    if (veg_con[i][vidx].veg_class == veg_lib[i][k].veg_class) {
+                    if (veg_con[i][vidx].veg_class ==
+                        veg_lib[i][k].veg_class) {
                         found = true;
                         break;
                     }

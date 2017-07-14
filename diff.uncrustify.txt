@@ -1,0 +1,2877 @@
+diff --git a/vic/drivers/cesm/src/get_global_param.c b/vic/drivers/cesm/src/get_global_param.c
+index 89ab7c3..6cb2557 100644
+--- a/vic/drivers/cesm/src/get_global_param.c
++++ b/vic/drivers/cesm/src/get_global_param.c
+@@ -76,8 +76,9 @@ get_global_param(FILE *gp)
+                 sscanf(cmdstr, "%*s %s", flgstr);
+                 options.FULL_ENERGY = str_to_bool(flgstr);
+                 if (options.FULL_ENERGY == false) {
+-                    log_warn("FULL_ENERGY is set to FALSE. Please double check "
+-                             "that this is the setting you intended.");
++                    log_warn(
++                        "FULL_ENERGY is set to FALSE. Please double check "
++                        "that this is the setting you intended.");
+                 }
+             }
+             else if (strcasecmp("FROZEN_SOIL", optstr) == 0) {
+@@ -274,15 +275,15 @@ get_global_param(FILE *gp)
+                     options.STATE_FORMAT = NETCDF4;
+                 }
+                 else {
+-                    log_err("STATE_FORMAT must be either NETCDF3_CLASSIC, "
+-                            "NETCDF3_64BIT_OFFSET, NETCDF4_CLASSIC, or NETCDF4.");
++                    log_err(
++                        "STATE_FORMAT must be either NETCDF3_CLASSIC, "
++                        "NETCDF3_64BIT_OFFSET, NETCDF4_CLASSIC, or NETCDF4.");
+                 }
+             }
+ 
+             /*************************************
+                Define parameter files
+             *************************************/
+-
+             else if (strcasecmp("CONSTANTS", optstr) == 0) {
+                 sscanf(cmdstr, "%*s %s", filenames.constants);
+             }
+@@ -302,8 +303,9 @@ get_global_param(FILE *gp)
+                             "NIJSSEN2001\" in your global parameter file.");
+                 }
+                 else {
+-                    log_err("Please change \"ARNO_PARAMS FALSE\" to \"BASEFLOW "
+-                            "ARNO\" in your global parameter file.");
++                    log_err(
++                        "Please change \"ARNO_PARAMS FALSE\" to \"BASEFLOW "
++                        "ARNO\" in your global parameter file.");
+                 }
+             }
+             else if (strcasecmp("NIJSSEN2001_BASEFLOW", optstr) == 0) {
+@@ -491,9 +493,10 @@ validate_filenames(filenames_struct *filenames)
+ 
+     // Validate parameter file information
+     if (strcmp(filenames->params.nc_filename, "MISSING") == 0) {
+-        log_err("A parameters file has not been defined.  Make sure that the "
+-                "global file defines the parameters parameter file on the line "
+-                "that begins with \"PARAMETERS\".");
++        log_err(
++            "A parameters file has not been defined.  Make sure that the "
++            "global file defines the parameters parameter file on the line "
++            "that begins with \"PARAMETERS\".");
+     }
+ 
+     // Validate snow parameter file
+diff --git a/vic/drivers/cesm/src/vic_cesm_init_library.c b/vic/drivers/cesm/src/vic_cesm_init_library.c
+index ab2b73d..89f7781 100644
+--- a/vic/drivers/cesm/src/vic_cesm_init_library.c
++++ b/vic/drivers/cesm/src/vic_cesm_init_library.c
+@@ -180,7 +180,7 @@ vic_initialize_lwup(void)
+ 
+     for (i = 0; i < local_domain.ncells_active; i++) {
+         // adjust sign for CESM sign convention
+-        l2x_vic[i].l2x_Fall_lwup = -1 * param.EMISS_GRND * CONST_STEBOL * pow(
++        l2x_vic[i].l2x_Fall_lwup = -1 *param.EMISS_GRND *CONST_STEBOL *pow(
+             l2x_vic[i].l2x_Sl_t, 4);
+     }
+ }
+diff --git a/vic/drivers/classic/include/vic_driver_classic.h b/vic/drivers/classic/include/vic_driver_classic.h
+index 4ca25e1..30e974a 100644
+--- a/vic/drivers/classic/include/vic_driver_classic.h
++++ b/vic/drivers/classic/include/vic_driver_classic.h
+@@ -100,7 +100,8 @@ void read_atmos_data(FILE *, global_param_struct, int, int, double **,
+                      double ***);
+ double **read_forcing_data(FILE **, global_param_struct, double ****);
+ void read_initial_model_state(FILE *, all_vars_struct *, int, int, int,
+-                              soil_con_struct *, lake_con_struct);
++                              soil_con_struct *,
++                              lake_con_struct);
+ lake_con_struct read_lakeparam(FILE *, soil_con_struct, veg_con_struct *);
+ void read_snowband(FILE *, soil_con_struct *);
+ void read_soilparam(FILE *soilparam, soil_con_struct *temp, bool *RUN_MODEL,
+@@ -108,7 +109,8 @@ void read_soilparam(FILE *soilparam, soil_con_struct *temp, bool *RUN_MODEL,
+ veg_lib_struct *read_veglib(FILE *, size_t *);
+ veg_con_struct *read_vegparam(FILE *, int, size_t);
+ void vic_force(force_data_struct *, dmy_struct *, FILE **, veg_con_struct *,
+-               veg_hist_struct **, soil_con_struct *);
++               veg_hist_struct **,
++               soil_con_struct *);
+ void vic_populate_model_state(all_vars_struct *, filep_struct, size_t,
+                               soil_con_struct *, veg_con_struct *,
+                               lake_con_struct);
+diff --git a/vic/drivers/classic/src/get_global_param.c b/vic/drivers/classic/src/get_global_param.c
+index 4a6534a..77ac939 100644
+--- a/vic/drivers/classic/src/get_global_param.c
++++ b/vic/drivers/classic/src/get_global_param.c
+@@ -422,7 +422,6 @@ get_global_param(FILE *gp)
+             /*************************************
+                Define parameter files
+             *************************************/
+-
+             else if (strcasecmp("CONSTANTS", optstr) == 0) {
+                 sscanf(cmdstr, "%*s %s", filenames.constants);
+             }
+@@ -625,8 +624,9 @@ get_global_param(FILE *gp)
+                         "file and re-run.");
+             }
+             else if (strcasecmp("TIME_STEP", optstr) == 0) {
+-                log_err("TIME_STEP has been replaced with MODEL_STEPS_PER_DAY, "
+-                        "update your global parameter file accordingly");
++                log_err(
++                    "TIME_STEP has been replaced with MODEL_STEPS_PER_DAY, "
++                    "update your global parameter file accordingly");
+             }
+             else if (strcasecmp("SNOW_STEP", optstr) == 0) {
+                 log_err("SNOW_STEP has been replaced with SNOW_STEPS_PER_DAY, "
+@@ -645,8 +645,9 @@ get_global_param(FILE *gp)
+                         "update your global parameter file accordingly");
+             }
+             else if (strcasecmp("BINARY_STATE_FILE", optstr) == 0) {
+-                log_err("BINARY_STATE_FILE has been replaced with STATE_FORMAT, "
+-                        "update your global parameter file accordingly");
++                log_err(
++                    "BINARY_STATE_FILE has been replaced with STATE_FORMAT, "
++                    "update your global parameter file accordingly");
+             }
+             else if (strcasecmp("ALMA_OUTPUT", optstr) == 0) {
+                 log_err("ALMA_OUTPUT has been deprecated, update your global "
+@@ -894,9 +895,10 @@ get_global_param(FILE *gp)
+         global_param.startsec = 0;
+     }
+     else if (global_param.startsec > SEC_PER_DAY) {
+-        log_err("The specified simulation start second (%u) > 86400.  Make sure "
+-                "that the global file defines time between 0 and 86400.",
+-                global_param.startsec);
++        log_err(
++            "The specified simulation start second (%u) > 86400.  Make sure "
++            "that the global file defines time between 0 and 86400.",
++            global_param.startsec);
+     }
+ 
+ 
+@@ -973,7 +975,8 @@ get_global_param(FILE *gp)
+                         "(ASCII or BINARY) for forcing file %d.", i,
+                         param_set.FORCE_FORMAT[i], i);
+             }
+-            if (param_set.FORCE_INDEX[i][param_set.N_TYPES[i] - 1] == MISSING) {
++            if (param_set.FORCE_INDEX[i][param_set.N_TYPES[i] - 1] ==
++                MISSING) {
+                 log_err("Did not define enough forcing variables in forcing "
+                         "file %d.",
+                         i);
+@@ -989,7 +992,8 @@ get_global_param(FILE *gp)
+             }
+             else {
+                 param_set.FORCE_DT[i] = SEC_PER_DAY /
+-                                        (double) param_set.force_steps_per_day[i
++                                        (double) param_set.force_steps_per_day[
++                    i
+                                         ];
+             }
+         }
+@@ -1171,10 +1175,11 @@ get_global_param(FILE *gp)
+                     "(after the number of bands).", options.SNOW_BAND);
+         }
+         if (options.SNOW_BAND > MAX_BANDS) {
+-            log_err("Global file wants more snow bands (%zu) than are "
+-                    "defined by MAX_BANDS (%d).  Edit vic_run/include/vic_def.h "
+-                    "and recompile.", options.SNOW_BAND,
+-                    MAX_BANDS);
++            log_err(
++                "Global file wants more snow bands (%zu) than are "
++                "defined by MAX_BANDS (%d).  Edit vic_run/include/vic_def.h "
++                "and recompile.", options.SNOW_BAND,
++                MAX_BANDS);
+         }
+     }
+     else if (options.SNOW_BAND <= 0) {
+@@ -1218,7 +1223,8 @@ get_global_param(FILE *gp)
+                      lastday);
+         if (global_param.stateday > lastday[global_param.statemonth - 1] ||
+             global_param.statemonth < 1 ||
+-            global_param.statemonth > MONTHS_PER_YEAR ||
++                                      global_param.statemonth > MONTHS_PER_YEAR
++            ||
+             global_param.stateday < 1 || global_param.stateday > 31 ||
+             global_param.statesec > SEC_PER_DAY) {
+             log_err("Unusual specification of the date to save state "
+@@ -1295,16 +1301,18 @@ get_global_param(FILE *gp)
+                 options.Nlayer);
+     }
+     if (options.Nlayer > MAX_LAYERS) {
+-        log_err("Global file wants more soil moisture layers (%zu) than "
+-                "are defined by MAX_LAYERS (%d).  Edit vic_run/include/vic_def.h "
+-                "and recompile.", options.Nlayer,
+-                MAX_LAYERS);
++        log_err(
++            "Global file wants more soil moisture layers (%zu) than "
++            "are defined by MAX_LAYERS (%d).  Edit vic_run/include/vic_def.h "
++            "and recompile.", options.Nlayer,
++            MAX_LAYERS);
+     }
+     if (options.Nnode > MAX_NODES) {
+-        log_err("Global file wants more soil thermal nodes (%zu) than are "
+-                "defined by MAX_NODES (%d).  Edit vic_run/include/vic_def.h and "
+-                "recompile.", options.Nnode,
+-                MAX_NODES);
++        log_err(
++            "Global file wants more soil thermal nodes (%zu) than are "
++            "defined by MAX_NODES (%d).  Edit vic_run/include/vic_def.h and "
++            "recompile.", options.Nnode,
++            MAX_NODES);
+     }
+     if (!options.FULL_ENERGY && options.CLOSE_ENERGY) {
+         log_err("CLOSE_ENERGY is TRUE but FULL_ENERGY is FALSE. Set "
+@@ -1324,10 +1332,11 @@ get_global_param(FILE *gp)
+                     "run.");
+         }
+         if (strcmp(filenames.lakeparam, "MISSING") == 0) {
+-            log_err("\"LAKES\" was specified, but no lake parameter file "
+-                    "has been defined.  Make sure that the global file defines "
+-                    "the lake parameter file on the line that begins with "
+-                    "\"LAKES\".");
++            log_err(
++                "\"LAKES\" was specified, but no lake parameter file "
++                "has been defined.  Make sure that the global file defines "
++                "the lake parameter file on the line that begins with "
++                "\"LAKES\".");
+         }
+         if (global_param.resolution == 0) {
+             log_err("The model grid cell resolution (RESOLUTION) must be "
+diff --git a/vic/drivers/classic/src/parse_output_info.c b/vic/drivers/classic/src/parse_output_info.c
+index 1641a40..fdd6718 100644
+--- a/vic/drivers/classic/src/parse_output_info.c
++++ b/vic/drivers/classic/src/parse_output_info.c
+@@ -115,8 +115,9 @@ parse_output_info(FILE           *gp,
+                 }
+                 else if (strcasecmp("AGGFREQ", optstr) == 0) {
+                     if (streamnum < 0) {
+-                        log_err("Error in global param file: \"OUTFILE\" must be "
+-                                "specified before you can specify \"AGGFREQ\".");
++                        log_err(
++                            "Error in global param file: \"OUTFILE\" must be "
++                            "specified before you can specify \"AGGFREQ\".");
+                     }
+                     found = sscanf(cmdstr, "%*s %s %s", freq_type_str,
+                                    freq_value_str);
+@@ -155,8 +156,9 @@ parse_output_info(FILE           *gp,
+                 }
+                 else if (strcasecmp("COMPRESS", optstr) == 0) {
+                     if (streamnum < 0) {
+-                        log_err("Error in global param file: \"OUTFILE\" must be "
+-                                "specified before you can specify \"COMPRESS\".");
++                        log_err(
++                            "Error in global param file: \"OUTFILE\" must be "
++                            "specified before you can specify \"COMPRESS\".");
+                     }
+                     sscanf(cmdstr, "%*s %s", flgstr);
+                     if (strcasecmp("TRUE", flgstr) == 0) {
+@@ -171,8 +173,9 @@ parse_output_info(FILE           *gp,
+                 }
+                 else if (strcasecmp("OUT_FORMAT", optstr) == 0) {
+                     if (streamnum < 0) {
+-                        log_err("Error in global param file: \"OUTFILE\" must be "
+-                                "specified before you can specify \"OUT_FORMAT\".");
++                        log_err(
++                            "Error in global param file: \"OUTFILE\" must be "
++                            "specified before you can specify \"OUT_FORMAT\".");
+                     }
+                     sscanf(cmdstr, "%*s %s", flgstr);
+                     if (strcasecmp("ASCII", flgstr) == 0) {
+@@ -188,8 +191,9 @@ parse_output_info(FILE           *gp,
+                 }
+                 else if (strcasecmp("OUTVAR", optstr) == 0) {
+                     if (streamnum < 0) {
+-                        log_err("Error in global param file: \"OUTFILE\" must be "
+-                                "specified before you can specify \"OUTVAR\".");
++                        log_err(
++                            "Error in global param file: \"OUTFILE\" must be "
++                            "specified before you can specify \"OUTVAR\".");
+                     }
+                     // parse outvar options
+                     strcpy(format, "");
+diff --git a/vic/drivers/classic/src/read_atmos_data.c b/vic/drivers/classic/src/read_atmos_data.c
+index deab975..e9a7138 100644
+--- a/vic/drivers/classic/src/read_atmos_data.c
++++ b/vic/drivers/classic/src/read_atmos_data.c
+@@ -77,11 +77,12 @@ read_atmos_data(FILE               *infile,
+         techniques are left to the user. **/
+     if (param_set.FORCE_DT[file_num] < SEC_PER_DAY &&
+         global_param.dt != param_set.FORCE_DT[file_num]) {
+-        log_err("When forcing the model with sub-daily data, the model must be "
+-                "run at the same time step as the forcing data.  Currently the "
+-                "model time step is %f seconds, while forcing file %i has a "
+-                "time step of %f seconds.", global_param.dt, file_num,
+-                param_set.FORCE_DT[file_num]);
++        log_err(
++            "When forcing the model with sub-daily data, the model must be "
++            "run at the same time step as the forcing data.  Currently the "
++            "model time step is %f seconds, while forcing file %i has a "
++            "time step of %f seconds.", global_param.dt, file_num,
++            param_set.FORCE_DT[file_num]);
+     }
+ 
+     if (infile == NULL) {
+@@ -203,7 +204,6 @@ read_atmos_data(FILE               *infile,
+     /**************************
+        Read ASCII Forcing Data
+     **************************/
+-
+     else {
+         // No need to skip over a header here, since ascii file headers are skipped
+         // in open_file().  However, if we wanted to read information from the header,
+diff --git a/vic/drivers/classic/src/read_forcing_data.c b/vic/drivers/classic/src/read_forcing_data.c
+index cfaec81..2a12881 100644
+--- a/vic/drivers/classic/src/read_forcing_data.c
++++ b/vic/drivers/classic/src/read_forcing_data.c
+@@ -62,7 +62,8 @@ read_forcing_data(FILE              **infile,
+                                    "Memory allocation error.");
+                 for (j = 0; j < param_set.TYPE[i].N_ELEM; j++) {
+                     (*veg_hist_data)[i][j] = calloc(global_param.nrecs * NF,
+-                                                    sizeof(*((*veg_hist_data)[i]
++                                                    sizeof(*((*veg_hist_data)[i
++                                                             ]
+                                                              [j])));
+                     check_alloc_status((*veg_hist_data)[i][j],
+                                        "Memory allocation error.");
+diff --git a/vic/drivers/classic/src/read_initial_model_state.c b/vic/drivers/classic/src/read_initial_model_state.c
+index d9e6099..ab28902 100644
+--- a/vic/drivers/classic/src/read_initial_model_state.c
++++ b/vic/drivers/classic/src/read_initial_model_state.c
+@@ -246,48 +246,58 @@ read_initial_model_state(FILE            *init_state,
+                         /* Read cumulative annual NPP */
+                         if (fread(&(veg_var[veg][band].AnnualNPP),
+                                   sizeof(double), 1, init_state) != 1) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                         if (fread(&(veg_var[veg][band].AnnualNPPPrev),
+                                   sizeof(double), 1, init_state) != 1) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                         /* Read Soil Carbon Storage */
+                         if (fread(&(cell[veg][band].CLitter), sizeof(double), 1,
+                                   init_state) != 1) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                         if (fread(&(cell[veg][band].CInter), sizeof(double), 1,
+                                   init_state) != 1) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                         if (fread(&(cell[veg][band].CSlow), sizeof(double), 1,
+                                   init_state) != 1) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                     }
+                     else {
+                         /* Read cumulative annual NPP */
+                         if (fscanf(init_state, " %lf",
+                                    &veg_var[veg][band].AnnualNPP) == EOF) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                         if (fscanf(init_state, " %lf",
+                                    &veg_var[veg][band].AnnualNPPPrev) == EOF) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                         /* Read Soil Carbon Storage */
+                         if (fscanf(init_state, " %lf",
+                                    &cell[veg][band].CLitter) == EOF) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                         if (fscanf(init_state, " %lf",
+                                    &cell[veg][band].CInter) == EOF) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                         if (fscanf(init_state, " %lf",
+                                    &cell[veg][band].CSlow) == EOF) {
+-                            log_err("End of model state file found unexpectedly");
++                            log_err(
++                                "End of model state file found unexpectedly");
+                         }
+                     }
+                 }
+@@ -545,7 +555,8 @@ read_initial_model_state(FILE            *init_state,
+                     log_err("End of model state file found unexpectedly");
+                 }
+             }
+-            if (fread(&lake_var->tempavg, sizeof(double), 1, init_state) != 1) {
++            if (fread(&lake_var->tempavg, sizeof(double), 1,
++                      init_state) != 1) {
+                 log_err("End of model state file found unexpectedly");
+             }
+             if (fread(&lake_var->areai, sizeof(double), 1, init_state) != 1) {
+@@ -588,7 +599,8 @@ read_initial_model_state(FILE            *init_state,
+                       init_state) != 1) {
+                 log_err("End of model state file found unexpectedly");
+             }
+-            if (fread(&lake_var->SAlbedo, sizeof(double), 1, init_state) != 1) {
++            if (fread(&lake_var->SAlbedo, sizeof(double), 1,
++                      init_state) != 1) {
+                 log_err("End of model state file found unexpectedly");
+             }
+             if (fread(&lake_var->sdepth, sizeof(double), 1, init_state) != 1) {
+@@ -622,7 +634,8 @@ read_initial_model_state(FILE            *init_state,
+                            &lake_var->soil.CLitter) == EOF) {
+                     log_err("End of model state file found unexpectedly");
+                 }
+-                if (fscanf(init_state, " %lf", &lake_var->soil.CInter) == EOF) {
++                if (fscanf(init_state, " %lf",
++                           &lake_var->soil.CInter) == EOF) {
+                     log_err("End of model state file found unexpectedly");
+                 }
+                 if (fscanf(init_state, " %lf", &lake_var->soil.CSlow) == EOF) {
+diff --git a/vic/drivers/classic/src/read_lakeparam.c b/vic/drivers/classic/src/read_lakeparam.c
+index b64a430..3a499f5 100644
+--- a/vic/drivers/classic/src/read_lakeparam.c
++++ b/vic/drivers/classic/src/read_lakeparam.c
+@@ -69,9 +69,10 @@ read_lakeparam(FILE           *lakeparam,
+         veg_con[temp.lake_idx].LAKE = 1;
+         fscanf(lakeparam, "%zu", &temp.numnod);
+         if (temp.numnod < 1) {
+-            log_err("Number of vertical lake nodes (%zu) for cell %d specified "
+-                    "in the lake parameter file is < 1; increase this number "
+-                    "to at least 1.", temp.numnod, soil_con.gridcel);
++            log_err(
++                "Number of vertical lake nodes (%zu) for cell %d specified "
++                "in the lake parameter file is < 1; increase this number "
++                "to at least 1.", temp.numnod, soil_con.gridcel);
+         }
+         if (temp.numnod > MAX_LAKE_NODES) {
+             log_err("Number of lake nodes (%zu) in cell %d specified in the "
+diff --git a/vic/drivers/classic/src/read_soilparam.c b/vic/drivers/classic/src/read_soilparam.c
+index a71abd1..53beb68 100644
+--- a/vic/drivers/classic/src/read_soilparam.c
++++ b/vic/drivers/classic/src/read_soilparam.c
+@@ -1009,10 +1009,10 @@ read_soilparam(FILE            *soilparam,
+                     tmp_resid_moist = temp->resid_moist[layer] *
+                                       temp->depth[layer] * MM_PER_M;
+                     zwt_prime_eff = tmp_depth2_save * CM_PER_M - bubble +
+-                                    bubble *
+-                                    pow(
++                                    bubble *pow(
+                         (zwt_prime + bub_save - tmp_depth2_save *
+-                         CM_PER_M) / bub_save, b / b_save);
++                    CM_PER_M) / bub_save, b /
++                        b_save);
+                     w_avg =
+                         -(b /
+                           (b -
+diff --git a/vic/drivers/classic/src/read_veglib.c b/vic/drivers/classic/src/read_veglib.c
+index 703074a..31d8dc9 100644
+--- a/vic/drivers/classic/src/read_veglib.c
++++ b/vic/drivers/classic/src/read_veglib.c
+@@ -101,7 +101,8 @@ read_veglib(FILE   *veglib,
+                         if (temp[i].fcanopy[j] < 0 ||
+                             temp[i].fcanopy[j] > 1) {
+                             log_err(
+-                                "Veg cover fraction must be between 0 and 1 " "(%f)",
++                                "Veg cover fraction must be between 0 and 1 "
++                                "(%f)",
+                                 temp[i].fcanopy[j]);
+                         }
+                     }
+diff --git a/vic/drivers/classic/src/read_vegparam.c b/vic/drivers/classic/src/read_vegparam.c
+index c322a08..2849770 100644
+--- a/vic/drivers/classic/src/read_vegparam.c
++++ b/vic/drivers/classic/src/read_vegparam.c
+@@ -369,7 +369,8 @@ read_vegparam(FILE  *vegparam,
+         }
+ 
+         // Determine if cell contains non-overstory vegetation
+-        if (options.COMPUTE_TREELINE && !veg_lib[temp[i].veg_class].overstory) {
++        if (options.COMPUTE_TREELINE &&
++            !veg_lib[temp[i].veg_class].overstory) {
+             NoOverstory++;
+         }
+     }
+diff --git a/vic/drivers/classic/src/vic_classic_timing.c b/vic/drivers/classic/src/vic_classic_timing.c
+index 275a06d..5b1521b 100644
+--- a/vic/drivers/classic/src/vic_classic_timing.c
++++ b/vic/drivers/classic/src/vic_classic_timing.c
+@@ -113,12 +113,15 @@ write_vic_timing_table(timer_struct *timers)
+             nyears / (timers[TIMER_VIC_ALL].delta_wall / SEC_PER_DAY));
+     fprintf(LOG_DEST, "\n");
+     fprintf(LOG_DEST, "  Timing Table:\n");
+-    fprintf(LOG_DEST,
+-            "|------------|----------------------|----------------------|----------------------|----------------------|\n");
+-    fprintf(LOG_DEST,
+-            "| Timer      | Wall Time (secs)     | CPU Time (secs)      | Wall Time (secs/day) | CPU Time (secs/day)  |\n");
+-    fprintf(LOG_DEST,
+-            "|------------|----------------------|----------------------|----------------------|----------------------|\n");
++    fprintf(
++        LOG_DEST,
++        "|------------|----------------------|----------------------|----------------------|----------------------|\n");
++    fprintf(
++        LOG_DEST,
++        "| Timer      | Wall Time (secs)     | CPU Time (secs)      | Wall Time (secs/day) | CPU Time (secs/day)  |\n");
++    fprintf(
++        LOG_DEST,
++        "|------------|----------------------|----------------------|----------------------|----------------------|\n");
+     fprintf(LOG_DEST, "| Init Time  | %20g | %20g | %20g | %20g |\n",
+             timers[TIMER_VIC_INIT].delta_wall, timers[TIMER_VIC_INIT].delta_cpu,
+             timers[TIMER_VIC_INIT].delta_wall / ndays,
+@@ -136,8 +139,9 @@ write_vic_timing_table(timer_struct *timers)
+             timers[TIMER_VIC_ALL].delta_wall, timers[TIMER_VIC_ALL].delta_cpu,
+             timers[TIMER_VIC_ALL].delta_wall / ndays,
+             timers[TIMER_VIC_ALL].delta_cpu / ndays);
+-    fprintf(LOG_DEST,
+-            "|------------|----------------------|----------------------|----------------------|----------------------|\n");
++    fprintf(
++        LOG_DEST,
++        "|------------|----------------------|----------------------|----------------------|----------------------|\n");
+     fprintf(LOG_DEST, "\n");
+ 
+     fprintf(LOG_DEST,
+diff --git a/vic/drivers/classic/src/vic_force.c b/vic/drivers/classic/src/vic_force.c
+index 36c9f85..5724ed6 100644
+--- a/vic/drivers/classic/src/vic_force.c
++++ b/vic/drivers/classic/src/vic_force.c
+@@ -263,7 +263,8 @@ vic_force(force_data_struct *force,
+                 // Check on fcanopy
+                 if (veg_hist[rec][v].fcanopy[i] < MIN_FCANOPY) {
+                     log_warn(
+-                        "rec %zu, veg %zu substep %zu fcanopy %f < minimum of %f; setting = %f", rec, v, i,
++                        "rec %zu, veg %zu substep %zu fcanopy %f < minimum of %f; setting = %f",
++                        rec, v, i,
+                         veg_hist[rec][v].fcanopy[i], MIN_FCANOPY,
+                         MIN_FCANOPY);
+                     veg_hist[rec][v].fcanopy[i] = MIN_FCANOPY;
+diff --git a/vic/drivers/image/src/get_global_param.c b/vic/drivers/image/src/get_global_param.c
+index 2b5ed93..f68fc0b 100644
+--- a/vic/drivers/image/src/get_global_param.c
++++ b/vic/drivers/image/src/get_global_param.c
+@@ -331,8 +331,9 @@ get_global_param(FILE *gp)
+                     options.STATE_FORMAT = NETCDF4;
+                 }
+                 else {
+-                    log_err("STATE_FORMAT must be either NETCDF3_CLASSIC, "
+-                            "NETCDF3_64BIT_OFFSET, NETCDF4_CLASSIC, or NETCDF4.");
++                    log_err(
++                        "STATE_FORMAT must be either NETCDF3_CLASSIC, "
++                        "NETCDF3_64BIT_OFFSET, NETCDF4_CLASSIC, or NETCDF4.");
+                 }
+             }
+ 
+@@ -390,8 +391,9 @@ get_global_param(FILE *gp)
+                             "NIJSSEN2001\" in your global parameter file.");
+                 }
+                 else {
+-                    log_err("Please change \"ARNO_PARAMS FALSE\" to \"BASEFLOW "
+-                            "ARNO\" in your global parameter file.");
++                    log_err(
++                        "Please change \"ARNO_PARAMS FALSE\" to \"BASEFLOW "
++                        "ARNO\" in your global parameter file.");
+                 }
+             }
+             else if (strcasecmp("NIJSSEN2001_BASEFLOW", optstr) == 0) {
+@@ -538,8 +540,9 @@ get_global_param(FILE *gp)
+                Fail when classic driver specific options are used
+             *************************************/
+             else if (strcasecmp("ATMOS_STEPS_PER_DAY", optstr) == 0) {
+-                log_err("ATMOS_STEPS_PER_DAY is not a valid option for this "
+-                        "driver.  Update your global parameter file accordingly.");
++                log_err(
++                    "ATMOS_STEPS_PER_DAY is not a valid option for this "
++                    "driver.  Update your global parameter file accordingly.");
+             }
+             else if (strcasecmp("OUTPUT_FORCE", optstr) == 0) {
+                 log_err("OUTPUT_FORCE is not a valid option for this driver.  "
+@@ -721,10 +724,11 @@ get_global_param(FILE *gp)
+         global_param.startsec = 0;
+     }
+     else if (global_param.startsec > SEC_PER_DAY) {
+-        log_err("The specified simulation start second (%u) > 86400  Make sure "
+-                "that the global file defines a positive integer "
+-                "for STARTSEC.",
+-                global_param.startsec);
++        log_err(
++            "The specified simulation start second (%u) > 86400  Make sure "
++            "that the global file defines a positive integer "
++            "for STARTSEC.",
++            global_param.startsec);
+     }
+ 
+     // Validate simulation end date and/or number of timesteps
+@@ -840,9 +844,10 @@ get_global_param(FILE *gp)
+ 
+     // Validate parameter file information
+     if (strcmp(filenames.params.nc_filename, "MISSING") == 0) {
+-        log_err("A parameters file has not been defined.  Make sure that the "
+-                "global file defines the parameters parameter file on the line "
+-                "that begins with \"PARAMETERS\".");
++        log_err(
++            "A parameters file has not been defined.  Make sure that the "
++            "global file defines the parameters parameter file on the line "
++            "that begins with \"PARAMETERS\".");
+     }
+ 
+     // Validate SPATIAL_FROST information
+@@ -909,7 +914,8 @@ get_global_param(FILE *gp)
+                      lastday);
+         if (global_param.stateday > lastday[global_param.statemonth - 1] ||
+             global_param.statemonth < 1 ||
+-            global_param.statemonth > MONTHS_PER_YEAR ||
++                                      global_param.statemonth > MONTHS_PER_YEAR
++            ||
+             global_param.stateday < 1 || global_param.stateday > 31 ||
+             global_param.statesec > SEC_PER_DAY) {
+             log_err("Unusual specification of the date to save state "
+diff --git a/vic/drivers/image/src/vic_force.c b/vic/drivers/image/src/vic_force.c
+index 04a3aa0..b284817 100644
+--- a/vic/drivers/image/src/vic_force.c
++++ b/vic/drivers/image/src/vic_force.c
+@@ -437,7 +437,8 @@ vic_force(void)
+                          (options.FCAN_SRC == FROM_VEGHIST))) {
+                         // Only issue this warning once if not using veg hist fractions
+                         log_warn(
+-                            "cell %zu, veg` %d substep %zu fcanopy %f < minimum of %f; setting = %f", i, vidx, j,
++                            "cell %zu, veg` %d substep %zu fcanopy %f < minimum of %f; setting = %f",
++                            i, vidx, j,
+                             veg_hist[i][vidx].fcanopy[j], MIN_FCANOPY,
+                             MIN_FCANOPY);
+                         veg_hist[i][vidx].fcanopy[j] = MIN_FCANOPY;
+diff --git a/vic/drivers/shared_all/include/vic_driver_shared_all.h b/vic/drivers/shared_all/include/vic_driver_shared_all.h
+index 0b4ad77..07fc0a0 100644
+--- a/vic/drivers/shared_all/include/vic_driver_shared_all.h
++++ b/vic/drivers/shared_all/include/vic_driver_shared_all.h
+@@ -594,7 +594,8 @@ bool cell_method_from_agg_type(unsigned short int aggtype, char cell_method[]);
+ bool check_write_flag(int rec);
+ void collect_eb_terms(energy_bal_struct, snow_data_struct, cell_data_struct,
+                       double, double, double, bool, bool, double, bool, int,
+-                      double *, double, double **);
++                      double *, double,
++                      double **);
+ void collect_wb_terms(cell_data_struct, veg_var_struct, snow_data_struct,
+                       double, double, double, bool, double, bool, double *,
+                       double **);
+@@ -612,12 +613,12 @@ double get_cpu_time();
+ void get_current_datetime(char *cdt);
+ double get_wall_time();
+ double date2num(double origin, dmy_struct *date, double tzoffset,
+-                unsigned short int calendar, unsigned short int time_units);
++                unsigned short int calendar,
++                unsigned short int time_units);
+ void dmy_all_30_day(double julian, dmy_struct *dmy);
+ void dmy_all_leap(double julian, dmy_struct *dmy);
+ bool dmy_equal(dmy_struct *a, dmy_struct *b);
+-void dmy_julian_day(double julian, unsigned short int calendar,
+-                    dmy_struct *dmy);
++void dmy_julian_day(double julian, unsigned short int calendar, dmy_struct *dmy);
+ void dmy_no_leap_day(double julian, dmy_struct *dmy);
+ void dt_seconds_to_time_units(unsigned short int time_units, double dt_seconds,
+                               double *dt_time_units);
+@@ -642,8 +643,9 @@ void initialize_options(void);
+ void initialize_parameters(void);
+ void initialize_save_data(all_vars_struct *all_vars, force_data_struct *force,
+                           soil_con_struct *soil_con, veg_con_struct *veg_con,
+-                          veg_lib_struct *veg_lib, lake_con_struct *lake_con,
+-                          double **out_data, save_data_struct *save_data,
++                          veg_lib_struct *veg_lib,
++                          lake_con_struct *lake_con, double **out_data,
++                          save_data_struct *save_data,
+                           timer_struct *timer);
+ void initialize_snow(snow_data_struct **snow, size_t veg_num);
+ void initialize_soil(cell_data_struct **cell, size_t veg_num);
+@@ -668,7 +670,9 @@ void parse_nc_time_units(char *nc_unit_chars, unsigned short int *units,
+                          dmy_struct *dmy);
+ void put_data(all_vars_struct *, force_data_struct *, soil_con_struct *,
+               veg_con_struct *, veg_lib_struct *veg_lib, lake_con_struct *,
+-              double **out_data, save_data_struct *, timer_struct *timer);
++              double **out_data,
++              save_data_struct *,
++              timer_struct *timer);
+ void print_alarm(alarm_struct *alarm);
+ void print_cell_data(cell_data_struct *cell, size_t nlayers, size_t nfrost);
+ void print_dmy(dmy_struct *dmy);
+@@ -677,7 +681,8 @@ void print_force_type(force_type_struct *force_type);
+ void print_global_param(global_param_struct *gp);
+ void print_lake_con(lake_con_struct *lcon, size_t nlnodes);
+ void print_lake_var(lake_var_struct *lvar, size_t nlnodes, size_t nfronts,
+-                    size_t nlayers, size_t nnodes, size_t nfrost);
++                    size_t nlayers, size_t nnodes,
++                    size_t nfrost);
+ void print_layer_data_states(layer_data_struct *ldata, size_t nfrost);
+ void print_layer_data_fluxes(layer_data_struct *ldata);
+ void print_license(void);
+@@ -690,10 +695,12 @@ void print_parameters(parameters_struct *param);
+ void print_save_data(save_data_struct *save);
+ void print_snow_data(snow_data_struct *snow);
+ void print_soil_con(soil_con_struct *scon, size_t nlayers, size_t nnodes,
+-                    size_t nfrost, size_t nbands, size_t nzwt);
++                    size_t nfrost, size_t nbands,
++                    size_t nzwt);
+ void print_stream(stream_struct *stream, metadata_struct *metadata);
+ void print_veg_con(veg_con_struct *vcon, size_t nroots, char blowing, char lake,
+-                   char carbon, size_t ncanopy);
++                   char carbon,
++                   size_t ncanopy);
+ void print_veg_lib(veg_lib_struct *vlib, char carbon);
+ void print_veg_var(veg_var_struct *vvar, size_t ncanopy);
+ void print_version(char *);
+@@ -736,7 +743,8 @@ int invalid_date(unsigned short int calendar, dmy_struct *dmy);
+ void validate_parameters(void);
+ void validate_streams(stream_struct **stream);
+ char will_it_snow(double *t, double t_offset, double max_snow_temp,
+-                  double *prcp, size_t n);
++                  double *prcp,
++                  size_t n);
+ void zero_output_list(double **);
+ 
+ #endif
+diff --git a/vic/drivers/shared_all/src/calc_root_fraction.c b/vic/drivers/shared_all/src/calc_root_fraction.c
+index 87e7988..f735c42 100644
+--- a/vic/drivers/shared_all/src/calc_root_fraction.c
++++ b/vic/drivers/shared_all/src/calc_root_fraction.c
+@@ -112,7 +112,8 @@ calc_root_fractions(veg_con_struct  *veg_con,
+                     Lstep = soil_con->depth[layer];
+                     Lsum += Lstep;
+                 }
+-                else if (layer == options.Nlayer && zone < options.ROOT_ZONES) {
++                else if (layer == options.Nlayer && zone <
++                         options.ROOT_ZONES) {
+                     Zstep = (double) veg_con[veg].zone_depth[zone];
+                     Lstep = Zsum + Zstep - Lsum;
+                     if (zone < options.ROOT_ZONES - 1) {
+diff --git a/vic/drivers/shared_all/src/cmd_proc.c b/vic/drivers/shared_all/src/cmd_proc.c
+index 884eea9..08425ed 100644
+--- a/vic/drivers/shared_all/src/cmd_proc.c
++++ b/vic/drivers/shared_all/src/cmd_proc.c
+@@ -138,8 +138,9 @@ print_license()
+     fprintf(stdout,
+             "  model version %s, Copyright (C) 2016 Computational\n",
+             SHORT_VERSION);
+-    fprintf(stdout,
+-            "  Hydrology Group, Dept. of Civil and Environmental Engineering,\n");
++    fprintf(
++        stdout,
++        "  Hydrology Group, Dept. of Civil and Environmental Engineering,\n");
+     fprintf(stdout,
+             "  University of Washington.  VIC comes with ABSOLUTELY NO\n");
+     fprintf(stdout,
+@@ -147,8 +148,9 @@ print_license()
+     fprintf(stdout,
+             "  under certain conditions; see LICENSE.txt for details.\n\n");
+ 
+-    fprintf(stdout,
+-            "  Report Bugs and Issues to : https://github.com/UW-Hydro/VIC/issues\n");
++    fprintf(
++        stdout,
++        "  Report Bugs and Issues to : https://github.com/UW-Hydro/VIC/issues\n");
+     fprintf(stdout,
+             "  VIC Users Email Listserve : vic_users@u.washington.edu \n\n");
+ }
+diff --git a/vic/drivers/shared_all/src/compute_derived_state_vars.c b/vic/drivers/shared_all/src/compute_derived_state_vars.c
+index c0a61ca..ad57d80 100644
+--- a/vic/drivers/shared_all/src/compute_derived_state_vars.c
++++ b/vic/drivers/shared_all/src/compute_derived_state_vars.c
+@@ -180,22 +180,23 @@ compute_derived_state_vars(all_vars_struct *all_vars,
+                                     pow((soil_con->dz_node[1]),
+                                         2);
+                         if (global_param.dt > dt_thresh) {
+-                            log_err("You are currently running FROZEN SOIL "
+-                                    "with an explicit method (IMPLICIT is "
+-                                    "set to FALSE).  For the explicit method "
+-                                    "to be stable, time step %f seconds is too "
+-                                    "large for the given thermal node spacing "
+-                                    "%f m, soil heat capacity %f J/m3/K, and "
+-                                    "soil thermal conductivity %f J/m/s/K.  "
+-                                    "Either set IMPLICIT to TRUE in your "
+-                                    "global parameter file (this is the "
+-                                    "recommended action), or decrease time "
+-                                    "step length to <= %f seconds, or decrease "
+-                                    "the number of soil thermal nodes.",
+-                                    global_param.dt,
+-                                    soil_con->dz_node[1],
+-                                    energy[veg][band].Cs_node[1],
+-                                    energy[veg][band].kappa_node[1], dt_thresh);
++                            log_err(
++                                "You are currently running FROZEN SOIL "
++                                "with an explicit method (IMPLICIT is "
++                                "set to FALSE).  For the explicit method "
++                                "to be stable, time step %f seconds is too "
++                                "large for the given thermal node spacing "
++                                "%f m, soil heat capacity %f J/m3/K, and "
++                                "soil thermal conductivity %f J/m/s/K.  "
++                                "Either set IMPLICIT to TRUE in your "
++                                "global parameter file (this is the "
++                                "recommended action), or decrease time "
++                                "step length to <= %f seconds, or decrease "
++                                "the number of soil thermal nodes.",
++                                global_param.dt,
++                                soil_con->dz_node[1],
++                                energy[veg][band].Cs_node[1],
++                                energy[veg][band].kappa_node[1], dt_thresh);
+                         }
+                     }
+ 
+diff --git a/vic/drivers/shared_all/src/generate_default_state.c b/vic/drivers/shared_all/src/generate_default_state.c
+index f8e78a3..6a95a34 100644
+--- a/vic/drivers/shared_all/src/generate_default_state.c
++++ b/vic/drivers/shared_all/src/generate_default_state.c
+@@ -122,8 +122,10 @@ generate_default_state(all_vars_struct *all_vars,
+                     }
+                     /* Initial estimate of LongUnderOut for use by snow_intercept() */
+                     tmp = energy[veg][band].T[0] + CONST_TKFRZ;
+-                    energy[veg][band].LongUnderOut = calc_outgoing_longwave(tmp,
+-                                                                            param.EMISS_SNOW);
++                    energy[veg][band].LongUnderOut = calc_outgoing_longwave(
++                        tmp,
++                        param
++                        .EMISS_SNOW);
+                     energy[veg][band].Tfoliage = energy[veg][band].T[0] +
+                                                  soil_con->Tfactor[band];
+                 }
+diff --git a/vic/drivers/shared_all/src/get_parameters.c b/vic/drivers/shared_all/src/get_parameters.c
+index 45b8aa6..5183127 100644
+--- a/vic/drivers/shared_all/src/get_parameters.c
++++ b/vic/drivers/shared_all/src/get_parameters.c
+@@ -621,7 +621,8 @@ validate_parameters()
+     // LAKE_ZWATER - Currently, no constraints
+     // LAKE_ZSNOW - Currently, no constraints
+     if (!(param.LAKE_RHOSNOW >= 0.)) {
+-        log_err("LAKE_RHOSNOW must be defined on the interval [0, inf) (kg m-3)");
++        log_err(
++            "LAKE_RHOSNOW must be defined on the interval [0, inf) (kg m-3)");
+     }
+     // LAKE_CONDI - Currently, no constraints
+     // LAKE_CONDS - Currently, no constraints
+@@ -758,8 +759,10 @@ validate_parameters()
+         log_err(
+             "SNOW_DENS_DMLIMIT must be defined on the interval [0, inf) (kg/m^3)");
+     }
+-    if (!(param.SNOW_DENS_MAX_CHANGE >= 0 && param.SNOW_DENS_MAX_CHANGE <= 1)) {
+-        log_err("SNOW_DENS_MAX_CHANGE must be defined on the interval [0,1] (-)")
++    if (!(param.SNOW_DENS_MAX_CHANGE >= 0 && param.SNOW_DENS_MAX_CHANGE <=
++          1)) {
++        log_err(
++            "SNOW_DENS_MAX_CHANGE must be defined on the interval [0,1] (-)")
+     }
+     // SNOW_DENS_ETA0 - Currently, no constraints
+     // SNOW_DENS_C1 - Currently, no constraints
+diff --git a/vic/drivers/shared_all/src/history_metadata.c b/vic/drivers/shared_all/src/history_metadata.c
+index 93a40aa..bb977f4 100644
+--- a/vic/drivers/shared_all/src/history_metadata.c
++++ b/vic/drivers/shared_all/src/history_metadata.c
+@@ -154,8 +154,9 @@ set_output_met_data_info()
+     strcpy(out_metadata[OUT_SMFROZFRAC].standard_name,
+            "soil_moisture_ice_fraction");
+     strcpy(out_metadata[OUT_SMFROZFRAC].units, "1");
+-    strcpy(out_metadata[OUT_SMFROZFRAC].description,
+-           "fraction of soil moisture (by mass) that is ice, for each soil layer");
++    strcpy(
++        out_metadata[OUT_SMFROZFRAC].description,
++        "fraction of soil moisture (by mass) that is ice, for each soil layer");
+ 
+     /* fraction of soil moisture (by mass) that is liquid, for each soil layer */
+     strcpy(out_metadata[OUT_SMLIQFRAC].varname, "OUT_SMLIQFRAC");
+@@ -163,8 +164,9 @@ set_output_met_data_info()
+     strcpy(out_metadata[OUT_SMLIQFRAC].standard_name,
+            "soil_moisture_liquid_fraction");
+     strcpy(out_metadata[OUT_SMLIQFRAC].units, "1");
+-    strcpy(out_metadata[OUT_SMLIQFRAC].description,
+-           "fraction of soil moisture (by mass) that is liquid, for each soil layer");
++    strcpy(
++        out_metadata[OUT_SMLIQFRAC].description,
++        "fraction of soil moisture (by mass) that is liquid, for each soil layer");
+ 
+     /* snow interception storage in canopy [mm] */
+     strcpy(out_metadata[OUT_SNOW_CANOPY].varname, "OUT_SNOW_CANOPY");
+@@ -294,8 +296,9 @@ set_output_met_data_info()
+     strcpy(out_metadata[OUT_ZWT_LUMPED].standard_name,
+            "lumped_water_table_position");
+     strcpy(out_metadata[OUT_ZWT_LUMPED].units, "cm");
+-    strcpy(out_metadata[OUT_ZWT_LUMPED].description,
+-           "lumped water table position (zwt of total moisture across all layers, lumped together)");
++    strcpy(
++        out_metadata[OUT_ZWT_LUMPED].description,
++        "lumped water table position (zwt of total moisture across all layers, lumped together)");
+ 
+     // Water Balance Terms - fluxes
+     /* baseflow out of the bottom layer [mm] */
+@@ -1019,8 +1022,9 @@ set_output_met_data_info()
+     strcpy(out_metadata[OUT_AERO_RESIST].standard_name,
+            "aerodynamic_resistance");
+     strcpy(out_metadata[OUT_AERO_RESIST].units, "s m-1");
+-    strcpy(out_metadata[OUT_AERO_RESIST].description,
+-           "scene aerodynamic resistance (tiles with overstory contribute overstory resistance; others contribue surface resistance)");
++    strcpy(
++        out_metadata[OUT_AERO_RESIST].description,
++        "scene aerodynamic resistance (tiles with overstory contribute overstory resistance; others contribue surface resistance)");
+ 
+     /* surface aerodynamic resistance [m/s] */
+     strcpy(out_metadata[OUT_AERO_RESIST1].varname, "OUT_AERO_RESIST1");
+diff --git a/vic/drivers/shared_all/src/print_library_shared.c b/vic/drivers/shared_all/src/print_library_shared.c
+index f6ae455..556d994 100644
+--- a/vic/drivers/shared_all/src/print_library_shared.c
++++ b/vic/drivers/shared_all/src/print_library_shared.c
+@@ -539,8 +539,9 @@ print_stream(stream_struct   *stream,
+     fprintf(LOG_DEST, "\tngridcells: %zu\n", stream->ngridcells);
+     fprintf(LOG_DEST, "\tagg_alarm:\n    ");
+     print_alarm(&(stream->agg_alarm));
+-    fprintf(LOG_DEST,
+-            "\t# \tVARID        \tVARNAME \tTYPE \tMULT \tFORMAT        \tAGGTYPE\n");
++    fprintf(
++        LOG_DEST,
++        "\t# \tVARID        \tVARNAME \tTYPE \tMULT \tFORMAT        \tAGGTYPE\n");
+     for (i = 0; i < stream->nvars; i++) {
+         varid = stream->varid[i];
+         fprintf(LOG_DEST, "\t%zu \t%u \t%20s \t%hu \t%f \t%10s \t%hu\n",
+diff --git a/vic/drivers/shared_all/src/put_data.c b/vic/drivers/shared_all/src/put_data.c
+index 7003104..feea802 100644
+--- a/vic/drivers/shared_all/src/put_data.c
++++ b/vic/drivers/shared_all/src/put_data.c
+@@ -199,10 +199,11 @@ put_data(all_vars_struct   *all_vars,
+                     ThisTreeAdjust = 1;
+                 }
+ 
+-                if (ThisAreaFract > 0. && (veg == veg_con[0].vegetat_type_num ||
+-                                           (!AboveTreeLine[band] ||
+-                                            (AboveTreeLine[band] &&
+-                                             !overstory)))) {
++                if (ThisAreaFract > 0. &&
++                    (veg == veg_con[0].vegetat_type_num ||
++                     (!AboveTreeLine[band] ||
++                      (AboveTreeLine[band] &&
++                       !overstory)))) {
+                     /** compute running totals of various landcovers **/
+                     if (HasVeg) {
+                         cv_veg += Cv * ThisAreaFract * ThisTreeAdjust;
+@@ -413,7 +414,8 @@ put_data(all_vars_struct   *all_vars,
+                             lake_var.runoff_out * MM_PER_M /
+                             soil_con->cell_area;  // mm over gridcell
+                         // mm over gridcell
+-                        out_data[OUT_LAKE_EVAP][0] = lake_var.evapw * MM_PER_M /
++                        out_data[OUT_LAKE_EVAP][0] = lake_var.evapw *
++                                                     MM_PER_M /
+                                                      soil_con->cell_area;
+                         // mm over gridcell
+                         out_data[OUT_LAKE_RCHRG][0] = lake_var.recharge *
+@@ -538,10 +540,12 @@ put_data(all_vars_struct   *all_vars,
+     }
+     storage += out_data[OUT_SWE][0] + out_data[OUT_SNOW_CANOPY][0] +
+                out_data[OUT_WDEW][0] + out_data[OUT_SURFSTOR][0];
+-    out_data[OUT_WATER_ERROR][0] = calc_water_balance_error(inflow,
+-                                                            outflow,
+-                                                            storage,
+-                                                            save_data->total_moist_storage);
++    out_data[OUT_WATER_ERROR][0] = calc_water_balance_error(
++        inflow,
++        outflow,
++        storage,
++        save_data->
++        total_moist_storage);
+ 
+     // Store total storage for next timestep
+     save_data->total_moist_storage = storage;
+diff --git a/vic/drivers/shared_all/src/soil_moisture_from_water_table.c b/vic/drivers/shared_all/src/soil_moisture_from_water_table.c
+index c01f991..60395e5 100644
+--- a/vic/drivers/shared_all/src/soil_moisture_from_water_table.c
++++ b/vic/drivers/shared_all/src/soil_moisture_from_water_table.c
+@@ -203,10 +203,11 @@ soil_moisture_from_water_table(soil_con_struct *soil_con,
+                 bubble = soil_con->bubble[j];
+                 tmp_resid_moist =
+                     soil_con->resid_moist[j] * soil_con->depth[j] * MM_PER_M;
+-                zwt_prime_eff = tmp_depth2_save * CM_PER_M - bubble + bubble *
+-                                pow((zwt_prime + bub_save - tmp_depth2_save *
+-                                     CM_PER_M) / bub_save,
+-                                    b / b_save);
++                zwt_prime_eff = tmp_depth2_save * CM_PER_M - bubble +
++                                bubble *pow(
++                    (zwt_prime + bub_save - tmp_depth2_save *
++                CM_PER_M) /
++                    bub_save, b / b_save);
+                 w_avg = -(b / (b - 1)) * bubble *
+                         (1 -
+                          pow((zwt_prime_eff + bubble - tmp_depth2 *
+diff --git a/vic/drivers/shared_all/src/vic_history.c b/vic/drivers/shared_all/src/vic_history.c
+index c05ca83..c90415a 100644
+--- a/vic/drivers/shared_all/src/vic_history.c
++++ b/vic/drivers/shared_all/src/vic_history.c
+@@ -342,8 +342,9 @@ set_output_var(stream_struct     *stream,
+     int                    found = false;
+ 
+     if (varnum >= stream->nvars) {
+-        log_err("Invalid varnum %zu, must be less than the number of variables "
+-                "in the stream %zu", varnum, stream->nvars);
++        log_err(
++            "Invalid varnum %zu, must be less than the number of variables "
++            "in the stream %zu", varnum, stream->nvars);
+     }
+     // Find the output varid by looping through out_metadata, comparing to varname
+     for (varid = 0; varid < N_OUTVAR_TYPES; varid++) {
+diff --git a/vic/drivers/shared_all/src/vic_log.c b/vic/drivers/shared_all/src/vic_log.c
+index a11cdd2..7e538c6 100644
+--- a/vic/drivers/shared_all/src/vic_log.c
++++ b/vic/drivers/shared_all/src/vic_log.c
+@@ -157,8 +157,9 @@ print_trace(void)
+     /* Note: we are ignoring the first and last stack frame
+        the first is this function, the last is the linker, neither are
+        particularly useful */
+-    fprintf(LOG_DEST,
+-            "---------------------------------------------------------------------------\n");
++    fprintf(
++        LOG_DEST,
++        "---------------------------------------------------------------------------\n");
+     fprintf(LOG_DEST, "Traceback (most recent call last):\n");
+     for (i = size - 2; i > 0; i--) {
+         fprintf(LOG_DEST, "%s\n", strings[i]);
+diff --git a/vic/drivers/shared_image/include/vic_driver_shared_image.h b/vic/drivers/shared_image/include/vic_driver_shared_image.h
+index dc4766c..fc409d5 100644
+--- a/vic/drivers/shared_image/include/vic_driver_shared_image.h
++++ b/vic/drivers/shared_image/include/vic_driver_shared_image.h
+@@ -204,11 +204,14 @@ void get_nc_var_attr(nameid_struct *nc_nameid, char *var_name, char *attr_name,
+ int get_nc_var_type(nameid_struct *nc_nameid, char *var_name);
+ int get_nc_varndimensions(nameid_struct *nc_nameid, char *var_name);
+ int get_nc_field_double(nameid_struct *nc_nameid, char *var_name, size_t *start,
+-                        size_t *count, double *var);
++                        size_t *count,
++                        double *var);
+ int get_nc_field_float(nameid_struct *nc_nameid, char *var_name, size_t *start,
+-                       size_t *count, float *var);
++                       size_t *count,
++                       float *var);
+ int get_nc_field_int(nameid_struct *nc_nameid, char *var_name, size_t *start,
+-                     size_t *count, int *var);
++                     size_t *count,
++                     int *var);
+ int get_nc_dtype(unsigned short int dtype);
+ int get_nc_mode(unsigned short int format);
+ void initialize_domain(domain_struct *domain);
+@@ -222,9 +225,11 @@ void initialize_state_file(char *filename, nc_file_struct *nc_state_file,
+ void initialize_location(location_struct *location);
+ int initialize_model_state(all_vars_struct *all_vars, size_t Nveg,
+                            size_t Nnodes, double surf_temp,
+-                           soil_con_struct *soil_con, veg_con_struct *veg_con);
++                           soil_con_struct *soil_con,
++                           veg_con_struct *veg_con);
+ void initialize_nc_file(nc_file_struct *nc_file, size_t nvars,
+-                        unsigned int *varids, unsigned short int *dtypes);
++                        unsigned int *varids,
++                        unsigned short int *dtypes);
+ void initialize_soil_con(soil_con_struct *soil_con);
+ void initialize_veg_con(veg_con_struct *veg_con);
+ void parse_output_info(FILE *gp, stream_struct **output_streams,
+@@ -242,7 +247,8 @@ void set_state_meta_data_info();
+ void set_nc_var_dimids(unsigned int varid, nc_file_struct *nc_hist_file,
+                        nc_var_struct *nc_var);
+ void set_nc_var_info(unsigned int varid, unsigned short int dtype,
+-                     nc_file_struct *nc_hist_file, nc_var_struct *nc_var);
++                     nc_file_struct *nc_hist_file,
++                     nc_var_struct *nc_var);
+ void set_nc_state_file_info(nc_file_struct *nc_state_file);
+ void set_nc_state_var_info(nc_file_struct *nc_state_file);
+ void sprint_location(char *str, location_struct *loc);
+diff --git a/vic/drivers/shared_image/include/vic_image_log.h b/vic/drivers/shared_image/include/vic_image_log.h
+index 2b650fb..ece2afc 100644
+--- a/vic/drivers/shared_image/include/vic_image_log.h
++++ b/vic/drivers/shared_image/include/vic_image_log.h
+@@ -50,33 +50,38 @@
+ // Error Level is always active
+ #ifdef NO_LINENOS
+ #define log_ncerr(e, M, ...) print_trace(); fprintf(LOG_DEST, \
+-                                                    "[ERROR] errno: %s: " M "\n", \
++                                                    "[ERROR] errno: %s: " M \
++                                                    "\n", \
+                                                     clean_ncerrno(e), \
+                                                     ## __VA_ARGS__); \
+-    exit(EXIT_FAILURE);
++    exit(EXIT_FAILURE)
+ #else
+-#define log_ncerr(e, M, ...) print_trace(); fprintf(LOG_DEST, \
+-                                                    "[ERROR] %s:%d: errno: %s: " M " \n", \
+-                                                    __FILE__, __LINE__, \
+-                                                    clean_ncerrno(e), \
+-                                                    ## __VA_ARGS__); \
+-    exit(EXIT_FAILURE);
++#define log_ncerr(e, M, ...) print_trace(); fprintf( \
++        LOG_DEST, \
++        "[ERROR] %s:%d: errno: %s: " \
++        M " \n", \
++        __FILE__, __LINE__, \
++        clean_ncerrno(e), \
++        ## __VA_ARGS__); \
++    exit(EXIT_FAILURE)
+ #endif
+ 
+ #define check_nc_status(A, M, ...) if (A != NC_NOERR) {log_ncerr(A, M, \
+                                                                  ## __VA_ARGS__); \
+-                                                       errno = 0; exit( \
+-                                                           EXIT_FAILURE);}
++                                                       errno = 0; \
++                                                       exit(EXIT_FAILURE); }
+ 
+ #define log_mpi_err(e, M, ...) print_trace(); \
+     print_mpi_error_str(e); fprintf(LOG_DEST, \
+                                     "[ERROR] %s:%d: errno: %d: " M " \n", \
+                                     __FILE__, __LINE__, e, \
+                                     ## __VA_ARGS__); \
+-    MPI_Abort(MPI_COMM_VIC, e);
++    MPI_Abort(MPI_COMM_VIC, e)
+ 
+-#define check_mpi_status(A, M, ...) if (A != MPI_SUCCESS) {log_mpi_err(A, M, \
+-                                                                       ## __VA_ARGS__); \
++#define check_mpi_status(A, M, ...) if (A != MPI_SUCCESS) {log_mpi_err( \
++                                                               A, M, \
++                                                               ## \
++                                                               __VA_ARGS__); \
+                                                            errno = 0; MPI_Abort( \
+                                                                MPI_COMM_VIC, A); \
+ }
+diff --git a/vic/drivers/shared_image/include/vic_mpi.h b/vic/drivers/shared_image/include/vic_mpi.h
+index b46a174..979d509 100644
+--- a/vic/drivers/shared_image/include/vic_mpi.h
++++ b/vic/drivers/shared_image/include/vic_mpi.h
+@@ -47,21 +47,29 @@ void create_MPI_alarm_struct_type(MPI_Datatype *mpi_type);
+ void create_MPI_option_struct_type(MPI_Datatype *mpi_type);
+ void create_MPI_param_struct_type(MPI_Datatype *mpi_type);
+ void gather_put_nc_field_double(int nc_id, int var_id, double fillval,
+-                                size_t *start, size_t *count, double *var);
++                                size_t *start, size_t *count,
++                                double *var);
+ void gather_put_nc_field_float(int nc_id, int var_id, float fillval,
+-                               size_t *start, size_t *count, float *var);
++                               size_t *start, size_t *count,
++                               float *var);
+ void gather_put_nc_field_int(int nc_id, int var_id, int fillval, size_t *start,
+-                             size_t *count, int *var);
++                             size_t *count,
++                             int *var);
+ void gather_put_nc_field_short(int nc_id, int var_id, short int fillval,
+-                               size_t *start, size_t *count, short int *var);
++                               size_t *start, size_t *count,
++                               short int *var);
+ void gather_put_nc_field_schar(int nc_id, int var_id, char fillval,
+-                               size_t *start, size_t *count, char *var);
++                               size_t *start, size_t *count,
++                               char *var);
+ void get_scatter_nc_field_double(nameid_struct *nc_nameid, char *var_name,
+-                                 size_t *start, size_t *count, double *var);
++                                 size_t *start, size_t *count,
++                                 double *var);
+ void get_scatter_nc_field_float(nameid_struct *nc_nameid, char *var_name,
+-                                size_t *start, size_t *count, float *var);
++                                size_t *start, size_t *count,
++                                float *var);
+ void get_scatter_nc_field_int(nameid_struct *nc_nameid, char *var_name,
+-                              size_t *start, size_t *count, int *var);
++                              size_t *start, size_t *count,
++                              int *var);
+ void initialize_mpi(void);
+ void map(size_t size, size_t n, size_t *from_map, size_t *to_map, void *from,
+          void *to);
+diff --git a/vic/drivers/shared_image/src/get_global_domain.c b/vic/drivers/shared_image/src/get_global_domain.c
+index 8d288ef..937a3a8 100644
+--- a/vic/drivers/shared_image/src/get_global_domain.c
++++ b/vic/drivers/shared_image/src/get_global_domain.c
+@@ -179,8 +179,10 @@ get_nc_latlon(nameid_struct *nc_nameid,
+                                        nc_domain->info.y_dim);
+ 
+     // Get number of lat/lon dimensions.
+-    nc_domain->info.n_coord_dims = get_nc_varndimensions(nc_nameid,
+-                                                         nc_domain->info.lon_var);
++    nc_domain->info.n_coord_dims = get_nc_varndimensions(
++        nc_nameid,
++        nc_domain->info.
++        lon_var);
+     if (nc_domain->info.n_coord_dims !=
+         (size_t) get_nc_varndimensions(nc_nameid, nc_domain->info.lat_var)) {
+         log_err("Un even number of dimensions for %s and %s in: %s",
+diff --git a/vic/drivers/shared_image/src/state_metadata.c b/vic/drivers/shared_image/src/state_metadata.c
+index 5792160..b5b7e3d 100644
+--- a/vic/drivers/shared_image/src/state_metadata.c
++++ b/vic/drivers/shared_image/src/state_metadata.c
+@@ -141,8 +141,9 @@ set_state_meta_data_info()
+            "snow_melting_phase");
+     strcpy(state_metadata[STATE_SNOW_MELT_STATE].units,
+            "1 melting, 0 not melting");
+-    strcpy(state_metadata[STATE_SNOW_MELT_STATE].description,
+-           "flag to indicate whether snowpack is in accumulation or melting phase");
++    strcpy(
++        state_metadata[STATE_SNOW_MELT_STATE].description,
++        "flag to indicate whether snowpack is in accumulation or melting phase");
+ 
+     // STATE_SNOW_COVERAGE
+     strcpy(state_metadata[STATE_SNOW_COVERAGE].varname, "STATE_SNOW_COVERAGE");
+@@ -360,8 +361,9 @@ set_state_meta_data_info()
+                "lake_snow_melting_phase");
+         strcpy(state_metadata[STATE_LAKE_SNOW_MELT_STATE].units,
+                "1 melting, 0 not melting");
+-        strcpy(state_metadata[STATE_LAKE_SNOW_MELT_STATE].description,
+-               "flag to indicate whether snowpack is in accumulation or melting phase on lake ice");
++        strcpy(
++            state_metadata[STATE_LAKE_SNOW_MELT_STATE].description,
++            "flag to indicate whether snowpack is in accumulation or melting phase on lake ice");
+ 
+         // STATE_LAKE_SNOW_COVERAGE
+         strcpy(state_metadata[STATE_LAKE_SNOW_COVERAGE].varname,
+@@ -481,8 +483,9 @@ set_state_meta_data_info()
+         strcpy(state_metadata[STATE_LAKE_ACTIVE_LAYERS].standard_name,
+                "lake_active_layers");
+         strcpy(state_metadata[STATE_LAKE_ACTIVE_LAYERS].units, "-");
+-        strcpy(state_metadata[STATE_LAKE_ACTIVE_LAYERS].description,
+-               "number of nodes whose corresponding layers currently contain water");
++        strcpy(
++            state_metadata[STATE_LAKE_ACTIVE_LAYERS].description,
++            "number of nodes whose corresponding layers currently contain water");
+ 
+         // STATE_LAKE_LAYER_DZ
+         strcpy(state_metadata[STATE_LAKE_LAYER_DZ].varname,
+@@ -491,8 +494,9 @@ set_state_meta_data_info()
+         strcpy(state_metadata[STATE_LAKE_LAYER_DZ].standard_name,
+                "lake_thickness_layer_below_surface");
+         strcpy(state_metadata[STATE_LAKE_LAYER_DZ].units, "m");
+-        strcpy(state_metadata[STATE_LAKE_LAYER_DZ].description,
+-               "vertical thickness of all horizontal lake water layers below the surface layer");
++        strcpy(
++            state_metadata[STATE_LAKE_LAYER_DZ].description,
++            "vertical thickness of all horizontal lake water layers below the surface layer");
+ 
+         // STATE_LAKE_SURF_LAYER_DZ
+         strcpy(state_metadata[STATE_LAKE_SURF_LAYER_DZ].varname,
+@@ -541,8 +545,9 @@ set_state_meta_data_info()
+         strcpy(state_metadata[STATE_LAKE_VOLUME].long_name, "lake_volume");
+         strcpy(state_metadata[STATE_LAKE_VOLUME].standard_name, "lake_volume");
+         strcpy(state_metadata[STATE_LAKE_VOLUME].units, "m3");
+-        strcpy(state_metadata[STATE_LAKE_VOLUME].description,
+-               "lake total volume including liquid water equivalent of lake ice");
++        strcpy(
++            state_metadata[STATE_LAKE_VOLUME].description,
++            "lake total volume including liquid water equivalent of lake ice");
+ 
+         // STATE_LAKE_LAYER_TEMP
+         strcpy(state_metadata[STATE_LAKE_LAYER_TEMP].varname,
+diff --git a/vic/drivers/shared_image/src/vic_image_timing.c b/vic/drivers/shared_image/src/vic_image_timing.c
+index d5f0d41..7cb8a2d 100644
+--- a/vic/drivers/shared_image/src/vic_image_timing.c
++++ b/vic/drivers/shared_image/src/vic_image_timing.c
+@@ -122,12 +122,15 @@ write_vic_timing_table(timer_struct *timers,
+             nyears / (timers[TIMER_VIC_ALL].delta_wall / SEC_PER_DAY));
+     fprintf(LOG_DEST, "\n");
+     fprintf(LOG_DEST, "  Timing Table:\n");
+-    fprintf(LOG_DEST,
+-            "|------------|----------------------|----------------------|----------------------|----------------------|\n");
+-    fprintf(LOG_DEST,
+-            "| Timer      | Wall Time (secs)     | CPU Time (secs)      | Wall Time (secs/day) | CPU Time (secs/day)  |\n");
+-    fprintf(LOG_DEST,
+-            "|------------|----------------------|----------------------|----------------------|----------------------|\n");
++    fprintf(
++        LOG_DEST,
++        "|------------|----------------------|----------------------|----------------------|----------------------|\n");
++    fprintf(
++        LOG_DEST,
++        "| Timer      | Wall Time (secs)     | CPU Time (secs)      | Wall Time (secs/day) | CPU Time (secs/day)  |\n");
++    fprintf(
++        LOG_DEST,
++        "|------------|----------------------|----------------------|----------------------|----------------------|\n");
+     fprintf(LOG_DEST, "| Init Time  | %20g | %20g | %20g | %20g |\n",
+             timers[TIMER_VIC_INIT].delta_wall, timers[TIMER_VIC_INIT].delta_cpu,
+             timers[TIMER_VIC_INIT].delta_wall / ndays,
+@@ -145,8 +148,9 @@ write_vic_timing_table(timer_struct *timers,
+             timers[TIMER_VIC_ALL].delta_wall, timers[TIMER_VIC_ALL].delta_cpu,
+             timers[TIMER_VIC_ALL].delta_wall / ndays,
+             timers[TIMER_VIC_ALL].delta_cpu / ndays);
+-    fprintf(LOG_DEST,
+-            "|------------|----------------------|----------------------|----------------------|----------------------|\n");
++    fprintf(
++        LOG_DEST,
++        "|------------|----------------------|----------------------|----------------------|----------------------|\n");
+     fprintf(LOG_DEST, "| Force Time | %20g | %20g | %20g | %20g |\n",
+             timers[TIMER_VIC_FORCE].delta_wall,
+             timers[TIMER_VIC_FORCE].delta_cpu,
+@@ -157,8 +161,9 @@ write_vic_timing_table(timer_struct *timers,
+             timers[TIMER_VIC_WRITE].delta_cpu,
+             timers[TIMER_VIC_WRITE].delta_wall / ndays,
+             timers[TIMER_VIC_WRITE].delta_cpu / ndays);
+-    fprintf(LOG_DEST,
+-            "|------------|----------------------|----------------------|----------------------|----------------------|\n");
++    fprintf(
++        LOG_DEST,
++        "|------------|----------------------|----------------------|----------------------|----------------------|\n");
+     fprintf(LOG_DEST, "\n");
+ 
+     fprintf(LOG_DEST,
+diff --git a/vic/drivers/shared_image/src/vic_init.c b/vic/drivers/shared_image/src/vic_init.c
+index fdfcc0a..79ea284 100644
+--- a/vic/drivers/shared_image/src/vic_init.c
++++ b/vic/drivers/shared_image/src/vic_init.c
+@@ -419,9 +419,10 @@ vic_init(void)
+                 options.Nlayer);
+     }
+     if (options.Nlayer > MAX_LAYERS) {
+-        log_err("Global file wants more soil moisture layers (%zu) than "
+-                "are defined by MAX_LAYERS (%d).  Edit vic_driver_shared.h and "
+-                "recompile.", options.Nlayer, MAX_LAYERS);
++        log_err(
++            "Global file wants more soil moisture layers (%zu) than "
++            "are defined by MAX_LAYERS (%d).  Edit vic_driver_shared.h and "
++            "recompile.", options.Nlayer, MAX_LAYERS);
+     }
+ 
+     // latitude and longitude
+@@ -1206,7 +1207,8 @@ vic_init(void)
+                 // library
+                 found = false;
+                 for (k = 0; k < options.NVEGTYPES; k++) {
+-                    if (veg_con[i][vidx].veg_class == veg_lib[i][k].veg_class) {
++                    if (veg_con[i][vidx].veg_class ==
++                        veg_lib[i][k].veg_class) {
+                         found = true;
+                         break;
+                     }
+diff --git a/vic/drivers/shared_image/src/vic_restore.c b/vic/drivers/shared_image/src/vic_restore.c
+index e1389b3..be1b43c 100644
+--- a/vic/drivers/shared_image/src/vic_restore.c
++++ b/vic/drivers/shared_image/src/vic_restore.c
+@@ -133,9 +133,11 @@ vic_restore(void)
+             d5start[1] = k;
+             for (j = 0; j < options.Nlayer; j++) {
+                 d5start[2] = j;
+-                get_scatter_nc_field_double(&(filenames.init_state),
+-                                            state_metadata[STATE_SOIL_MOISTURE].varname,
+-                                            d5start, d5count, dvar);
++                get_scatter_nc_field_double(
++                    &(filenames.init_state),
++                    state_metadata[STATE_SOIL_MOISTURE]
++                    .varname,
++                    d5start, d5count, dvar);
+                 for (i = 0; i < local_domain.ncells_active; i++) {
+                     v = veg_con_map[i].vidx[m];
+                     if (v >= 0) {
+@@ -155,9 +157,11 @@ vic_restore(void)
+                 d6start[2] = j;
+                 for (p = 0; p < options.Nfrost; p++) {
+                     d6start[3] = p;
+-                    get_scatter_nc_field_double(&(filenames.init_state),
+-                                                state_metadata[STATE_SOIL_ICE].varname,
+-                                                d6start, d6count, dvar);
++                    get_scatter_nc_field_double(
++                        &(filenames.init_state),
++                        state_metadata[STATE_SOIL_ICE].
++                        varname,
++                        d6start, d6count, dvar);
+                     for (i = 0; i < local_domain.ncells_active; i++) {
+                         v = veg_con_map[i].vidx[m];
+                         if (v >= 0) {
+@@ -174,9 +178,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_CANOPY_WATER].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_CANOPY_WATER].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -192,9 +198,11 @@ vic_restore(void)
+             d4start[0] = m;
+             for (k = 0; k < options.SNOW_BAND; k++) {
+                 d4start[1] = k;
+-                get_scatter_nc_field_double(&(filenames.init_state),
+-                                            state_metadata[STATE_ANNUALNPP].varname,
+-                                            d4start, d4count, dvar);
++                get_scatter_nc_field_double(
++                    &(filenames.init_state),
++                    state_metadata[STATE_ANNUALNPP].
++                    varname,
++                    d4start, d4count, dvar);
+                 for (i = 0; i < local_domain.ncells_active; i++) {
+                     v = veg_con_map[i].vidx[m];
+                     if (v >= 0) {
+@@ -209,9 +217,11 @@ vic_restore(void)
+             d4start[0] = m;
+             for (k = 0; k < options.SNOW_BAND; k++) {
+                 d4start[1] = k;
+-                get_scatter_nc_field_double(&(filenames.init_state),
+-                                            state_metadata[STATE_ANNUALNPPPREV].varname,
+-                                            d4start, d4count, dvar);
++                get_scatter_nc_field_double(
++                    &(filenames.init_state),
++                    state_metadata[STATE_ANNUALNPPPREV]
++                    .varname,
++                    d4start, d4count, dvar);
+                 for (i = 0; i < local_domain.ncells_active; i++) {
+                     v = veg_con_map[i].vidx[m];
+                     if (v >= 0) {
+@@ -226,9 +236,11 @@ vic_restore(void)
+             d4start[0] = m;
+             for (k = 0; k < options.SNOW_BAND; k++) {
+                 d4start[1] = k;
+-                get_scatter_nc_field_double(&(filenames.init_state),
+-                                            state_metadata[STATE_CLITTER].varname,
+-                                            d4start, d4count, dvar);
++                get_scatter_nc_field_double(
++                    &(filenames.init_state),
++                    state_metadata[STATE_CLITTER].
++                    varname,
++                    d4start, d4count, dvar);
+                 for (i = 0; i < local_domain.ncells_active; i++) {
+                     v = veg_con_map[i].vidx[m];
+                     if (v >= 0) {
+@@ -243,9 +255,11 @@ vic_restore(void)
+             d4start[0] = m;
+             for (k = 0; k < options.SNOW_BAND; k++) {
+                 d4start[1] = k;
+-                get_scatter_nc_field_double(&(filenames.init_state),
+-                                            state_metadata[STATE_CINTER].varname,
+-                                            d4start, d4count, dvar);
++                get_scatter_nc_field_double(
++                    &(filenames.init_state),
++                    state_metadata[STATE_CINTER].
++                    varname,
++                    d4start, d4count, dvar);
+                 for (i = 0; i < local_domain.ncells_active; i++) {
+                     v = veg_con_map[i].vidx[m];
+                     if (v >= 0) {
+@@ -295,9 +309,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_int(&(filenames.init_state),
+-                                     state_metadata[STATE_SNOW_MELT_STATE].varname,
+-                                     d4start, d4count, ivar);
++            get_scatter_nc_field_int(
++                &(filenames.init_state),
++                state_metadata[STATE_SNOW_MELT_STATE].
++                varname,
++                d4start, d4count, ivar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -312,9 +328,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_SNOW_COVERAGE].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_SNOW_COVERAGE].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -329,10 +347,12 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[
+-                                            STATE_SNOW_WATER_EQUIVALENT].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[
++                    STATE_SNOW_WATER_EQUIVALENT].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -347,9 +367,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_SNOW_SURF_TEMP].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_SNOW_SURF_TEMP].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -364,9 +386,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_SNOW_SURF_WATER].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_SNOW_SURF_WATER].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -381,9 +405,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_SNOW_PACK_TEMP].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_SNOW_PACK_TEMP].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -398,9 +424,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_SNOW_PACK_WATER].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_SNOW_PACK_WATER].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -415,9 +443,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_SNOW_DENSITY].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_SNOW_DENSITY].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -432,9 +462,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_SNOW_COLD_CONTENT].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_SNOW_COLD_CONTENT]
++                .varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -449,9 +481,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_SNOW_CANOPY].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_SNOW_CANOPY].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -476,9 +510,11 @@ vic_restore(void)
+             d5start[1] = k;
+             for (j = 0; j < options.Nnode; j++) {
+                 d5start[2] = j;
+-                get_scatter_nc_field_double(&(filenames.init_state),
+-                                            state_metadata[STATE_SOIL_NODE_TEMP].varname,
+-                                            d5start, d5count, dvar);
++                get_scatter_nc_field_double(
++                    &(filenames.init_state),
++                    state_metadata[STATE_SOIL_NODE_TEMP
++                    ].varname,
++                    d5start, d5count, dvar);
+                 for (i = 0; i < local_domain.ncells_active; i++) {
+                     v = veg_con_map[i].vidx[m];
+                     if (v >= 0) {
+@@ -495,7 +531,8 @@ vic_restore(void)
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+             get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_FOLIAGE_TEMPERATURE].varname,
++                                        state_metadata[
++                                            STATE_FOLIAGE_TEMPERATURE].varname,
+                                         d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+@@ -513,7 +550,8 @@ vic_restore(void)
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+             get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_ENERGY_LONGUNDEROUT].varname,
++                                        state_metadata[
++                                            STATE_ENERGY_LONGUNDEROUT].varname,
+                                         d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+@@ -530,9 +568,11 @@ vic_restore(void)
+         d4start[0] = m;
+         for (k = 0; k < options.SNOW_BAND; k++) {
+             d4start[1] = k;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_ENERGY_SNOW_FLUX].varname,
+-                                        d4start, d4count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_ENERGY_SNOW_FLUX].
++                varname,
++                d4start, d4count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 v = veg_con_map[i].vidx[m];
+                 if (v >= 0) {
+@@ -546,9 +586,11 @@ vic_restore(void)
+         // total soil moisture
+         for (j = 0; j < options.Nlayer; j++) {
+             d3start[0] = j;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_LAKE_SOIL_MOISTURE].varname,
+-                                        d3start, d3count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_LAKE_SOIL_MOISTURE
++                ].varname,
++                d3start, d3count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 all_vars[i].lake_var.soil.layer[j].moist = dvar[i];
+             }
+@@ -559,9 +601,11 @@ vic_restore(void)
+             d4start[0] = j;
+             for (p = 0; p < options.Nfrost; p++) {
+                 d4start[1] = p;
+-                get_scatter_nc_field_double(&(filenames.init_state),
+-                                            state_metadata[STATE_LAKE_SOIL_ICE].varname,
+-                                            d4start, d4count, dvar);
++                get_scatter_nc_field_double(
++                    &(filenames.init_state),
++                    state_metadata[STATE_LAKE_SOIL_ICE]
++                    .varname,
++                    d4start, d4count, dvar);
+                 for (i = 0; i < local_domain.ncells_active; i++) {
+                     all_vars[i].lake_var.soil.layer[j].ice[p] = dvar[i];
+                 }
+@@ -570,25 +614,31 @@ vic_restore(void)
+ 
+         if (options.CARBON) {
+             // litter carbon: tmpval = lake_var.soil.CLitter;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_LAKE_CLITTER].varname,
+-                                        d2start, d2count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_LAKE_CLITTER].
++                varname,
++                d2start, d2count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 all_vars[i].lake_var.soil.CLitter = dvar[i];
+             }
+ 
+             // intermediate carbon: tmpval = lake_var.soil.CInter;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_LAKE_CINTER].varname,
+-                                        d2start, d2count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_LAKE_CINTER].
++                varname,
++                d2start, d2count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 all_vars[i].lake_var.soil.CInter = dvar[i];
+             }
+ 
+             // slow carbon: tmpval = lake_var.soil.CSlow;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_LAKE_CSLOW].varname,
+-                                        d2start, d2count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_LAKE_CSLOW].
++                varname,
++                d2start, d2count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 all_vars[i].lake_var.soil.CSlow = dvar[i];
+             }
+@@ -603,82 +653,102 @@ vic_restore(void)
+         }
+ 
+         // melting state: (int)lake_var.snow.MELTING
+-        get_scatter_nc_field_int(&(filenames.init_state),
+-                                 state_metadata[STATE_LAKE_SNOW_MELT_STATE].varname,
+-                                 d2start, d2count, ivar);
++        get_scatter_nc_field_int(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SNOW_MELT_STATE].
++            varname,
++            d2start, d2count, ivar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.MELTING = ivar[i];
+         }
+ 
+         // snow covered fraction: lake_var.snow.coverage
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SNOW_COVERAGE].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SNOW_COVERAGE].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.coverage = dvar[i];
+         }
+ 
+         // snow water equivalent: lake_var.snow.swq
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[
+-                                        STATE_LAKE_SNOW_WATER_EQUIVALENT].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[
++                STATE_LAKE_SNOW_WATER_EQUIVALENT].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.swq = dvar[i];
+         }
+ 
+         // snow surface temperature: lake_var.snow.surf_temp
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SNOW_SURF_TEMP].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SNOW_SURF_TEMP].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.surf_temp = dvar[i];
+         }
+ 
+         // snow surface water: lake_var.snow.surf_water
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SNOW_SURF_WATER].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SNOW_SURF_WATER].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.surf_water = dvar[i];
+         }
+ 
+         // snow pack temperature: lake_var.snow.pack_temp
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SNOW_PACK_TEMP].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SNOW_PACK_TEMP].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.pack_temp = dvar[i];
+         }
+ 
+         // snow pack water: lake_var.snow.pack_water
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SNOW_PACK_WATER].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SNOW_PACK_WATER].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.pack_water = dvar[i];
+         }
+ 
+         // snow density: lake_var.snow.density
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SNOW_SURF_TEMP].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SNOW_SURF_TEMP].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.density = dvar[i];
+         }
+ 
+         // snow cold content: lake_var.snow.coldcontent
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SNOW_COLD_CONTENT].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SNOW_COLD_CONTENT
++            ].varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.coldcontent = dvar[i];
+         }
+ 
+         // snow canopy storage: lake_var.snow.snow_canopy
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SNOW_CANOPY].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SNOW_CANOPY].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.snow.snow_canopy = dvar[i];
+         }
+@@ -687,7 +757,8 @@ vic_restore(void)
+         for (j = 0; j < options.Nnode; j++) {
+             d3start[0] = j;
+             get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_LAKE_SOIL_NODE_TEMP].varname,
++                                        state_metadata[
++                                            STATE_LAKE_SOIL_NODE_TEMP].varname,
+                                         d3start, d3count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 all_vars[i].lake_var.soil.layer[j].moist = dvar[i];
+@@ -695,9 +766,11 @@ vic_restore(void)
+         }
+ 
+         // lake active layers: lake_var.activenod
+-        get_scatter_nc_field_int(&(filenames.init_state),
+-                                 state_metadata[STATE_LAKE_ACTIVE_LAYERS].varname,
+-                                 d2start, d2count, ivar);
++        get_scatter_nc_field_int(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_ACTIVE_LAYERS].
++            varname,
++            d2start, d2count, ivar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.activenod = ivar[i];
+         }
+@@ -711,9 +784,11 @@ vic_restore(void)
+         }
+ 
+         // lake surface layer thickness: lake_var.surfdz
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SURF_LAYER_DZ].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SURF_LAYER_DZ].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.surfdz = dvar[i];
+         }
+@@ -739,9 +814,11 @@ vic_restore(void)
+         }
+ 
+         // lake surface area: lake_var.sarea
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_SURF_AREA].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_SURF_AREA].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.sarea = dvar[i];
+         }
+@@ -757,51 +834,63 @@ vic_restore(void)
+         // lake layer temperatures: lake_var.temp[nidx]
+         for (j = 0; j < options.NLAKENODES; j++) {
+             d3start[0] = j;
+-            get_scatter_nc_field_double(&(filenames.init_state),
+-                                        state_metadata[STATE_LAKE_LAYER_TEMP].varname,
+-                                        d3start, d3count, dvar);
++            get_scatter_nc_field_double(
++                &(filenames.init_state),
++                state_metadata[STATE_LAKE_LAYER_TEMP].
++                varname,
++                d3start, d3count, dvar);
+             for (i = 0; i < local_domain.ncells_active; i++) {
+                 all_vars[i].lake_var.temp[j] = dvar[i];
+             }
+         }
+ 
+         // vertical average lake temperature: lake_var.tempavg
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_AVERAGE_TEMP].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_AVERAGE_TEMP].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.tempavg = dvar[i];
+         }
+ 
+         // lake ice area fraction: lake_var.areai
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_ICE_AREA_FRAC].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_ICE_AREA_FRAC].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.areai = dvar[i];
+         }
+ 
+         // new lake ice area fraction: lake_var.new_ice_area
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_ICE_AREA_FRAC_NEW].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_ICE_AREA_FRAC_NEW
++            ].varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.new_ice_area = dvar[i];
+         }
+ 
+         // lake ice water equivalent: lake_var.ice_water_eq
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[
+-                                        STATE_LAKE_ICE_WATER_EQUIVALENT].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[
++                STATE_LAKE_ICE_WATER_EQUIVALENT].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.ice_water_eq = dvar[i];
+         }
+ 
+         // lake ice height: lake_var.hice
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_ICE_HEIGHT].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_ICE_HEIGHT].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.hice = dvar[i];
+         }
+@@ -824,7 +913,8 @@ vic_restore(void)
+ 
+         // lake ice snow surface temperature: lake_var.surf_temp
+         get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_ICE_SNOW_SURF_TEMP].varname,
++                                    state_metadata[
++                                        STATE_LAKE_ICE_SNOW_SURF_TEMP].varname,
+                                     d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.surf_temp = dvar[i];
+@@ -832,17 +922,20 @@ vic_restore(void)
+ 
+         // lake ice snow pack temperature: lake_var.pack_temp
+         get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_ICE_SNOW_PACK_TEMP].varname,
++                                    state_metadata[
++                                        STATE_LAKE_ICE_SNOW_PACK_TEMP].varname,
+                                     d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.pack_temp = dvar[i];
+         }
+ 
+         // lake ice snow coldcontent: lake_var.coldcontent
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[
+-                                        STATE_LAKE_ICE_SNOW_COLD_CONTENT].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[
++                STATE_LAKE_ICE_SNOW_COLD_CONTENT].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.coldcontent = dvar[i];
+         }
+@@ -866,17 +959,21 @@ vic_restore(void)
+         }
+ 
+         // lake ice snow albedo: lake_var.SAlbedo
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_ICE_SNOW_ALBEDO].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_ICE_SNOW_ALBEDO].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.SAlbedo = dvar[i];
+         }
+ 
+         // lake ice snow depth: lake_var.sdepth
+-        get_scatter_nc_field_double(&(filenames.init_state),
+-                                    state_metadata[STATE_LAKE_ICE_SNOW_DEPTH].varname,
+-                                    d2start, d2count, dvar);
++        get_scatter_nc_field_double(
++            &(filenames.init_state),
++            state_metadata[STATE_LAKE_ICE_SNOW_DEPTH].
++            varname,
++            d2start, d2count, dvar);
+         for (i = 0; i < local_domain.ncells_active; i++) {
+             all_vars[i].lake_var.sdepth = dvar[i];
+         }
+diff --git a/vic/drivers/shared_image/src/vic_store.c b/vic/drivers/shared_image/src/vic_store.c
+index 602dac2..3f2a5c5 100644
+--- a/vic/drivers/shared_image/src/vic_store.c
++++ b/vic/drivers/shared_image/src/vic_store.c
+@@ -1712,11 +1712,14 @@ initialize_state_file(char           *filename,
+                             NC_DOUBLE, ndims, dimids, &(lon_var_id));
+         check_nc_status(status, "Error defining lon variable in %s", filename);
+ 
+-        status = nc_put_att_text(nc_state_file->nc_id, lon_var_id, "long_name", strlen(
+-                                     "longitude"), "longitude");
++        status =
++            nc_put_att_text(nc_state_file->nc_id, lon_var_id, "long_name",
++                            strlen(
++                                "longitude"), "longitude");
+         check_nc_status(status, "Error adding attribute in %s", filename);
+-        status = nc_put_att_text(nc_state_file->nc_id, lon_var_id, "units", strlen(
+-                                     "degrees_east"), "degrees_east");
++        status =
++            nc_put_att_text(nc_state_file->nc_id, lon_var_id, "units", strlen(
++                                "degrees_east"), "degrees_east");
+         check_nc_status(status, "Error adding attribute in %s", filename);
+         status = nc_put_att_text(nc_state_file->nc_id, lon_var_id,
+                                  "standard_name", strlen(
+@@ -1733,11 +1736,14 @@ initialize_state_file(char           *filename,
+                             NC_DOUBLE, ndims, dimids, &(lat_var_id));
+         check_nc_status(status, "Error defining lat variable (%s) in %s",
+                         global_domain.info.lat_var, filename);
+-        status = nc_put_att_text(nc_state_file->nc_id, lat_var_id, "long_name", strlen(
+-                                     "latitude"), "latitude");
++        status =
++            nc_put_att_text(nc_state_file->nc_id, lat_var_id, "long_name",
++                            strlen(
++                                "latitude"), "latitude");
+         check_nc_status(status, "Error adding attribute in %s", filename);
+-        status = nc_put_att_text(nc_state_file->nc_id, lat_var_id, "units", strlen(
+-                                     "degrees_north"), "degrees_north");
++        status =
++            nc_put_att_text(nc_state_file->nc_id, lat_var_id, "units", strlen(
++                                "degrees_north"), "degrees_north");
+         check_nc_status(status, "Error adding attribute in %s", filename);
+         status = nc_put_att_text(nc_state_file->nc_id, lat_var_id,
+                                  "standard_name", strlen("latitude"),
+diff --git a/vic/vic_run/include/vic_log.h b/vic/vic_run/include/vic_log.h
+index cfaf4a1..9d8d2ee 100644
+--- a/vic/vic_run/include/vic_log.h
++++ b/vic/vic_run/include/vic_log.h
+@@ -73,7 +73,7 @@ void setup_logging(int id, char log_path[], FILE **logfile);
+ // Debug Level
+ #if LOG_LVL < 10
+ #define debug(M, ...) fprintf(LOG_DEST, "[DEBUG] %s:%d: " M "\n", __FILE__, \
+-                              __LINE__, ## __VA_ARGS__); fflush(LOG_DEST);
++                              __LINE__, ## __VA_ARGS__); fflush(LOG_DEST)
+ #else
+ #define debug(M, ...)
+ 
+@@ -111,13 +111,13 @@ void setup_logging(int id, char log_path[], FILE **logfile);
+ #define log_err(M, ...) print_trace(); fprintf(LOG_DEST, \
+                                                "[ERROR] errno: %s: " M "\n", \
+                                                clean_errno(), ## __VA_ARGS__); \
+-    exit(EXIT_FAILURE);
++    exit(EXIT_FAILURE)
+ #else
+ #define log_err(M, ...) print_trace(); fprintf(LOG_DEST, \
+-                                               "[ERROR] %s:%d: errno: %s: " M "\n", \
+-                                               __FILE__, __LINE__, \
++                                               "[ERROR] %s:%d: errno: %s: " M \
++                                               "\n", __FILE__, __LINE__, \
+                                                clean_errno(), ## __VA_ARGS__); \
+-    exit(EXIT_FAILURE);
++    exit(EXIT_FAILURE)
+ #endif
+ 
+ // These depend on previously defined macros
+@@ -126,17 +126,17 @@ void setup_logging(int id, char log_path[], FILE **logfile);
+ // here means that it just doesn't print a message, it still does the
+ // check.  MKAY?
+ #define check_debug(A, M, ...) if (!(A)) {debug(M, ## __VA_ARGS__); errno = 0; \
+-                                          exit(EXIT_FAILURE);}
++                                          exit(EXIT_FAILURE); }
+ 
+-#define check(A, M, ...) if (!(A)) {log_err(M, ## __VA_ARGS__); errno = 0; exit( \
+-                                        EXIT_FAILURE);}
++#define check(A, M, ...) if (!(A)) {log_err(M, ## __VA_ARGS__); errno = 0; \
++                                    exit(EXIT_FAILURE); }
+ #define check_alloc_status(A, M, \
+                            ...) if (A == NULL) {log_err(M, ## __VA_ARGS__); \
+-                                                errno = 0; exit( \
+-                                                    EXIT_FAILURE);}
++                                                errno = 0; \
++                                                exit(EXIT_FAILURE); }
+ 
+ #define sentinel(M, ...)  {log_err(M, ## __VA_ARGS__); errno = 0; exit( \
+-                               EXIT_FAILURE);}
++                               EXIT_FAILURE); }
+ 
+ #define check_mem(A) check((A), "Out of memory.")
+ 
+@@ -144,7 +144,7 @@ void setup_logging(int id, char log_path[], FILE **logfile);
+                               E), E, __FUNCTION__, __LINE__)
+ 
+ #define error_response(F, C, M, ...)  {Response_send_status(F, &HTTP_ ## C); \
+-                                       sentinel(M, ## __VA_ARGS__);}
++                                       sentinel(M, ## __VA_ARGS__); }
+ 
+ #define error_unless(T, F, C, M, ...) if (!(T)) \
+         error_response(F, C, M, ## __VA_ARGS__)
+diff --git a/vic/vic_run/src/CalcAerodynamic.c b/vic/vic_run/src/CalcAerodynamic.c
+index 723ab22..7952c41 100644
+--- a/vic/vic_run/src/CalcAerodynamic.c
++++ b/vic/vic_run/src/CalcAerodynamic.c
+@@ -155,9 +155,9 @@ CalcAerodynamic(bool    OverStory,          /* overstory flag */
+             U[2] = Uh * exp(n * ((2. + Z0_SNOW) / Height - 1.));
+             Ra[2] = log(Zt / Z0_SNOW) * log(Zt / Z0_SNOW) /
+                     (K2 * Ut) +
+-                    Height *
+-                    log((ref_height[0] -
+-                         d_Upper) / Z0_Upper) / (n * K2 * (Zw - d_Upper)) *
++                    Height *log((ref_height[0] -
++                                 d_Upper) /
++                                Z0_Upper) / (n * K2 * (Zw - d_Upper)) *
+                     (exp(n *
+                          (1 - Zt /
+                           Height)) - exp(n * (1 - (Z0_SNOW + 2.) / Height)));
+@@ -171,9 +171,9 @@ CalcAerodynamic(bool    OverStory,          /* overstory flag */
+             U[2] = Uh;
+             Ra[2] = log(Zt / Z0_SNOW) * log(Zt / Z0_SNOW) /
+                     (K2 * Ut) +
+-                    Height *
+-                    log((ref_height[0] -
+-                         d_Upper) / Z0_Upper) / (n * K2 * (Zw - d_Upper)) *
++                    Height *log((ref_height[0] -
++                                 d_Upper) /
++                                Z0_Upper) / (n * K2 * (Zw - d_Upper)) *
+                     (exp(n * (1 - Zt / Height)) - 1);
+             log_warn("Top of overstory is less than 2 meters above the lower "
+                      "boundary");
+diff --git a/vic/vic_run/src/CalcBlowingSnow.c b/vic/vic_run/src/CalcBlowingSnow.c
+index 8435791..12e9a1b 100644
+--- a/vic/vic_run/src/CalcBlowingSnow.c
++++ b/vic/vic_run/src/CalcBlowingSnow.c
+@@ -126,19 +126,19 @@ CalcBlowingSnow(double   Dt,
+                 /* Find the limits of integration. */
+                 if (p == 0) {
+                     lower = -9999;
+-                    upper = Uo + sigma_w * log(2. * (p + 1) * area);
++                    upper = Uo + sigma_w *log(2. * (p + 1) *area);
+                 }
+                 else if (p > 0 && p < param.BLOWING_NUMINCS / 2) {
+-                    lower = Uo + sigma_w * log(2. * (p) * area);
+-                    upper = Uo + sigma_w * log(2. * (p + 1) * area);
++                    lower = Uo + sigma_w *log(2. * (p) *area);
++                    upper = Uo + sigma_w *log(2. * (p + 1) *area);
+                 }
+                 else if (p < (param.BLOWING_NUMINCS - 1) && p >=
+                          (double) param.BLOWING_NUMINCS / 2) {
+-                    lower = Uo - sigma_w * log(2. - 2. * (p * area));
+-                    upper = Uo - sigma_w * log(2. - 2. * ((p + 1.) * area));
++                    lower = Uo - sigma_w *log(2. - 2. * (p * area));
++                    upper = Uo - sigma_w *log(2. - 2. * ((p + 1.) * area));
+                 }
+                 else if (p == param.BLOWING_NUMINCS - 1) {
+-                    lower = Uo - sigma_w * log(2. - 2. * (p * area));
++                    lower = Uo - sigma_w *log(2. - 2. * (p * area));
+                     upper = 9999;
+                 }
+ 
+@@ -271,18 +271,18 @@ CalcBlowingSnow(double   Dt,
+  *****************************************************************************/
+ double
+ qromb(double (*funcd)(),
+-      double   es,
+-      double   Wind,
+-      double   AirDens,
+-      double   ZO,
+-      double   EactAir,
+-      double   F,
+-      double   hsalt,
+-      double   phi_r,
+-      double   ushear,
+-      double   Zrh,
+-      double   a,
+-      double   b)
++      double es,
++      double Wind,
++      double AirDens,
++      double ZO,
++      double EactAir,
++      double F,
++      double hsalt,
++      double phi_r,
++      double ushear,
++      double Zrh,
++      double a,
++      double b)
+ {
+     extern parameters_struct param;
+ 
+@@ -363,19 +363,19 @@ polint(double  xa[],
+  *****************************************************************************/
+ double
+ trapzd(double (*funcd)(),
+-       double   es,
+-       double   Wind,
+-       double   AirDens,
+-       double   ZO,
+-       double   EactAir,
+-       double   F,
+-       double   hsalt,
+-       double   phi_r,
+-       double   ushear,
+-       double   Zrh,
+-       double   a,
+-       double   b,
+-       int      n)
++       double es,
++       double Wind,
++       double AirDens,
++       double ZO,
++       double EactAir,
++       double F,
++       double hsalt,
++       double phi_r,
++       double ushear,
++       double Zrh,
++       double a,
++       double b,
++       int    n)
+ {
+     double        x, tnm, sum, del;
+     static double s;
+@@ -542,7 +542,7 @@ sub_with_height(double z,
+     fluctuat_v = 0.005 * pow(Wind, 1.36);
+ 
+     // Ventilation velocity for turbulent suspension Lee (1975)
+-    Vtz = terminal_v + 3. * fluctuat_v * cos(CONST_PI / 4.);
++    Vtz = terminal_v + 3. *fluctuat_v *cos(CONST_PI / 4.);
+ 
+     Re = 2. * Rmean * Vtz / param.BLOWING_KIN_VIS;
+     Nu = 1.79 + 0.606 * pow(Re, 0.5);
+diff --git a/vic/vic_run/src/calc_surf_energy_bal.c b/vic/vic_run/src/calc_surf_energy_bal.c
+index 01abda8..c47dcdc 100644
+--- a/vic/vic_run/src/calc_surf_energy_bal.c
++++ b/vic/vic_run/src/calc_surf_energy_bal.c
+@@ -698,15 +698,19 @@ calc_surf_energy_bal(double             Le,
+             /** Check for Thin Snowpack which only Partially Covers Grid Cell
+                 exists only if not snowing and snowpack has started to melt **/
+             if (options.SPATIAL_SNOW) {
+-                snow->coverage = calc_snow_coverage(&snow->store_snow,
+-                                                    soil_con->max_snow_distrib_slope,
+-                                                    snow_coverage, snow->swq,
+-                                                    old_swq, snow->depth, old_depth,
+-                                                    (*melt) - snow->vapor_flux,
+-                                                    &snow->max_snow_depth, snowfall,
+-                                                    &snow->store_swq,
+-                                                    &snow->snow_distrib_slope,
+-                                                    &snow->store_coverage);
++                snow->coverage = calc_snow_coverage(
++                    &snow->store_snow,
++                    soil_con->
++                    max_snow_distrib_slope,
++                    snow_coverage, snow->swq,
++                    old_swq, snow->depth,
++                    old_depth,
++                    (*melt) - snow->vapor_flux,
++                    &snow->max_snow_depth,
++                    snowfall,
++                    &snow->store_swq,
++                    &snow->snow_distrib_slope,
++                    &snow->store_coverage);
+             }
+             else {
+                 if (snow->swq > 0) {
+@@ -1076,9 +1080,10 @@ error_print_surf_energy_bal(double  Ts,
+        Main Routine
+     ***************/
+ 
+-    log_warn("calc_surf_energy_bal failed to converge to a solution in "
+-             "root_brent.  Variable values will be dumped to the screen, check "
+-             "for invalid values.");
++    log_warn(
++        "calc_surf_energy_bal failed to converge to a solution in "
++        "root_brent.  Variable values will be dumped to the screen, check "
++        "for invalid values.");
+ 
+     /* Print Variables */
+     /* general model terms */
+diff --git a/vic/vic_run/src/canopy_evap.c b/vic/vic_run/src/canopy_evap.c
+index 8f66894..0ae774c 100644
+--- a/vic/vic_run/src/canopy_evap.c
++++ b/vic/vic_run/src/canopy_evap.c
+@@ -120,7 +120,7 @@ canopy_evap(layer_data_struct *layer,
+ 
+     /* compute fraction of canopy that is dry */
+     if (veg_var->Wdmax > 0) {
+-        *dryFrac = 1.0 - f * pow((tmp_Wdew / veg_var->Wdmax), (2.0 / 3.0));
++        *dryFrac = 1.0 - f *pow((tmp_Wdew / veg_var->Wdmax), (2.0 / 3.0));
+     }
+     else {
+         *dryFrac = 0;
+@@ -367,7 +367,6 @@ transpiration(layer_data_struct *layer,
+        Evapotranspiration is restricted by low soil moisture. Evaporation
+        is computed independantly from each soil layer.
+     *********************************************************************/
+-
+     else {
+         /* Initialize conductances for aggregation over soil layers */
+         gc = 0;
+diff --git a/vic/vic_run/src/estimate_T1.c b/vic/vic_run/src/estimate_T1.c
+index 59841a1..973d1b1 100644
+--- a/vic/vic_run/src/estimate_T1.c
++++ b/vic/vic_run/src/estimate_T1.c
+@@ -51,7 +51,7 @@ estimate_T1(double Ts,
+ 
+     C1 = Cs2 * dp / D2 * (1. - exp(-D2 / dp));
+     C2 = -(1. - exp(D1 / dp)) * exp(-D2 / dp);
+-    C3 = kappa1 / D1 - kappa2 / D1 + kappa2 / D1 * exp(-D1 / dp);
++    C3 = kappa1 / D1 - kappa2 / D1 + kappa2 / D1 *exp(-D1 / dp);
+ 
+     T1 = (kappa1 / 2. / D1 / D2 * (Ts) + C1 / delta_t * T1_old +
+           (2. * C2 - 1. + exp(-D1 / dp)) * kappa2 / 2. / D1 / D2 * T2) /
+diff --git a/vic/vic_run/src/faparl.c b/vic/vic_run/src/faparl.c
+index a825f9f..c463443 100644
+--- a/vic/vic_run/src/faparl.c
++++ b/vic/vic_run/src/faparl.c
+@@ -283,7 +283,7 @@ faparl(double *CanopLayerBnd,
+            ! Loop over all canopy layers except the final layer
+            !-----------------------------------------------------------*/
+         for (cidx = 0; cidx < options.Ncanopy - 1; cidx++) {
+-///*---------------------------------------------------------------------------
++// /*---------------------------------------------------------------------------
+ // ! p2=1/p1
+ // !---------------------------------------------------------------------------*/
+ 
+diff --git a/vic/vic_run/src/func_canopy_energy_bal.c b/vic/vic_run/src/func_canopy_energy_bal.c
+index 8aeea60..5f5a9d0 100644
+--- a/vic/vic_run/src/func_canopy_energy_bal.c
++++ b/vic/vic_run/src/func_canopy_energy_bal.c
+@@ -217,7 +217,7 @@ func_canopy_energy_bal(double  Tfoliage,
+         /* Calculate the latent heat flux */
+ 
+         Ls = calc_latent_heat_of_sublimation(Tfoliage);
+-        *LatentHeatSub = Ls **VaporMassFlux * CONST_RHOFW;
++        *LatentHeatSub = Ls * *VaporMassFlux * CONST_RHOFW;
+         *LatentHeat = 0;
+         *Evap = 0;
+         veg_var->throughfall = 0;
+@@ -246,7 +246,7 @@ func_canopy_energy_bal(double  Tfoliage,
+                             root, dryFrac, shortwave, Catm, CanopLayerBnd);
+         *Wdew /= MM_PER_M;
+ 
+-        *LatentHeat = Le **Evap * CONST_RHOFW;
++        *LatentHeat = Le * *Evap * CONST_RHOFW;
+         *LatentHeatSub = 0;
+     }
+ 
+diff --git a/vic/vic_run/src/ice_melt.c b/vic/vic_run/src/ice_melt.c
+index 52cf3ab..d9b2d64 100644
+--- a/vic/vic_run/src/ice_melt.c
++++ b/vic/vic_run/src/ice_melt.c
+@@ -369,26 +369,28 @@ ice_melt(double            z2,
+                     snow->surf_temp_fbcount++;
+                 }
+                 else {
+-                    ErrorIcePackEnergyBalance(snow->surf_temp, delta_t,
+-                                              aero_resist,
+-                                              aero_resist_used, z2,
+-                                              displacement, Z0, wind, net_short,
+-                                              longwave, density, Le, air_temp,
+-                                              pressure * PA_PER_KPA,
+-                                              vpd * PA_PER_KPA,
+-                                              vp * PA_PER_KPA,
+-                                              RainFall, SurfaceSwq,
+-                                              snow->surf_water, OldTSurf,
+-                                              &RefreezeEnergy,
+-                                              &vapor_flux, &blowing_flux,
+-                                              &surface_flux,
+-                                              &advection, deltaCC, Tcutoff,
+-                                              avgcond, SWconducted,
+-                                              snow->swq * CONST_RHOFW / param.LAKE_RHOSNOW,
+-                                              param.LAKE_RHOSNOW, surf_atten,
+-                                              &SnowFlux, &latent_heat,
+-                                              &latent_heat_sub,
+-                                              &sensible_heat, &LWnet);
++                    ErrorIcePackEnergyBalance(
++                        snow->surf_temp, delta_t,
++                        aero_resist,
++                        aero_resist_used, z2,
++                        displacement, Z0, wind, net_short,
++                        longwave, density, Le, air_temp,
++                        pressure * PA_PER_KPA,
++                        vpd * PA_PER_KPA,
++                        vp * PA_PER_KPA,
++                        RainFall, SurfaceSwq,
++                        snow->surf_water, OldTSurf,
++                        &RefreezeEnergy,
++                        &vapor_flux, &blowing_flux,
++                        &surface_flux,
++                        &advection, deltaCC, Tcutoff,
++                        avgcond, SWconducted,
++                        snow->swq * CONST_RHOFW /
++                        param.LAKE_RHOSNOW,
++                        param.LAKE_RHOSNOW, surf_atten,
++                        &SnowFlux, &latent_heat,
++                        &latent_heat_sub,
++                        &sensible_heat, &LWnet);
+                     return(ERROR);
+                 }
+             }
+diff --git a/vic/vic_run/src/initialize_lake.c b/vic/vic_run/src/initialize_lake.c
+index b2acf58..072ad1a 100644
+--- a/vic/vic_run/src/initialize_lake.c
++++ b/vic/vic_run/src/initialize_lake.c
+@@ -213,7 +213,8 @@ initialize_lake(lake_var_struct  *lake,
+         lake->soil.layer[i].T = lake->temp[0];
+         lake->soil.layer[i].evap = 0.0;
+         lake->soil.layer[i].kappa = cell->layer[i].kappa;
+-        lake->soil.layer[i].moist = soil_con->porosity[i] * soil_con->depth[i] *
++        lake->soil.layer[i].moist = soil_con->porosity[i] *
++                                    soil_con->depth[i] *
+                                     MM_PER_M;
+         lake->soil.layer[i].phi = cell->layer[i].phi;
+         for (j = 0; j < options.Nfrost; j++) {
+diff --git a/vic/vic_run/src/lakes.eb.c b/vic/vic_run/src/lakes.eb.c
+index 2242c7c..98faad5 100644
+--- a/vic/vic_run/src/lakes.eb.c
++++ b/vic/vic_run/src/lakes.eb.c
+@@ -335,16 +335,18 @@ solve_lake(double           snowfall,
+              * -------------------------------------------------------------------- */
+ 
+             if (lake->activenod > 0) {
+-                ErrorFlag = water_under_ice(freezeflag, sw_ice, wind, Ti,
+-                                            water_density,
+-                                            soil_con.lat,
+-                                            lake->activenod, lake->dz,
+-                                            lake->surfdz,
+-                                            Tcutoff, &qw, lake->surface,
+-                                            &temphi, water_cp,
+-                                            mixdepth, lake->hice,
+-                                            lake_snow->swq * CONST_RHOFW / param.LAKE_RHOSNOW,
+-                                            dt, &energy_out_bottom_ice);
++                ErrorFlag = water_under_ice(
++                    freezeflag, sw_ice, wind, Ti,
++                    water_density,
++                    soil_con.lat,
++                    lake->activenod, lake->dz,
++                    lake->surfdz,
++                    Tcutoff, &qw, lake->surface,
++                    &temphi, water_cp,
++                    mixdepth, lake->hice,
++                    lake_snow->swq * CONST_RHOFW /
++                    param.LAKE_RHOSNOW,
++                    dt, &energy_out_bottom_ice);
+                 if (ErrorFlag == ERROR) {
+                     return (ERROR);
+                 }
+@@ -845,7 +847,6 @@ eddy(int     freezeflag,
+     /**********************************************************************
+     * Avoid too low wind speeds for computational stability.
+     **********************************************************************/
+-
+     else {
+         if (wind < 1.0) {
+             wind = 1.0;
+@@ -1987,7 +1988,8 @@ water_balance(lake_var_struct *lake,
+ 
+             for (j = 0; j < options.Nlayer; j++) {
+                 if (Recharge >
+-                    (soil_con.max_moist[j] - cell[iveg][band].layer[j].moist)) {
++                    (soil_con.max_moist[j] -
++                     cell[iveg][band].layer[j].moist)) {
+                     Recharge -=
+                         (soil_con.max_moist[j] -
+                          cell[iveg][band].layer[j].moist);
+@@ -2034,8 +2036,10 @@ water_balance(lake_var_struct *lake,
+     baseflow_out_mm = frac * rel_moist;
+     if (rel_moist > soil_con.Ws) {
+         frac = (rel_moist - soil_con.Ws) / (1 - soil_con.Ws);
+-        baseflow_out_mm += Dsmax * (1 - soil_con.Ds / soil_con.Ws) * pow(frac,
+-                                                                         soil_con.c);
++        baseflow_out_mm += Dsmax * (1 - soil_con.Ds / soil_con.Ws) * pow(
++            frac,
++            soil_con
++            .c);
+     }
+     if (baseflow_out_mm < 0) {
+         baseflow_out_mm = 0;
+@@ -2074,7 +2078,7 @@ water_balance(lake_var_struct *lake,
+         lake->runoff_out = 0.0;
+     }
+     else {
+-        circum = 2 * CONST_PI * pow(surfacearea / CONST_PI, 0.5);
++        circum = 2 *CONST_PI *pow(surfacearea / CONST_PI, 0.5);
+         lake->runoff_out = lake_con.wfrac * circum * dt *
+                            1.6 * pow(ldepth - lake_con.mindepth, 1.5);
+         if ((lake->volume - lake->ice_water_eq) >= lake->runoff_out) {
+diff --git a/vic/vic_run/src/massrelease.c b/vic/vic_run/src/massrelease.c
+index c977da2..31c16c7 100644
+--- a/vic/vic_run/src/massrelease.c
++++ b/vic/vic_run/src/massrelease.c
+@@ -82,7 +82,6 @@ MassRelease(double *InterceptedSnow,
+     /* (*InterceptedSnow < MIN_INTERCEPTION_STORAGE) If the amount of snow in
+        the canopy is less than some minimum value, MIN_INTERCEPTION_STORAGE,
+        then only melt can occur and there is no mass release. */
+-
+     else {
+         TempDrip = min(*TempInterceptionStorage, *InterceptedSnow);
+         *Drip += TempDrip;
+diff --git a/vic/vic_run/src/newt_raph_func_fast.c b/vic/vic_run/src/newt_raph_func_fast.c
+index fc2ea03..b4d11ca 100644
+--- a/vic/vic_run/src/newt_raph_func_fast.c
++++ b/vic/vic_run/src/newt_raph_func_fast.c
+@@ -80,7 +80,8 @@ newt_raph(void (*vecfunc)(double x[], double fvec[], int n, int init, ...),
+                 param.NEWT_RAPH_R_MIN) {
+                 x[i] += p[i] * param.NEWT_RAPH_RELAX1;
+             }
+-            else if (k > 20 && k <= 60 && x[i] < param.NEWT_RAPH_R_MAX && x[i] >
++            else if (k > 20 && k <= 60 && x[i] < param.NEWT_RAPH_R_MAX &&
++                     x[i] >
+                      param.NEWT_RAPH_R_MIN) {
+                 x[i] += p[i] * param.NEWT_RAPH_RELAX2;
+             }
+diff --git a/vic/vic_run/src/photosynth.c b/vic/vic_run/src/photosynth.c
+index 5251f36..ad2f2c1 100644
+--- a/vic/vic_run/src/photosynth.c
++++ b/vic/vic_run/src/photosynth.c
+@@ -183,7 +183,7 @@ photosynth(char    Ctype,
+            !   which is not considered in INITVEGDATA
+            ! K scales of course with EK
+         ********************************************************************************/
+-        K = CO2Specificity * 1.E3 * NscaleFactor * exp(
++        K = CO2Specificity * 1.E3 *NscaleFactor *exp(
+             param.PHOTO_EK * (T0 / T1) / (CONST_RGAS * T));
+ 
+         /********************************************************************************
+diff --git a/vic/vic_run/src/root_brent.c b/vic/vic_run/src/root_brent.c
+index 2adef40..b2f9f00 100644
+--- a/vic/vic_run/src/root_brent.c
++++ b/vic/vic_run/src/root_brent.c
+@@ -278,7 +278,7 @@ root_brent(double LowerBound,
+             fc = fa;
+         }
+ 
+-        tol = 2 * DBL_EPSILON * fabs(b) + param.ROOT_BRENT_T;
++        tol = 2 *DBL_EPSILON *fabs(b) + param.ROOT_BRENT_T;
+         m = 0.5 * (c - b);
+ 
+         if (fabs(m) <= tol || fb == 0) {
+diff --git a/vic/vic_run/src/runoff.c b/vic/vic_run/src/runoff.c
+index a72a988..6915987 100644
+--- a/vic/vic_run/src/runoff.c
++++ b/vic/vic_run/src/runoff.c
+@@ -402,24 +402,27 @@ runoff(cell_data_struct  *cell,
+             moist[lindex] = tmp_layer.moist;
+         }
+ 
+-        ErrorFlag = distribute_node_moisture_properties(energy->moist,
+-                                                        energy->ice,
+-                                                        energy->kappa_node,
+-                                                        energy->Cs_node,
+-                                                        soil_con->Zsum_node,
+-                                                        energy->T,
+-                                                        soil_con->max_moist_node,
+-                                                        soil_con->expt_node,
+-                                                        soil_con->bubble_node,
+-                                                        moist, soil_con->depth,
+-                                                        soil_con->soil_dens_min,
+-                                                        soil_con->bulk_dens_min,
+-                                                        soil_con->quartz,
+-                                                        soil_con->soil_density,
+-                                                        soil_con->bulk_density,
+-                                                        soil_con->organic, Nnodes,
+-                                                        options.Nlayer,
+-                                                        soil_con->FS_ACTIVE);
++        ErrorFlag = distribute_node_moisture_properties(
++            energy->moist,
++            energy->ice,
++            energy->kappa_node,
++            energy->Cs_node,
++            soil_con->Zsum_node,
++            energy->T,
++            soil_con->
++            max_moist_node,
++            soil_con->expt_node,
++            soil_con->bubble_node,
++            moist, soil_con->depth,
++            soil_con->soil_dens_min,
++            soil_con->bulk_dens_min,
++            soil_con->quartz,
++            soil_con->soil_density,
++            soil_con->bulk_density,
++            soil_con->organic,
++            Nnodes,
++            options.Nlayer,
++            soil_con->FS_ACTIVE);
+         if (ErrorFlag == ERROR) {
+             return (ERROR);
+         }
+diff --git a/vic/vic_run/src/snow_intercept.c b/vic/vic_run/src/snow_intercept.c
+index f803dba..ebc1317 100644
+--- a/vic/vic_run/src/snow_intercept.c
++++ b/vic/vic_run/src/snow_intercept.c
+@@ -518,7 +518,7 @@ snow_intercept(double             Dt,
+             /* Energy released by freezing of intercepted water is added to the
+                MeltEnergy */
+ 
+-            *MeltEnergy += (CONST_LATICE **IntRain * CONST_RHOFW) / (Dt);
++            *MeltEnergy += (CONST_LATICE * *IntRain * CONST_RHOFW) / (Dt);
+             *IntRain = 0.0;
+         }
+ 
+diff --git a/vic/vic_run/src/snow_melt.c b/vic/vic_run/src/snow_melt.c
+index 94bf7cd..25d66a0 100644
+--- a/vic/vic_run/src/snow_melt.c
++++ b/vic/vic_run/src/snow_melt.c
+@@ -290,31 +290,36 @@ snow_melt(double            Le,
+                         snow->surf_temp_fbcount++;
+                     }
+                     else {
+-                        error = ErrorSnowPackEnergyBalance(snow->surf_temp,
+-                                                           iveg, band,
+-                                                           delta_t, aero_resist,
+-                                                           aero_resist_used,
+-                                                           z2, Z0, density, vp,
+-                                                           LongSnowIn, Le,
+-                                                           pressure,
+-                                                           RainFall,
+-                                                           NetShortSnow, vpd,
+-                                                           wind, (*OldTSurf),
+-                                                           coverage,
+-                                                           snow->depth,
+-                                                           snow->density,
+-                                                           snow->surf_water,
+-                                                           SurfaceSwq,
+-                                                           Tcanopy, Tgrnd,
+-                                                           &advection,
+-                                                           &advected_sensible_heat,
+-                                                           &deltaCC,
+-                                                           &grnd_flux, &latent_heat,
+-                                                           &latent_heat_sub,
+-                                                           NetLongSnow, &RefreezeEnergy,
+-                                                           &sensible_heat, &snow->vapor_flux,
+-                                                           &snow->blowing_flux,
+-                                                           &snow->surface_flux);
++                        error = ErrorSnowPackEnergyBalance(
++                            snow->surf_temp,
++                            iveg, band,
++                            delta_t, aero_resist,
++                            aero_resist_used,
++                            z2, Z0, density, vp,
++                            LongSnowIn, Le,
++                            pressure,
++                            RainFall,
++                            NetShortSnow, vpd,
++                            wind, (*OldTSurf),
++                            coverage,
++                            snow->depth,
++                            snow->density,
++                            snow->surf_water,
++                            SurfaceSwq,
++                            Tcanopy, Tgrnd,
++                            &advection,
++                            &
++                            advected_sensible_heat,
++                            &deltaCC,
++                            &grnd_flux,
++                            &latent_heat,
++                            &latent_heat_sub,
++                            NetLongSnow,
++                            &RefreezeEnergy,
++                            &sensible_heat,
++                            &snow->vapor_flux,
++                            &snow->blowing_flux,
++                            &snow->surface_flux);
+                         return(error);
+                     }
+                 }
+diff --git a/vic/vic_run/src/snow_utility.c b/vic/vic_run/src/snow_utility.c
+index 8f8fb83..f8baaa5 100644
+--- a/vic/vic_run/src/snow_utility.c
++++ b/vic/vic_run/src/snow_utility.c
+@@ -136,9 +136,11 @@ snow_density(snow_data_struct *snow,
+ 
+         if (new_snow > 0.0) {
+             Ps = 0.5 * CONST_G * CONST_RHOFW * swq;
+-            ddz2 = -Ps / param.SNOW_DENS_ETA0 *
+-                   exp(-(-param.SNOW_DENS_C5 *
+-                         (Tavg - CONST_TKFRZ) + param.SNOW_DENS_C6 * density));
++            ddz2 = -Ps / param.SNOW_DENS_ETA0 *exp(-(-param.SNOW_DENS_C5 *
++                                                     (Tavg -
++                                                      CONST_TKFRZ) +
++                                                     param.SNOW_DENS_C6 *
++                                                     density));
+         }
+         else {
+             ddz2 = 0.0;
+@@ -216,7 +218,7 @@ new_snow_density(double air_temp)
+ 
+     if (options.SNOW_DENSITY == DENS_SNTHRM) {
+         // new snow density based on Hedstrom and Pomeroy (1998)
+-        density_new = param.SNOW_NEW_SNT_C1 + param.SNOW_NEW_SNT_C2 * exp(
++        density_new = param.SNOW_NEW_SNT_C1 + param.SNOW_NEW_SNT_C2 *exp(
+             air_temp / param.SNOW_NEW_SNT_C3);
+     }
+     else if (options.SNOW_DENSITY == DENS_BRAS) {
+@@ -264,14 +266,16 @@ snow_albedo(double new_snow,
+         /* Accumulation season */
+         if (cold_content < 0.0 && !MELTING) {
+             albedo = param.SNOW_NEW_SNOW_ALB * pow(param.SNOW_ALB_ACCUM_A,
+-                                                   pow((double) last_snow * dt /
++                                                   pow((double) last_snow *
++                                                       dt /
+                                                        SEC_PER_DAY,
+                                                        param.SNOW_ALB_ACCUM_B));
+         }
+         /* Melt Season */
+         else {
+             albedo = param.SNOW_NEW_SNOW_ALB * pow(param.SNOW_ALB_THAW_A,
+-                                                   pow((double) last_snow * dt /
++                                                   pow((double) last_snow *
++                                                       dt /
+                                                        SEC_PER_DAY,
+                                                        param.SNOW_ALB_THAW_B));
+         }
+diff --git a/vic/vic_run/src/solve_snow.c b/vic/vic_run/src/solve_snow.c
+index 2b9d9e5..2b29cb4 100644
+--- a/vic/vic_run/src/solve_snow.c
++++ b/vic/vic_run/src/solve_snow.c
+@@ -388,15 +388,21 @@ solve_snow(char               overstory,
+                 /** Check for Thin Snowpack which only Partially Covers Grid Cell
+                    exists only if not snowing and snowpack has started to melt **/
+                 if (options.SPATIAL_SNOW) {
+-                    snow->coverage = calc_snow_coverage(&snow->store_snow,
+-                                                        soil_con->max_snow_distrib_slope,
+-                                                        old_coverage, snow->swq,
+-                                                        old_swq, snow->depth, old_depth,
+-                                                        melt / MM_PER_M + snow->vapor_flux,
+-                                                        &snow->max_snow_depth, *snowfall,
+-                                                        &snow->store_swq,
+-                                                        &snow->snow_distrib_slope,
+-                                                        &snow->store_coverage);
++                    snow->coverage = calc_snow_coverage(
++                        &snow->store_snow,
++                        soil_con->
++                        max_snow_distrib_slope,
++                        old_coverage, snow->swq,
++                        old_swq, snow->depth,
++                        old_depth,
++                        melt / MM_PER_M +
++                        snow->vapor_flux,
++                        &snow->max_snow_depth,
++                        *snowfall,
++                        &snow->store_swq,
++                        &snow->
++                        snow_distrib_slope,
++                        &snow->store_coverage);
+                 }
+                 else {
+                     if (snow->swq > 0) {
+diff --git a/vic/vic_run/src/surface_fluxes.c b/vic/vic_run/src/surface_fluxes.c
+index 8354ba7..19432cf 100644
+--- a/vic/vic_run/src/surface_fluxes.c
++++ b/vic/vic_run/src/surface_fluxes.c
+@@ -602,32 +602,36 @@ surface_fluxes(bool                 overstory,
+                    Solve Energy Balance Components at Soil Surface
+                 **************************************************/
+ 
+-                Tsurf = calc_surf_energy_bal((*Le), LongUnderIn, NetLongSnow,
+-                                             NetShortGrnd, NetShortSnow,
+-                                             OldTSurf,
+-                                             ShortUnderIn, iter_snow.albedo,
+-                                             iter_snow_energy.latent,
+-                                             iter_snow_energy.latent_sub,
+-                                             iter_snow_energy.sensible,
+-                                             Tcanopy, VPDcanopy,
+-                                             VPcanopy,
+-                                             delta_coverage, dp,
+-                                             ice0, step_melt_energy, moist0,
+-                                             iter_snow.coverage,
+-                                             (step_snow.depth + iter_snow.depth) / 2.,
+-                                             BareAlbedo, surf_atten,
+-                                             iter_aero_resist, iter_aero_resist_veg, iter_aero_resist_used,
+-                                             displacement, &step_melt, &step_ppt,
+-                                             rainfall, ref_height, roughness,
+-                                             snowfall, wind, root, INCLUDE_SNOW,
+-                                             UnderStory, options.Nnode, Nveg,
+-                                             step_dt, hidx, iveg,
+-                                             (int) overstory, veg_class,
+-                                             CanopLayerBnd, &dryFrac, force,
+-                                             dmy, &iter_soil_energy,
+-                                             iter_layer,
+-                                             &(iter_snow), soil_con,
+-                                             &iter_soil_veg_var);
++                Tsurf = calc_surf_energy_bal(
++                    (*Le), LongUnderIn, NetLongSnow,
++                    NetShortGrnd, NetShortSnow,
++                    OldTSurf,
++                    ShortUnderIn, iter_snow.albedo,
++                    iter_snow_energy.latent,
++                    iter_snow_energy.latent_sub,
++                    iter_snow_energy.sensible,
++                    Tcanopy, VPDcanopy,
++                    VPcanopy,
++                    delta_coverage, dp,
++                    ice0, step_melt_energy, moist0,
++                    iter_snow.coverage,
++                    (step_snow.depth +
++                     iter_snow.depth) / 2.,
++                    BareAlbedo, surf_atten,
++                    iter_aero_resist,
++                    iter_aero_resist_veg, iter_aero_resist_used,
++                    displacement, &step_melt,
++                    &step_ppt,
++                    rainfall, ref_height, roughness,
++                    snowfall, wind, root, INCLUDE_SNOW,
++                    UnderStory, options.Nnode, Nveg,
++                    step_dt, hidx, iveg,
++                    (int) overstory, veg_class,
++                    CanopLayerBnd, &dryFrac, force,
++                    dmy, &iter_soil_energy,
++                    iter_layer,
++                    &(iter_snow), soil_con,
++                    &iter_soil_veg_var);
+ 
+                 if ((int) Tsurf == ERROR) {
+                     // Return error flag to skip rest of grid cell

@@ -154,8 +154,9 @@ set_output_met_data_info()
     strcpy(out_metadata[OUT_SMFROZFRAC].standard_name,
            "soil_moisture_ice_fraction");
     strcpy(out_metadata[OUT_SMFROZFRAC].units, "1");
-    strcpy(out_metadata[OUT_SMFROZFRAC].description,
-           "fraction of soil moisture (by mass) that is ice, for each soil layer");
+    strcpy(
+        out_metadata[OUT_SMFROZFRAC].description,
+        "fraction of soil moisture (by mass) that is ice, for each soil layer");
 
     /* fraction of soil moisture (by mass) that is liquid, for each soil layer */
     strcpy(out_metadata[OUT_SMLIQFRAC].varname, "OUT_SMLIQFRAC");
@@ -163,8 +164,9 @@ set_output_met_data_info()
     strcpy(out_metadata[OUT_SMLIQFRAC].standard_name,
            "soil_moisture_liquid_fraction");
     strcpy(out_metadata[OUT_SMLIQFRAC].units, "1");
-    strcpy(out_metadata[OUT_SMLIQFRAC].description,
-           "fraction of soil moisture (by mass) that is liquid, for each soil layer");
+    strcpy(
+        out_metadata[OUT_SMLIQFRAC].description,
+        "fraction of soil moisture (by mass) that is liquid, for each soil layer");
 
     /* snow interception storage in canopy [mm] */
     strcpy(out_metadata[OUT_SNOW_CANOPY].varname, "OUT_SNOW_CANOPY");
@@ -294,8 +296,9 @@ set_output_met_data_info()
     strcpy(out_metadata[OUT_ZWT_LUMPED].standard_name,
            "lumped_water_table_position");
     strcpy(out_metadata[OUT_ZWT_LUMPED].units, "cm");
-    strcpy(out_metadata[OUT_ZWT_LUMPED].description,
-           "lumped water table position (zwt of total moisture across all layers, lumped together)");
+    strcpy(
+        out_metadata[OUT_ZWT_LUMPED].description,
+        "lumped water table position (zwt of total moisture across all layers, lumped together)");
 
     // Water Balance Terms - fluxes
     /* baseflow out of the bottom layer [mm] */
@@ -1019,8 +1022,9 @@ set_output_met_data_info()
     strcpy(out_metadata[OUT_AERO_RESIST].standard_name,
            "aerodynamic_resistance");
     strcpy(out_metadata[OUT_AERO_RESIST].units, "s m-1");
-    strcpy(out_metadata[OUT_AERO_RESIST].description,
-           "scene aerodynamic resistance (tiles with overstory contribute overstory resistance; others contribue surface resistance)");
+    strcpy(
+        out_metadata[OUT_AERO_RESIST].description,
+        "scene aerodynamic resistance (tiles with overstory contribute overstory resistance; others contribue surface resistance)");
 
     /* surface aerodynamic resistance [m/s] */
     strcpy(out_metadata[OUT_AERO_RESIST1].varname, "OUT_AERO_RESIST1");
