@@ -489,6 +489,7 @@ print_option(option_struct *option)
     fprintf(LOG_DEST, "\tFCAN_SRC             : %d\n", option->FCAN_SRC);
     fprintf(LOG_DEST, "\tLAKE_PROFILE         : %d\n", option->LAKE_PROFILE);
     fprintf(LOG_DEST, "\tORGANIC_FRACT        : %d\n", option->ORGANIC_FRACT);
+    fprintf(LOG_DEST, "\tNEW_SNOW_ALB_SUPPLIED: %d\n", option->NEW_SNOW_ALB_SUPPLIED);
     fprintf(LOG_DEST, "\tSTATE_FORMAT         : %d\n", option->STATE_FORMAT);
     fprintf(LOG_DEST, "\tINIT_STATE           : %d\n", option->INIT_STATE);
     fprintf(LOG_DEST, "\tSAVE_STATE           : %d\n", option->SAVE_STATE);

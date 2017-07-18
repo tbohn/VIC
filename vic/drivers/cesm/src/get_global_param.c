@@ -338,6 +338,10 @@ get_global_param(FILE *gp)
                 sscanf(cmdstr, "%*s %s", flgstr);
                 options.ORGANIC_FRACT = str_to_bool(flgstr);
             }
+            else if (strcasecmp("NEW_SNOW_ALB_SUPPLIED", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                options.NEW_SNOW_ALB_SUPPLIED = str_to_bool(flgstr);
+            }
             else if (strcasecmp("VEGLIB_PHOTO", optstr) == 0) {
                 sscanf(cmdstr, "%*s %s", flgstr);
                 options.VEGLIB_PHOTO = str_to_bool(flgstr);

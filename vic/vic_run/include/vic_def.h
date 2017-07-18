@@ -283,6 +283,7 @@ typedef struct {
                                           FROM_VEGPARAM = use LAI values from the veg param file */
     bool LAKE_PROFILE;   /**< TRUE = user-specified lake/area profile */
     bool ORGANIC_FRACT;  /**< TRUE = organic matter fraction of each layer is read from the soil parameter file; otherwise set to 0.0. */
+    bool NEW_SNOW_ALB_SUPPLIED;  /**< TRUE = assume new_snow_albedo is supplied in the soil_parameter file */
 
     // state options
     unsigned short int STATE_FORMAT;  /**< TRUE = model state file is binary (default) */
@@ -582,6 +583,7 @@ typedef struct {
     double max_moist[MAX_LAYERS];     /**< maximum moisture content (mm) per layer */
     double max_moist_node[MAX_NODES]; /**< maximum moisture content (mm/mm) per node */
     double max_snow_distrib_slope;    /**< Maximum slope of snow depth distribution [m].  This should equal 2*depth_min, where depth_min = minimum snow pack depth below which coverage < 1.  Comment, ported from user_def.h, with questionable units: SiB uses 0.076; Rosemount data imply 0.155cm depth ~ 0.028mm swq. */
+    double new_snow_albedo;           /**< albedo of newly-fallen snow */
     double phi_s[MAX_LAYERS];         /**< soil moisture diffusion parameter (mm/mm) */
     double porosity[MAX_LAYERS];      /**< porosity (fraction) */
     double quartz[MAX_LAYERS];        /**< quartz content of soil (fraction of mineral soil volume) */

@@ -1,5 +1,4 @@
-/******************************************************************************
- * @section DESCRIPTION
+/****************************************************************************** * @section DESCRIPTION
  *
  * This routine reads soil parameters for each grid cell.
  *
@@ -583,6 +582,24 @@ read_soilparam(FILE            *soilparam,
             }
             sscanf(token, "%lf", &tempdbl);
             temp->avgJulyAirTemp = tempdbl;
+        }
+
+        /* If specified, read cell new snow albedo in the final
+           column of the soil parameter file */
+        if (options.NEW_SNOW_ALB_SUPPLIED) {
+            token = strtok(NULL, delimiters);
+            while (token != NULL && (length = strlen(token)) == 0) {
+                token = strtok(NULL, delimiters);
+            }
+            if (token == NULL) {
+                log_err("Can't find values for average new_snow_albedo Tair "
+                        " in soil file");
+            }
+            sscanf(token, "%lf", &tempdbl);
+            temp->new_snow_albedo = tempdbl;
+        }
+        else {
+          temp->new_snow_albedo = param.SNOW_NEW_SNOW_ALB;
         }
 
         /*******************************************

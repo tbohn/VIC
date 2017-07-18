@@ -83,6 +83,7 @@ initialize_options()
     options.GRID_DECIMAL = 2;
     options.JULY_TAVG_SUPPLIED = false;
     options.LAI_SRC = FROM_VEGLIB;
+    options.NEW_SNOW_ALB_SUPPLIED = false;
     options.ORGANIC_FRACT = false;
     options.VEGLIB_FCAN = false;
     options.VEGLIB_PHOTO = false;

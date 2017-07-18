@@ -285,6 +285,12 @@ display_current_settings(int mode)
     else {
         fprintf(LOG_DEST, "ORGANIC_FRACT\t\tFALSE\n");
     }
+    if (options.NEW_SNOW_ALB_SUPPLIED) {
+        fprintf(LOG_DEST, "NEW_SNOW_ALB_SUPPLIED\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "NEW_SNOW_ALB_SUPPLIED\t\tFALSE\n");
+    }
 
     fprintf(LOG_DEST, "\n");
     if (options.VEGLIB_PHOTO) {

@@ -709,6 +709,16 @@ vic_init(void)
 
     // TODO: read avgJulyAirTemp for compute treeline option
 
+    // new snow albedo
+    if (options.NEW_SNOW_ALB_SUPPLIED) {
+        // new_snow_albedo: albedo of newly-falled snow
+        get_scatter_nc_field_double(&(filenames.params), "new_snow_albedo",
+                                    d2start, d2count, dvar);
+        for (i = 0; i < local_domain.ncells_active; i++) {
+            soil_con[i].new_snow_albedo = (double) dvar[i];
+        }
+    }
+
     // Additional processing of the soil variables
     // (compute derived parameters)
     for (i = 0; i < local_domain.ncells_active; i++) {

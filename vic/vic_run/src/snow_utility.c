@@ -249,6 +249,7 @@ snow_albedo(double new_snow,
             double swq,
             double albedo,
             double cold_content,
+            double new_snow_albedo,
             double dt,
             int    last_snow,
             bool   MELTING)
@@ -257,23 +258,23 @@ snow_albedo(double new_snow,
 
     /** New Snow **/
     if (new_snow > param.SNOW_TRACESNOW && cold_content < 0.0) {
-        albedo = param.SNOW_NEW_SNOW_ALB;
+        albedo = new_snow_albedo;
     }
     /** Aged Snow **/
     else if (swq > 0.0) {
         /* Accumulation season */
         if (cold_content < 0.0 && !MELTING) {
-            albedo = param.SNOW_NEW_SNOW_ALB * pow(param.SNOW_ALB_ACCUM_A,
-                                                   pow((double) last_snow * dt /
-                                                       SEC_PER_DAY,
-                                                       param.SNOW_ALB_ACCUM_B));
+            albedo = new_snow_albedo * pow(param.SNOW_ALB_ACCUM_A,
+                                           pow((double) last_snow * dt /
+                                               SEC_PER_DAY,
+                                               param.SNOW_ALB_ACCUM_B));
         }
         /* Melt Season */
         else {
-            albedo = param.SNOW_NEW_SNOW_ALB * pow(param.SNOW_ALB_THAW_A,
-                                                   pow((double) last_snow * dt /
-                                                       SEC_PER_DAY,
-                                                       param.SNOW_ALB_THAW_B));
+            albedo = new_snow_albedo * pow(param.SNOW_ALB_THAW_A,
+                                           pow((double) last_snow * dt /
+                                               SEC_PER_DAY,
+                                               param.SNOW_ALB_THAW_B));
         }
     }
     else {

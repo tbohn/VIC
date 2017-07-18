@@ -185,9 +185,9 @@ solve_lake(double           snowfall,
          * -------------------------------------------------------------------- */
 
         alblake(Tcutoff, tair, &lake->SAlbedo, &tempalbs, &albi, &albw,
-                snowfall, lake_snow->coldcontent, dt, &lake_snow->last_snow,
-                lake_snow->swq, &lake_snow->MELTING, dmy.day_in_year,
-                soil_con.lat);
+	        snowfall, lake_snow->coldcontent, soil_con.new_snow_albedo,
+                dt, &lake_snow->last_snow, lake_snow->swq,
+                &lake_snow->MELTING, dmy.day_in_year, soil_con.lat);
 
         /* --------------------------------------------------------------------
          * Calculate the incoming solar radiaton for both the ice fraction
@@ -626,6 +626,7 @@ alblake(double         Tcutoff,
         double        *albw,
         double         newsnow,
         double         coldcontent,
+	double         new_snow_albedo, 
         double         dt,
         unsigned      *last_snow,
         double         swq,
@@ -690,17 +691,17 @@ alblake(double         Tcutoff,
     // compute snow surface albedo
     if (swq > 0.0) {
         *snowalbedo = snow_albedo(newsnow, swq, *snowalbedo, coldcontent,
-                                  dt, *last_snow, *MELTING);
+                                  new_snow_albedo, dt, *last_snow, *MELTING);
     }
     else if (swq == 0.0 && newsnow > 0.0) {
-        *snowalbedo = param.SNOW_NEW_SNOW_ALB;
+        *snowalbedo = new_snow_albedo;
     }
     else {
         *snowalbedo = 0.0;
     }
 
     if (newsnow > 0.0) {
-        *albs = param.SNOW_NEW_SNOW_ALB;
+        *albs = new_snow_albedo;
     }
     else {
         *albs = *snowalbedo;

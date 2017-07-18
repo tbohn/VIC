@@ -38,8 +38,8 @@ void advect_soil_veg_storage(double, double, double, double *,
                              lake_con_struct);
 double advected_sensible_heat(double, double, double, double, double);
 void alblake(double, double, double *, double *, double *, double *, double,
-             double, double, unsigned int *, double, bool *, unsigned short int,
-             double);
+             double, double, double, unsigned int *, double, bool *,
+             unsigned short int, double);
 double arno_evap(layer_data_struct *, double, double, double, double, double,
                  double, double, double, double, double, double *);
 bool assert_close_double(double x, double y, double rtol, double abs_tol);
@@ -236,7 +236,7 @@ void set_node_parameters(double *, double *, double *, double *, double *,
                          double *, int, int);
 void shear_stress(double U10, double ZO, double *ushear, double *Zo_salt,
                   double utshear);
-double snow_albedo(double, double, double, double, double, int, bool);
+double snow_albedo(double, double, double, double, double, double, int, bool);
 double snow_density(snow_data_struct *, double, double, double, double);
 int snow_intercept(double, double, double, double, double, double, double,
                    double, double, double, double *, double *, double *,
