@@ -265,13 +265,14 @@ vic_init(void)
         if (options.FCAN_SRC == FROM_DEFAULT) {
             for (k = 0; k < MONTHS_PER_YEAR; k++) {
                 for (i = 0; i < local_domain.ncells_active; i++) {
-                    if (j < options.NVEGTYPES - 1) {
-                        veg_lib[i][j].fcanopy[k] = 1.0;
-                    }
-                    // Assuming the last type is bare soil
-                    else {
-                        veg_lib[i][j].fcanopy[k] = MIN_FCANOPY;
-                    }
+//                    if (j < options.NVEGTYPES - 1) {
+//                        veg_lib[i][j].fcanopy[k] = 1.0;
+//                    }
+//                    // Assuming the last type is bare soil
+//                    else {
+//                        veg_lib[i][j].fcanopy[k] = MIN_FCANOPY;
+//                    }
+                    veg_lib[i][j].fcanopy[k] = 1.0;
                 }
             }
         }
@@ -1000,11 +1001,18 @@ vic_init(void)
             // TBD: Need better check for equal to 1.
             if (sum != 1.) {
                 sprint_location(locstr, &(local_domain.locations[i]));
-                log_warn("Sum of the snow band area fractions does not equal "
-                         "1 (%f), dividing each fraction by the sum\n%s",
-                         sum, locstr);
-                for (j = 0; j < options.SNOW_BAND; j++) {
-                    soil_con[i].AreaFract[j] /= sum;
+                if (sum > 0) {
+                    log_warn("Sum of the snow band area fractions does not "
+                             "equal 1 (%f), dividing each fraction by the "
+                             "sum\n%s", sum, locstr);
+                    for (j = 0; j < options.SNOW_BAND; j++) {
+                        soil_con[i].AreaFract[j] /= sum;
+                    }
+                }
+                else {
+                    log_warn("Sum of the snow band area fractions is 0, "
+                             "setting first fraction to 1\n%s", locstr);
+                    soil_con[i].AreaFract[0] = 1.;
                 }
             }
             // check that the mean elevation from the snow bands matches the
@@ -1013,13 +1021,16 @@ vic_init(void)
             for (j = 0; j < options.SNOW_BAND; j++) {
                 mean += soil_con[i].BandElev[j] * soil_con[i].AreaFract[j];
             }
-            if (fabs(soil_con[i].elevation - soil_con[i].BandElev[j]) > 1.0) {
-                sprint_location(locstr, &(local_domain.locations[i]));
-                log_warn("average band elevation %f not equal to grid_cell "
-                         "average elevation %f; setting grid cell elevation "
-                         "to average band elevation.\n%s",
-                         mean, soil_con[i].elevation, locstr);
-                soil_con[i].elevation = (double)mean;
+            for (j = 0; j < options.SNOW_BAND; j++) {
+                if (fabs(soil_con[i].elevation -
+                         soil_con[i].BandElev[j]) > 1.0) {
+                    sprint_location(locstr, &(local_domain.locations[i]));
+                    log_warn("average band elevation %f not equal to grid_cell "
+                             "average elevation %f; setting grid cell "
+                             "elevation to average band elevation.\n%s",
+                             mean, soil_con[i].elevation, locstr);
+                    soil_con[i].elevation = (double)mean;
+                }
             }
             // Tfactor: calculate the temperature factor
             for (j = 0; j < options.SNOW_BAND; j++) {
@@ -1089,6 +1100,7 @@ vic_init(void)
         nveg = veg_con_map[i].nv_active - 1;
         for (j = 0; j < veg_con_map[i].nv_active; j++) {
             veg_con[i][j].vegetat_type_num = (int) nveg;
+            veg_con[i][j].Cv = 0;
         }
     }
 
@@ -1182,9 +1194,10 @@ vic_init(void)
 
     // Run some checks and corrections for vegetation
     for (i = 0; i < local_domain.ncells_active; i++) {
-        // Only run to options.NVEGTYPES - 1, assuming bare soil
-        // is the last type
-        for (j = 0; j < options.NVEGTYPES - 1; j++) {
+//        // Only run to options.NVEGTYPES - 1, assuming bare soil
+//        // is the last type
+//        for (j = 0; j < options.NVEGTYPES - 1; j++) {
+        for (j = 0; j < options.NVEGTYPES; j++) {
             vidx = veg_con_map[i].vidx[j];
             if (vidx != NODATA_VEG) {
                 sum = 0;
@@ -1232,11 +1245,11 @@ vic_init(void)
             }
         }
 
-        // handle the bare soil portion of the tile
-        vidx = veg_con_map[i].vidx[options.NVEGTYPES - 1];
-        if (vidx != NODATA_VEG) {
-            Cv_sum[i] += veg_con[i][vidx].Cv;
-        }
+//        // handle the bare soil portion of the tile
+//        vidx = veg_con_map[i].vidx[options.NVEGTYPES - 1];
+//        if (vidx != NODATA_VEG) {
+//            Cv_sum[i] += veg_con[i][vidx].Cv;
+//        }
 
         // TODO: handle bare soil adjustment for compute treeline option
 

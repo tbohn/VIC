@@ -71,8 +71,10 @@ compute_derived_state_vars(all_vars_struct *all_vars,
     Nveg = veg_con[0].vegetat_type_num;
 
     // allocate memory for tmpT and tmpZ
-    malloc_3d_double(tmpTshape, &tmpT);
-    malloc_2d_double(tmpZshape, &tmpZ);
+    if (!options.QUICK_FLUX) {
+        malloc_3d_double(tmpTshape, &tmpT);
+        malloc_2d_double(tmpZshape, &tmpZ);
+    }
 
     /******************************************
        Compute derived soil layer vars
@@ -105,10 +107,14 @@ compute_derived_state_vars(all_vars_struct *all_vars,
        Compute derived soil snow state vars
     ******************************************/
     for (veg = 0; veg <= Nveg; veg++) {
-        for (band = 0; band < options.SNOW_BAND; band++) {
-            if (snow[veg][band].density > 0.) {
-                snow[veg][band].depth = CONST_RHOFW * snow[veg][band].swq /
-                                        snow[veg][band].density;
+        if (Cv > 0) {
+            for (band = 0; band < options.SNOW_BAND; band++) {
+                if (soil_con->AreaFract[band] > 0.) {
+                    if (snow[veg][band].density > 0.) {
+                        snow[veg][band].depth = CONST_RHOFW *
+                            snow[veg][band].swq / snow[veg][band].density;
+                    }
+                }
             }
         }
     }
@@ -249,6 +255,8 @@ compute_derived_state_vars(all_vars_struct *all_vars,
         }
     }
     // free memory for tmpT and tmpZ
-    free_3d_double(tmpTshape, tmpT);
-    free_2d_double(tmpZshape, tmpZ);
+    if (!options.QUICK_FLUX) {
+        free_3d_double(tmpTshape, tmpT);
+        free_2d_double(tmpZshape, tmpZ);
+    }
 }
