@@ -1021,16 +1021,13 @@ vic_init(void)
             for (j = 0; j < options.SNOW_BAND; j++) {
                 mean += soil_con[i].BandElev[j] * soil_con[i].AreaFract[j];
             }
-            for (j = 0; j < options.SNOW_BAND; j++) {
-                if (fabs(soil_con[i].elevation -
-                         soil_con[i].BandElev[j]) > 1.0) {
-                    sprint_location(locstr, &(local_domain.locations[i]));
-                    log_warn("average band elevation %f not equal to grid_cell "
-                             "average elevation %f; setting grid cell "
-                             "elevation to average band elevation.\n%s",
-                             mean, soil_con[i].elevation, locstr);
-                    soil_con[i].elevation = (double)mean;
-                }
+            if (fabs(soil_con[i].elevation - mean) > 1.0) {
+                sprint_location(locstr, &(local_domain.locations[i]));
+                log_warn("average band elevation %f not equal to grid_cell "
+                         "average elevation %f; setting grid cell "
+                         "elevation to average band elevation.\n%s",
+                         mean, soil_con[i].elevation, locstr);
+                soil_con[i].elevation = (double)mean;
             }
             // Tfactor: calculate the temperature factor
             for (j = 0; j < options.SNOW_BAND; j++) {

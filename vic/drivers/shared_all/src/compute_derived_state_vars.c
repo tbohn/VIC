@@ -46,6 +46,10 @@ compute_derived_state_vars(all_vars_struct *all_vars,
     size_t                     veg;
     size_t                     lidx;
     size_t                     band;
+    size_t                     tmpMshape[] = {
+        options.NVEGTYPES + 1, options.SNOW_BAND,
+        options.Nlayer
+    };
     size_t                     tmpTshape[] = {
         options.Nlayer, options.Nnode,
         options.Nfrost + 1
@@ -55,9 +59,9 @@ compute_derived_state_vars(all_vars_struct *all_vars,
     };
     int                        ErrorFlag;
     double                     Cv;
-    double                     moist[MAX_VEG][MAX_BANDS][MAX_LAYERS];
     double                     dt_thresh;
     double                     tmp_runoff;
+    double                  ***tmpM;
     double                  ***tmpT;
     double                   **tmpZ;
 
@@ -70,7 +74,8 @@ compute_derived_state_vars(all_vars_struct *all_vars,
     snow = all_vars->snow;
     Nveg = veg_con[0].vegetat_type_num;
 
-    // allocate memory for tmpT and tmpZ
+    // allocate memory for tmp* arrays
+    malloc_3d_double(tmpMshape, &tmpM);
     if (!options.QUICK_FLUX) {
         malloc_3d_double(tmpTshape, &tmpT);
         malloc_2d_double(tmpZshape, &tmpZ);
@@ -87,14 +92,14 @@ compute_derived_state_vars(all_vars_struct *all_vars,
             for (band = 0; band < options.SNOW_BAND; band++) {
                 // Initialize soil for existing snow elevation bands
                 if (soil_con->AreaFract[band] > 0.) {
-                    // set up temporary moist arrays
+                    // set up temporary moist array
                     for (lidx = 0; lidx < options.Nlayer; lidx++) {
-                        moist[veg][band][lidx] =
+                        tmpM[veg][band][lidx] =
                             cell[veg][band].layer[lidx].moist;
                     }
 
                     // compute saturated area and water table
-                    compute_runoff_and_asat(soil_con, moist[veg][band], 0,
+                    compute_runoff_and_asat(soil_con, tmpM[veg][band], 0,
                                             &(cell[veg][band].asat),
                                             &tmp_runoff);
                     wrap_compute_zwt(soil_con, &(cell[veg][band]));
@@ -107,14 +112,10 @@ compute_derived_state_vars(all_vars_struct *all_vars,
        Compute derived soil snow state vars
     ******************************************/
     for (veg = 0; veg <= Nveg; veg++) {
-        if (Cv > 0) {
-            for (band = 0; band < options.SNOW_BAND; band++) {
-                if (soil_con->AreaFract[band] > 0.) {
-                    if (snow[veg][band].density > 0.) {
-                        snow[veg][band].depth = CONST_RHOFW *
-                            snow[veg][band].swq / snow[veg][band].density;
-                    }
-                }
+        for (band = 0; band < options.SNOW_BAND; band++) {
+            if (snow[veg][band].density > 0.) {
+                snow[veg][band].depth = CONST_RHOFW * snow[veg][band].swq /
+                                        snow[veg][band].density;
             }
         }
     }
@@ -158,7 +159,7 @@ compute_derived_state_vars(all_vars_struct *all_vars,
                                 soil_con->max_moist_node,
                                 soil_con->expt_node,
                                 soil_con->bubble_node,
-                                moist[veg][band],
+                                tmpM[veg][band],
                                 soil_con->depth,
                                 soil_con->soil_dens_min,
                                 soil_con->bulk_dens_min,
@@ -254,7 +255,8 @@ compute_derived_state_vars(all_vars_struct *all_vars,
             }
         }
     }
-    // free memory for tmpT and tmpZ
+    // free memory for tmp* arrays
+    free_3d_double(tmpMshape, tmpM);
     if (!options.QUICK_FLUX) {
         free_3d_double(tmpTshape, tmpT);
         free_2d_double(tmpZshape, tmpZ);
