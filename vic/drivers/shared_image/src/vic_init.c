@@ -265,14 +265,13 @@ vic_init(void)
         if (options.FCAN_SRC == FROM_DEFAULT) {
             for (k = 0; k < MONTHS_PER_YEAR; k++) {
                 for (i = 0; i < local_domain.ncells_active; i++) {
-//                    if (j < options.NVEGTYPES - 1) {
-//                        veg_lib[i][j].fcanopy[k] = 1.0;
-//                    }
-//                    // Assuming the last type is bare soil
-//                    else {
-//                        veg_lib[i][j].fcanopy[k] = MIN_FCANOPY;
-//                    }
-                    veg_lib[i][j].fcanopy[k] = 1.0;
+                    if (j < options.NVEGTYPES - 1) {
+                        veg_lib[i][j].fcanopy[k] = 1.0;
+                    }
+                    // Assuming the last type is bare soil
+                    else {
+                        veg_lib[i][j].fcanopy[k] = MIN_FCANOPY;
+                    }
                 }
             }
         }
@@ -576,7 +575,6 @@ vic_init(void)
             soil_con[i].soil_dens_min[j] = (double) dvar[i];
         }
     }
-
 
     // organic soils
     if (options.ORGANIC_FRACT) {
@@ -998,8 +996,7 @@ vic_init(void)
                 }
                 sum += soil_con[i].AreaFract[j];
             }
-            // TBD: Need better check for equal to 1.
-            if (sum != 1.) {
+            if (!assert_close_double(sum, 1.0, 0., AREA_SUM_ERROR_THRESH)) {
                 sprint_location(locstr, &(local_domain.locations[i]));
                 if (sum > 0) {
                     log_warn("Sum of the snow band area fractions does not "
@@ -1021,7 +1018,8 @@ vic_init(void)
             for (j = 0; j < options.SNOW_BAND; j++) {
                 mean += soil_con[i].BandElev[j] * soil_con[i].AreaFract[j];
             }
-            if (fabs(soil_con[i].elevation - mean) > 1.0) {
+            if (!assert_close_double(soil_con[i].elevation, mean, 0.,
+                                     AREA_SUM_ERROR_THRESH)) {
                 sprint_location(locstr, &(local_domain.locations[i]));
                 log_warn("average band elevation %f not equal to grid_cell "
                          "average elevation %f; setting grid cell "
@@ -1059,8 +1057,7 @@ vic_init(void)
                 }
                 sum += soil_con[i].Pfactor[j];
             }
-            // TBD: Need better check for equal to 1.
-            if (sum != 1.) {
+            if (!assert_close_double(sum, 1.0, 0., AREA_SUM_ERROR_THRESH)) {
                 sprint_location(locstr, &(local_domain.locations[i]));
                 log_warn("Sum of the snow band precipitation fractions does "
                          "not equal 1 (%f), dividing each fraction by the "
@@ -1210,8 +1207,7 @@ vic_init(void)
                 for (k = 0; k < options.ROOT_ZONES; k++) {
                     sum += veg_con[i][vidx].zone_fract[k];
                 }
-                // TBD: Need better test for not equal to 1.
-                if (sum != 1.) {
+                if (!assert_close_double(sum, 1.0, 0., AREA_SUM_ERROR_THRESH)) {
                     sprint_location(locstr, &(local_domain.locations[i]));
                     log_warn("Root zone fractions sum to more than 1 (%f), "
                              "normalizing fractions.  If the sum is large, "
@@ -1249,11 +1245,16 @@ vic_init(void)
 
         // TODO: handle bare soil adjustment for compute treeline option
 
-        // If the sum of the tile fractions is not within a tolerance, throw an error
-        if (!assert_close_double(Cv_sum[i], 1., 0., 0.001)) {
+        // If the sum of the tile fractions is not within a tolerance,
+        // readjust Cvs to sum to 1.0
+        if (!assert_close_double(Cv_sum[i], 1., 0., AREA_SUM_ERROR_THRESH)) {
             sprint_location(locstr, &(local_domain.locations[i]));
-            log_err("Cv !=  1.0 (%f) at grid cell %zd. Exiting ...\n%s",
-                    Cv_sum[i], i, locstr);
+            log_warn("Cv !=  1.0 (%f) at grid cell %zd. Adjusting fractions "
+                     "...\n%s", Cv_sum[i], i, locstr);
+            for (j = 0; j < options.NVEGTYPES; j++) {
+                vidx = veg_con_map[i].vidx[j];
+                veg_con[i][vidx].Cv /= Cv_sum[i];
+            }
         }
     }
 
@@ -1311,7 +1312,6 @@ vic_init(void)
             }
         }
     }
-
 
     // read_lake parameters
     if (options.LAKES) {

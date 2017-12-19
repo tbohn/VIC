@@ -383,6 +383,9 @@ get_global_param(FILE *gp)
             else if (strcasecmp("PARAMETERS", optstr) == 0) {
                 sscanf(cmdstr, "%*s %s", filenames.params.nc_filename);
             }
+            else if (strcasecmp("ROUT_PARAM", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", filenames.rout_params.nc_filename);
+            }
             else if (strcasecmp("ARNO_PARAMS", optstr) == 0) {
                 sscanf(cmdstr, "%*s %s", flgstr);
                 if (strcasecmp("TRUE", flgstr) == 0) {
@@ -527,15 +530,6 @@ get_global_param(FILE *gp)
             }
             else if (strcasecmp("OUT_FORMAT", optstr) == 0) {
                 ; // do nothing
-            }
-            // vegetation history not yet implemented in image mode
-            // TBD: feature in VIC 4.2 that has been ported to classic
-            // mode, but that does not exist in image mode (yet)
-            else if (strcasecmp("ALBEDO", optstr) == 0 ||
-                     strcasecmp("LAI_IN", optstr) == 0 ||
-                     strcasecmp("FCANOPY", optstr) == 0) {
-                log_err("Time-varying vegetation parameters not implemented "
-                        "in image mode");
             }
 
             /*************************************
