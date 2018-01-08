@@ -279,6 +279,38 @@ get_global_param(FILE *gp)
                     log_err("Unknown RC_MODE option: %s", flgstr);
                 }
             }
+            else if (strcasecmp("CROPSPLIT", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                options.CROPSPLIT = str_to_bool(flgstr);
+            }
+            else if (strcasecmp("IRRIGATION", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                options.IRRIGATION = str_to_bool(flgstr);
+            }
+            else if (strcasecmp("IRR_FREE", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                options.IRR_FREE = str_to_bool(flgstr);
+            }
+            else if (strcasecmp("VEGLIB_IPRM", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                options.VEGLIB_IPRM = str_to_bool(flgstr);
+            }
+            else if (strcasecmp("VEGPARAM_CSPFLG", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                options.VEGPARAM_CSPFLG = str_to_bool(flgstr);
+            }
+            else if (strcasecmp("VEGPARAM_IFLAG", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                options.VEGPARAM_IFLAG = str_to_bool(flgstr);
+            }
+            else if (strcasecmp("VEGPARAM_FCROP", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                options.VEGPARAM_FCROP = str_to_bool(flgstr);
+            }
+            else if (strcasecmp("VEGPARAM_FIRR", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                options.VEGPARAM_FIRR = str_to_bool(flgstr);
+            }
 
             /*************************************
                Define log directory
@@ -485,6 +517,38 @@ get_global_param(FILE *gp)
                 }
                 else {
                     log_err("Unrecognized value of ALB_SRC in the global "
+                            "control file.");
+                }
+            }
+            else if (strcasecmp("FCROP_SRC", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                if (strcasecmp("FROM_VEGHIST", flgstr) == 0) {
+                    options.FCROP_SRC = FROM_VEGHIST;
+                }
+                else if (strcasecmp("FROM_VEGPARAM", flgstr) == 0) {
+                    options.FCROP_SRC = FROM_VEGPARAM;
+                }
+                else if (strcasecmp("FROM_VEGLIB", flgstr) == 0) {
+                    options.FCROP_SRC = FROM_VEGLIB;
+                }
+                else {
+                    log_err("Unrecognized value of FCROP_SRC in the global "
+                            "control file.");
+                }
+            }
+            else if (strcasecmp("FIRR_SRC", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                if (strcasecmp("FROM_VEGHIST", flgstr) == 0) {
+                    options.FIRR_SRC = FROM_VEGHIST;
+                }
+                else if (strcasecmp("FROM_VEGPARAM", flgstr) == 0) {
+                    options.FIRR_SRC = FROM_VEGPARAM;
+                }
+                else if (strcasecmp("FROM_VEGLIB", flgstr) == 0) {
+                    options.FIRR_SRC = FROM_VEGLIB;
+                }
+                else {
+                    log_err("Unrecognized value of FIRR_SRC in the global "
                             "control file.");
                 }
             }

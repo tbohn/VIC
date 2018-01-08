@@ -72,6 +72,12 @@ read_vegparam(FILE  *vegparam,
     if (options.VEGPARAM_ALB) {
         skip++;
     }
+    if (options.VEGPARAM_FCROP) {
+        skip++;
+    }
+    if (options.VEGPARAM_FIRR) {
+        skip++;
+    }
 
     NoOverstory = 0;
 
@@ -155,6 +161,12 @@ read_vegparam(FILE  *vegparam,
         if (options.BLOWING) {
             NfieldsMax += 3;
         }
+        if (options.VEGPARAM_CSPFLG) {
+            NfieldsMax++;
+        }
+        if (options.VEGPARAM_IFLAG) {
+            NfieldsMax++;
+        }
         if (Nfields != NfieldsMax) {
             log_err("Cell %d - expecting %d fields but found %d in veg line %s",
                     gridcel, NfieldsMax, Nfields, line);
@@ -197,6 +209,21 @@ read_vegparam(FILE  *vegparam,
                 log_err("BLOWING parameter fetch should be >> 1 but "
                         "cell %i has fetch = %.2f", gridcel, temp[i].fetch);
             }
+        }
+
+        temp[i].crop_split = 0;
+        temp[i].Nsubtiles = 1;
+        if (options.VEGPARAM_CSPFLG) {
+            temp[i].crop_split = atoi(vegarr[j]);
+            if (temp[i].crop_split) {
+                temp[i].Nsubtiles = 2;
+            }
+            j++;
+        }
+
+        temp[i].irr_active = 0;
+        if (options.VEGPARAM_IFLAG) {
+            temp[i].irr_active = atoi(vegarr[j]);
         }
 
         veg_class = MISSING;
@@ -362,6 +389,86 @@ read_vegparam(FILE  *vegparam,
             }
         }
 
+        if (options.VEGPARAM_FCROP) {
+            // Read the fcrop line
+            if (fgets(line, MAXSTRING, vegparam) == NULL) {
+                log_err("unexpected EOF for cell %i while reading fcrop for "
+                        "vegetat_type_num %d", vegcel, vegetat_type_num);
+            }
+            Nfields = 0;
+            vegarr[Nfields] = calloc(MAX_VEGPARAM_LINE_LENGTH,
+                                     sizeof(*(vegarr[Nfields])));
+            strcpy(tmpline, line);
+            ttrim(tmpline);
+            token = strtok(tmpline, delimiters);
+            strcpy(vegarr[Nfields], token);
+            Nfields++;
+
+            while ((token = strtok(NULL, delimiters)) != NULL) {
+                vegarr[Nfields] = calloc(MAX_VEGPARAM_LINE_LENGTH,
+                                         sizeof(*(vegarr[Nfields])));
+                strcpy(vegarr[Nfields], token);
+                Nfields++;
+            }
+            NfieldsMax = MONTHS_PER_YEAR; /* For fcrop */
+            if (Nfields != NfieldsMax) {
+                log_err("cell %d - expecting %d fcrop values but found %d in "
+                        "line %s", gridcel, NfieldsMax, Nfields, line);
+            }
+
+            if (options.FCROP_SRC == FROM_VEGPARAM) {
+                for (j = 0; j < MONTHS_PER_YEAR; j++) {
+                    tmp = atof(vegarr[j]);
+                    if (tmp != NODATA_VH) {
+                        temp[i].fcrop[j] = tmp;
+                    }
+                }
+            }
+            for (k = 0; k < Nfields; k++) {
+                free(vegarr[k]);
+            }
+        }
+
+        if (options.VEGPARAM_FIRR) {
+            // Read the firr line
+            if (fgets(line, MAXSTRING, vegparam) == NULL) {
+                log_err("unexpected EOF for cell %i while reading firr for "
+                        "vegetat_type_num %d", vegcel, vegetat_type_num);
+            }
+            Nfields = 0;
+            vegarr[Nfields] = calloc(MAX_VEGPARAM_LINE_LENGTH,
+                                     sizeof(*(vegarr[Nfields])));
+            strcpy(tmpline, line);
+            ttrim(tmpline);
+            token = strtok(tmpline, delimiters);
+            strcpy(vegarr[Nfields], token);
+            Nfields++;
+
+            while ((token = strtok(NULL, delimiters)) != NULL) {
+                vegarr[Nfields] = calloc(MAX_VEGPARAM_LINE_LENGTH,
+                                         sizeof(*(vegarr[Nfields])));
+                strcpy(vegarr[Nfields], token);
+                Nfields++;
+            }
+            NfieldsMax = MONTHS_PER_YEAR; /* For firr */
+            if (Nfields != NfieldsMax) {
+                log_err("cell %d - expecting %d firr values but found %d in "
+                        "line %s", gridcel, NfieldsMax, Nfields, line);
+            }
+
+            if (options.FIRR_SRC == FROM_VEGPARAM) {
+                for (j = 0; j < MONTHS_PER_YEAR; j++) {
+                    tmp = atof(vegarr[j]);
+                    if (tmp != NODATA_VH) {
+                        temp[i].firr[j] = tmp;
+                    }
+                }
+            }
+            for (k = 0; k < Nfields; k++) {
+                free(vegarr[k]);
+            }
+        }
+
         // Determine if cell contains non-overstory vegetation
         if (options.COMPUTE_TREELINE && !veg_lib[temp[i].veg_class].overstory) {
             NoOverstory++;
@@ -486,6 +593,8 @@ read_vegparam(FILE  *vegparam,
         temp[i].LAI[j] = veg_lib[temp[i].veg_class].LAI[j];
         temp[i].roughness[j] = veg_lib[temp[i].veg_class].roughness[j];
         temp[i].Wdmax[j] = veg_lib[temp[i].veg_class].Wdmax[j];
+        temp[i].fcrop[j] = veg_lib[temp[i].veg_class].fcrop[j];
+        temp[i].firr[j] = veg_lib[temp[i].veg_class].firr[j];
     }
 
     return temp;

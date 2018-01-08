@@ -1085,6 +1085,7 @@ surface_fluxes(bool                 overstory,
     ********************************************************/
 
     (*inflow) = ppt;
+    ppt += cell->irr_applied;
 
     ErrorFlag = runoff(cell, energy, soil_con, ppt, soil_con->frost_fract,
                        options.Nnode);

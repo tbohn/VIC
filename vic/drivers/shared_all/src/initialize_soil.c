@@ -69,10 +69,14 @@ initialize_soil(cell_data_struct **cell,
             cell[veg][band].RhInter = 0.0;
             cell[veg][band].RhSlow = 0.0;
             cell[veg][band].RhTot = 0.0;
+            cell[veg][band].irr_applied = 0;
+            cell[veg][band].irr_demand = 0;
+            cell[veg][band].irr_run_used = 0;
+            cell[veg][band].irr_with_used = 0;
             for (lindex = 0; lindex < options.Nlayer; lindex++) {
                 cell[veg][band].layer[lindex].esoil = 0.0;
-                cell[veg][band].layer[lindex].transp = 0.0;
                 cell[veg][band].layer[lindex].evap = 0.0;
+                cell[veg][band].layer[lindex].transp = 0.0;
             }
         }
     }

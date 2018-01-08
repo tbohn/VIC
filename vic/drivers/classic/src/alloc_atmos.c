@@ -76,6 +76,12 @@ alloc_atmos(int                 nrecs,
             (*force)[i].par = calloc(NR + 1, sizeof(*(*force)[i].par));
             check_alloc_status((*force)[i].par, "Memory allocation error.");
         }
+        if (options.IRRIGATION) {
+            (*force)[i].irr_run = calloc(NR + 1, sizeof(*(*force)[i].irr_run));
+            check_alloc_status((*force)[i].irr_run, "Memory allocation error.");
+            (*force)[i].irr_with = calloc(NR + 1, sizeof(*(*force)[i].irr_with));
+            check_alloc_status((*force)[i].irr_with, "Memory allocation error.");
+        }
     }
 }
 
@@ -112,6 +118,10 @@ free_atmos(int                 nrecs,
             free((*force)[i].coszen);
             free((*force)[i].fdir);
             free((*force)[i].par);
+        }
+        if (options.IRRIGATION) {
+            free((*force)[i].irr_run);
+            free((*force)[i].irr_with);
         }
     }
 

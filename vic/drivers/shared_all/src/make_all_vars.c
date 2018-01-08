@@ -32,10 +32,14 @@
  *           cell's states and fluxes.
  *****************************************************************************/
 all_vars_struct
-make_all_vars(size_t nveg)
+make_all_vars(size_t nveg,
+              veg_con_struct *veg_con)
 {
+    extern option_struct     options;
+
     all_vars_struct temp;
     size_t          Nitems;
+    size_t          v;
 
     Nitems = nveg + 1;
 
@@ -43,6 +47,24 @@ make_all_vars(size_t nveg)
     temp.energy = make_energy_bal(Nitems);
     temp.veg_var = make_veg_var(Nitems);
     temp.cell = make_cell_data(Nitems);
+
+    if (options.CROPSPLIT) {
+
+        temp.snow_subtiles = (snow_data_struct ***) calloc(Nitems, sizeof(snow_data_struct **));
+        temp.energy_subtiles = (energy_bal_struct ***) calloc(Nitems, sizeof(energy_bal_struct **));
+        temp.veg_var_subtiles = (veg_var_struct ***) calloc(Nitems, sizeof(veg_var_struct **));
+        temp.cell_subtiles = (cell_data_struct ***) calloc(Nitems, sizeof(cell_data_struct **));
+
+        for (v = 0; v < Nitems; v++) {
+            if (veg_con[v].crop_split) {
+                temp.snow_subtiles[v]   = make_snow_data(MAX_SUBTILES);
+                temp.energy_subtiles[v] = make_energy_bal(MAX_SUBTILES);
+                temp.veg_var_subtiles[v]  = make_veg_var(MAX_SUBTILES);
+                temp.cell_subtiles[v]     = make_cell_data(MAX_SUBTILES);
+            }
+        }
+
+    }
 
     return (temp);
 }

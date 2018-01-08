@@ -1,7 +1,7 @@
 /******************************************************************************
  * @section DESCRIPTION
  *
- * Header file for vic_driver_image routines
+ * Convert to plant-specific veg parameters
  *
  * @section LICENSE
  *
@@ -24,21 +24,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *****************************************************************************/
 
-#ifndef VIC_DRIVER_IMAGE_H
-#define VIC_DRIVER_IMAGE_H
+#include <vic_run.h>
 
-#include <vic_driver_shared_image.h>
+/******************************************************************************
+ * @brief    Convert to plant-specific veg parameters.
+ *****************************************************************************/
+void
+convert_to_plant_specific(veg_var_struct   *veg_var,
+                          snow_data_struct *snow)
+{
 
-#define VIC_DRIVER "Image"
+    extern parameters_struct param;
 
-bool check_save_state_flag(size_t, dmy_struct *dmy_offset);
-void display_current_settings(int);
-void get_forcing_file_info(param_set_struct *param_set, size_t file_num);
-void get_global_param(FILE *);
-void vic_force(void);
-void vic_image_init(void);
-void vic_image_finalize();
-void vic_image_start(void);
-void vic_populate_model_state(void);
+    veg_var->LAI /= veg_var->fcanopy;
+    veg_var->Wdew /= veg_var->fcanopy;
+    veg_var->Wdmax = veg_var->LAI * param.VEG_LAI_WATER_FACTOR;
+    snow->snow_canopy /= veg_var->fcanopy;
 
-#endif
+}

@@ -276,6 +276,10 @@ get_default_outvar_aggtype(unsigned int varid)
     case OUT_EVAP_BARE:
     case OUT_EVAP_CANOP:
     case OUT_INFLOW:
+    case OUT_IRR_APPLIED:
+    case OUT_IRR_DEMAND:
+    case OUT_IRR_RUN:
+    case OUT_IRR_WITH:
     case OUT_LAKE_BF_IN:
     case OUT_LAKE_BF_IN_V:
     case OUT_LAKE_BF_OUT:

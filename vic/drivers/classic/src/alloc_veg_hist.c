@@ -67,6 +67,14 @@ alloc_veg_hist(int                nrecs,
                                                           roughness)));
             check_alloc_status((*veg_hist)[i][j].roughness,
                                "Memory allocation error.");
+            (*veg_hist)[i][j].fcrop =
+                calloc(NR + 1, sizeof(*((*veg_hist)[i][j].fcrop)));
+            check_alloc_status((*veg_hist)[i][j].fcrop,
+                               "Memory allocation error.");
+            (*veg_hist)[i][j].firr =
+                calloc(NR + 1, sizeof(*((*veg_hist)[i][j].firr)));
+            check_alloc_status((*veg_hist)[i][j].firr,
+                               "Memory allocation error.");
         }
     }
 }
@@ -92,6 +100,8 @@ free_veg_hist(int                nrecs,
             free((*veg_hist)[i][j].fcanopy);
             free((*veg_hist)[i][j].LAI);
             free((*veg_hist)[i][j].roughness);
+            free((*veg_hist)[i][j].fcrop);
+            free((*veg_hist)[i][j].firr);
         }
         free((*veg_hist)[i]);
     }

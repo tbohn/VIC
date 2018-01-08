@@ -44,6 +44,7 @@ vic_populate_model_state(all_vars_struct *all_vars,
                          size_t           cellnum,
                          soil_con_struct *soil_con,
                          veg_con_struct  *veg_con,
+                         veg_hist_struct **veg_hist,
                          lake_con_struct  lake_con,
                          dmy_struct      *dmy_current)
 {
@@ -95,7 +96,7 @@ vic_populate_model_state(all_vars_struct *all_vars,
     }
 
     // compute those state variables that are derived from the others
-    compute_derived_state_vars(all_vars, soil_con, veg_con);
+    compute_derived_state_vars(all_vars, soil_con, veg_hist[0], veg_con);
     if (options.LAKES) {
         compute_derived_lake_dimensions(lake, lake_con);
     }

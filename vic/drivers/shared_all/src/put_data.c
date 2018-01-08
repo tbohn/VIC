@@ -163,6 +163,14 @@ put_data(all_vars_struct   *all_vars,
         out_data[OUT_FDIR][0] = MISSING;
         out_data[OUT_PAR][0] = MISSING;
     }
+    if (options.IRRIGATION) {
+        out_data[OUT_IRR_RUN][0] = force->irr_run[NR];
+        out_data[OUT_IRR_WITH][0] = force->irr_with[NR];
+    }
+    else {
+        out_data[OUT_IRR_RUN][0] = MISSING;
+        out_data[OUT_IRR_WITH][0] = MISSING;
+    }
 
     /****************************************
        Store Output for all Vegetation Types (except lakes)
@@ -530,7 +538,8 @@ put_data(all_vars_struct   *all_vars,
     /********************
        Check Water Balance
     ********************/
-    inflow = out_data[OUT_PREC][0] + out_data[OUT_LAKE_CHAN_IN][0];  // mm over grid cell
+    inflow = out_data[OUT_PREC][0] + out_data[OUT_LAKE_CHAN_IN][0] +
+             out_data[OUT_IRR_APPLIED][0]; // mm over grid cell
     outflow = out_data[OUT_EVAP][0] + out_data[OUT_RUNOFF][0] +
               out_data[OUT_BASEFLOW][0];  // mm over grid cell
     storage = 0.;
@@ -758,6 +767,15 @@ collect_wb_terms(cell_data_struct cell,
         out_data[OUT_CINTER][0] += cell.CInter * AreaFactor;
         out_data[OUT_CSLOW][0] += cell.CSlow * AreaFactor;
     }
+
+    /*****************************
+       Record Irrigation Variables
+    *****************************/
+    if (options.IRRIGATION) {
+        out_data[OUT_IRR_DEMAND][0] += cell.irr_demand * AreaFactor;
+        out_data[OUT_IRR_APPLIED][0] += cell.irr_applied * AreaFactor;
+    }
+
 }
 
 /******************************************************************************

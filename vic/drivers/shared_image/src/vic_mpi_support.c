@@ -789,6 +789,10 @@ create_MPI_param_struct_type(MPI_Datatype *mpi_type)
     offsets[i] = offsetof(parameters_struct, ALBEDO_BARE_SOIL);
     mpi_types[i++] = MPI_DOUBLE;
 
+    // double ALBEDO_H2O_SURF;
+    offsets[i] = offsetof(parameters_struct, ALBEDO_H2O_SURF);
+    mpi_types[i++] = MPI_DOUBLE;
+
     // double EMISS_GRND;
     offsets[i] = offsetof(parameters_struct, EMISS_GRND);
     mpi_types[i++] = MPI_DOUBLE;

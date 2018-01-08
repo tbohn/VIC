@@ -36,6 +36,7 @@
 void
 compute_derived_state_vars(all_vars_struct *all_vars,
                            soil_con_struct *soil_con,
+                           veg_hist_struct *veg_hist,
                            veg_con_struct  *veg_con)
 {
     extern global_param_struct global_param;
@@ -261,4 +262,7 @@ compute_derived_state_vars(all_vars_struct *all_vars,
         free_3d_double(tmpTshape, tmpT);
         free_2d_double(tmpZshape, tmpZ);
     }
+
+    // initialize crop subtiles
+    initialize_crop_subtiles(all_vars, veg_hist, veg_con);
 }

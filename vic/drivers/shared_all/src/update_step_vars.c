@@ -28,8 +28,8 @@
 #include <vic_driver_shared_all.h>
 
 /******************************************************************************
-* @brief        This subroutine controls the model core, it solves both the
-*               energy and water balance models, as well as frozen soils.
+* @brief        This subroutine updates data structures with values for the
+*               current time step.
 ******************************************************************************/
 int
 update_step_vars(all_vars_struct *all_vars,
@@ -42,10 +42,12 @@ update_step_vars(all_vars_struct *all_vars,
     size_t               Nveg;
     unsigned short       band;
     size_t               Nbands;
-    veg_var_struct     **veg_var;
-
-    /* set local pointers */
-    veg_var = all_vars->veg_var;
+    veg_var_struct      *veg_var;
+    snow_data_struct    *snow;
+    veg_var_struct      *veg_var1;
+    veg_var_struct      *veg_var2;
+    snow_data_struct    *snow1;
+    snow_data_struct    *snow2;
 
     Nbands = options.SNOW_BAND;
 
@@ -55,12 +57,41 @@ update_step_vars(all_vars_struct *all_vars,
     /* Assign current veg characteristics */
     for (iveg = 0; iveg <= Nveg; iveg++) {
         for (band = 0; band < Nbands; band++) {
-            veg_var[iveg][band].albedo = veg_hist[iveg].albedo[NR];
-            veg_var[iveg][band].displacement = veg_hist[iveg].displacement[NR];
-            veg_var[iveg][band].fcanopy = veg_hist[iveg].fcanopy[NR];
-            veg_var[iveg][band].LAI = veg_hist[iveg].LAI[NR];
-            veg_var[iveg][band].roughness = veg_hist[iveg].roughness[NR];
+
+            /* set local pointers */
+            veg_var = &(all_vars->veg_var[iveg][band]);
+            snow = &(all_vars->snow[iveg][band]);
+
+            veg_var->albedo = veg_hist[iveg].albedo[NR];
+            veg_var->displacement = veg_hist[iveg].displacement[NR];
+            veg_var->fcanopy = veg_hist[iveg].fcanopy[NR];
+            veg_var->LAI = veg_hist[iveg].LAI[NR];
+            veg_var->roughness = veg_hist[iveg].roughness[NR];
+            veg_var->fcrop = veg_hist[iveg].fcrop[NR];
+            veg_var->firr = veg_hist[iveg].firr[NR];
+
+            /* Convert parameters from spatial-average to plant-specific */
+            if (options.CROPSPLIT && veg_con[iveg].crop_split) {
+                // Tile contains irrigated and non-irrigated sub-tiles
+                veg_var1 = &(all_vars->veg_var_subtiles[iveg][0][band]);
+                veg_var2 = &(all_vars->veg_var_subtiles[iveg][1][band]);
+                snow1 = &(all_vars->snow_subtiles[iveg][0][band]);
+                snow2 = &(all_vars->snow_subtiles[iveg][1][band]);
+                convert_to_plant_specific_crop_subtiles(veg_var, veg_var1,
+                                                        veg_var2, snow1,
+                                                        snow2);
+            }
+            else {
+                // Not a split tile
+                convert_to_plant_specific(veg_var, snow);
+            }
         }
+
+
+    }
+
+    if (options.CROPSPLIT) {
+        handle_subarea_changes(all_vars, veg_con, veg_hist);
     }
 
     return (0);

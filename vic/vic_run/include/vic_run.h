@@ -123,7 +123,19 @@ void compute_soil_layer_thermal_properties(layer_data_struct *, double *,
                                            double *, double *, double *,
                                            double *, double *, double *,
                                            double *, size_t);
+void compute_irrig_demand(cell_data_struct *, soil_con_struct *,
+                          veg_lib_struct *, force_data_struct *, double);
 double compute_zwt(soil_con_struct *, int, double);
+void convert_to_plant_specific(veg_var_struct *, snow_data_struct *);
+void convert_to_plant_specific_crop_subtiles(veg_var_struct *,
+                                             veg_var_struct *,
+                                             veg_var_struct *,
+                                             snow_data_struct *,
+                                             snow_data_struct *);
+void copy_cell_data(cell_data_struct *, cell_data_struct *);
+void copy_energy_bal(energy_bal_struct *, energy_bal_struct *);
+void copy_snow_data(snow_data_struct *, snow_data_struct *);
+void copy_veg_var(veg_var_struct *, veg_var_struct *);
 void correct_precip(double *, double, double, double, double);
 double darkinhib(double);
 int distribute_node_moisture_properties(double *, double *, double *, double *,
@@ -336,5 +348,14 @@ int water_under_ice(int, double, double, double *, double *, double, int,
 void wrap_compute_zwt(soil_con_struct *, cell_data_struct *);
 void write_layer(layer_data_struct *, int, double *);
 void write_vegvar(veg_var_struct *, int);
+void wtavg_cell_data(cell_data_struct *, double, cell_data_struct *, double,
+                     bool, cell_data_struct *);
+void wtavg_energy_bal(energy_bal_struct *, bool, bool, double,
+                      energy_bal_struct *, bool, bool, double, double *, bool,
+                      energy_bal_struct *);
+void wtavg_snow_data(snow_data_struct *, bool, double, snow_data_struct *,
+                     bool, double, bool, snow_data_struct *);
+void wtavg_veg_var(veg_var_struct *, double, veg_var_struct *, double, bool,
+                   veg_var_struct *);
 
 #endif

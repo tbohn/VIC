@@ -34,6 +34,7 @@
  *****************************************************************************/
 void
 free_all_vars(all_vars_struct *all_vars,
+              veg_con_struct  *veg_con,
               int              Nveg)
 {
     extern option_struct options;
@@ -67,4 +68,35 @@ free_all_vars(all_vars_struct *all_vars,
         free((char *) all_vars[0].snow[i]);
     }
     free((char *) all_vars[0].snow);
+
+    if (options.CROPSPLIT) {
+
+        for (i = 0; i < Nveg; i++) {
+            if (veg_con[i].crop_split) {
+                for(j = 0; j < MAX_SUBTILES; j++) {
+                    free((char *) all_vars[0].cell_subtiles[i][j]);
+                    if (options.CARBON) {
+                        for ( k = 0 ; k < options.SNOW_BAND ; k++ ) {
+                            free((char *) all_vars[0].veg_var_subtiles[i][j][k].NscaleFactor);
+                            free((char *) all_vars[0].veg_var_subtiles[i][j][k].aPARLayer);
+                            free((char *) all_vars[0].veg_var_subtiles[i][j][k].CiLayer);
+                            free((char *) all_vars[0].veg_var_subtiles[i][j][k].rsLayer);
+                        }
+                    }
+                    free((char *) all_vars[0].veg_var_subtiles[i][j]);
+                    free((char *) all_vars[0].energy_subtiles[i][j]);
+                    free((char *) all_vars[0].snow_subtiles[i][j]);
+                }
+            }
+            free((char *) all_vars[0].cell_subtiles[i]);
+            free((char *) all_vars[0].veg_var_subtiles[i]);
+            free((char *) all_vars[0].energy_subtiles[i]);
+            free((char *) all_vars[0].snow_subtiles[i]);
+        }
+        free((char *)(*all_vars).cell_subtiles);
+        free((char *)(*all_vars).veg_var_subtiles);
+        free((char *)(*all_vars).energy_subtiles);
+        free((char *)(*all_vars).snow_subtiles);
+
+    }
 }

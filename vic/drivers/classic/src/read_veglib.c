@@ -118,6 +118,11 @@ read_veglib(FILE   *veglib,
             for (j = 0; j < MONTHS_PER_YEAR; j++) {
                 fscanf(veglib, "%lf", &temp[i].roughness[j]);
             }
+            // Default values for fcrop and firr
+            for (j = 0; j < MONTHS_PER_YEAR; j++) {
+                temp[i].fcrop[j] = 1.0;
+                temp[i].firr[j] = 0.0;
+            }
             temp[i].wind_h = 0.;
             maxd = 0;
             for (j = 0; j < MONTHS_PER_YEAR; j++) {
@@ -192,6 +197,41 @@ read_veglib(FILE   *veglib,
             else {
                 temp[i].Wnpp_inhib = 1.0;
                 temp[i].NPPfactor_sat = 1.0;
+            }
+
+            /* Irrigation parameters */
+            if (options.VEGLIB_IPRM) {
+                fscanf(veglib, "%s", tmpstr); /* irrigation soil moisture threshold */
+                if (!strcmp(tmpstr,"SAT")) {
+                    temp[i].ithresh = IRR_SAT;
+                }
+                else if (!strcmp(tmpstr,"FC")) {
+                    temp[i].ithresh = IRR_FC;
+                }
+                else if (!strcmp(tmpstr,"CR")) {
+                    temp[i].ithresh = IRR_CR;
+                }
+                fscanf(veglib, "%s", tmpstr); /* irrigation soil moisture target */
+                if (!strcmp(tmpstr,"SAT")) {
+                    temp[i].itarget = IRR_SAT;
+                }
+                else if (!strcmp(tmpstr,"FC")) {
+                    temp[i].itarget = IRR_FC;
+                }
+                else if (!strcmp(tmpstr,"CR")) {
+                    temp[i].itarget = IRR_CR;
+                }
+            }
+            else {
+                // Initialize but don't use
+                temp[i].ithresh = IRR_SAT;
+                temp[i].itarget = IRR_SAT;
+            }
+
+            // Default crop fractions
+            for (j = 0; j < 12; j++) {
+                temp[i].fcrop[j] = 1.0;
+                temp[i].firr[j] = 1.0;
             }
 
             fgets(str, MAXSTRING, veglib); /* skip over end of line comments */
