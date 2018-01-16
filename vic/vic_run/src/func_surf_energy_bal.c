@@ -760,7 +760,8 @@ func_surf_energy_bal(double  Ts,
             for (i=0; i<options.Nlayer; i++) {
                 layer[i].transp *= veg_var->fcanopy;
             }
-            SurfRad = surf_atten*NetBareRad;
+            // Account for canopy shading
+            SurfRad = NetBareRad + (surf_atten - 1) * NetShortBare;
         }
         else {
             SurfRad = NetBareRad;

@@ -289,6 +289,68 @@ vic_init(void)
         }
     }
 
+    // read irrigation parameters
+    if (options.IRRIGATION) {
+        // ithresh and itarget
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d3start[0] = j;
+            get_scatter_nc_field_int(&(filenames.params), "ithresh",
+                                     d3start, d3count, ivar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].ithresh = ivar[i];
+            }
+        }
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d3start[0] = j;
+            get_scatter_nc_field_int(&(filenames.params), "itarget",
+                                     d3start, d3count, ivar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].itarget = ivar[i];
+            }
+        }
+        // crop_split
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d3start[0] = j;
+            get_scatter_nc_field_int(&(filenames.params), "crop_split",
+                                     d3start, d3count, ivar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].crop_split = ivar[i];
+            }
+        }
+        // irr_active
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d3start[0] = j;
+            get_scatter_nc_field_int(&(filenames.params), "irr_active",
+                                     d3start, d3count, ivar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].irr_active = ivar[i];
+            }
+        }
+        // fcrop and firr
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d4start[0] = j;
+            for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                d4start[1] = k;
+                get_scatter_nc_field_double(&(filenames.params), "fcrop",
+                                            d4start, d4count, dvar);
+                for (i = 0; i < local_domain.ncells_active; i++) {
+                    veg_lib[i][j].fcrop[k] = (double) dvar[i];
+                }
+            }
+        }
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d4start[0] = j;
+            for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                d4start[1] = k;
+                get_scatter_nc_field_double(&(filenames.params), "firr",
+                                            d4start, d4count, dvar);
+                for (i = 0; i < local_domain.ncells_active; i++) {
+                    veg_lib[i][j].firr[k] = (double) dvar[i];
+                }
+            }
+        }
+    }
+
     // read carbon cycle parameters
     if (options.CARBON) {
         // Ctype
