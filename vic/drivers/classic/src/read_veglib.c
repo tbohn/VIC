@@ -224,8 +224,8 @@ read_veglib(FILE   *veglib,
             }
             else {
                 // Initialize but don't use
-                temp[i].ithresh = IRR_SAT;
-                temp[i].itarget = IRR_SAT;
+                temp[i].ithresh = IRR_CR;
+                temp[i].itarget = IRR_FC;
             }
 
             // Default crop fractions
