@@ -314,7 +314,7 @@ vic_init(void)
             get_scatter_nc_field_int(&(filenames.params), "crop_split",
                                      d3start, d3count, ivar);
             for (i = 0; i < local_domain.ncells_active; i++) {
-                veg_lib[i][j].crop_split = ivar[i];
+                veg_lib[i][j].crop_split = (bool) ivar[i];
             }
         }
         // irr_active
@@ -323,7 +323,7 @@ vic_init(void)
             get_scatter_nc_field_int(&(filenames.params), "irr_active",
                                      d3start, d3count, ivar);
             for (i = 0; i < local_domain.ncells_active; i++) {
-                veg_lib[i][j].irr_active = ivar[i];
+                veg_lib[i][j].irr_active = (bool) ivar[i];
             }
         }
         // fcrop and firr
@@ -1179,7 +1179,8 @@ vic_init(void)
             if (veg_con_map[i].Cv[j] > 0) {
                 veg_con_map[i].vidx[j] = k;
                 veg_con[i][k].Cv = veg_con_map[i].Cv[j];
-                veg_con[i][k].veg_class = j;
+                veg_con[i][k].crop_split = veg_lib[i][j].crop_split;
+                veg_con[i][k].irr_active = veg_lib[i][j].irr_active;
                 for (m = 0; m < MONTHS_PER_YEAR; m++) {
                     if (options.ALB_SRC == FROM_VEGLIB ||
                         options.ALB_SRC == FROM_VEGPARAM) {
@@ -1201,6 +1202,8 @@ vic_init(void)
                     veg_con[i][k].displacement[m] =
                         veg_lib[i][j].displacement[m];
                     veg_con[i][k].roughness[m] = veg_lib[i][j].roughness[m];
+                    veg_con[i][k].fcrop[m] = veg_lib[i][j].fcrop[m];
+                    veg_con[i][k].firr[m] = veg_lib[i][j].firr[m];
                 }
                 k++;
             }

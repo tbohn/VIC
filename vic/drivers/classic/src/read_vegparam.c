@@ -211,19 +211,19 @@ read_vegparam(FILE  *vegparam,
             }
         }
 
-        temp[i].crop_split = 0;
+        temp[i].crop_split = false;
         temp[i].Nsubtiles = 1;
         if (options.VEGPARAM_CSPFLG) {
-            temp[i].crop_split = atoi(vegarr[j]);
+            temp[i].crop_split = bool(atoi(vegarr[j]));
             if (temp[i].crop_split) {
                 temp[i].Nsubtiles = 2;
             }
             j++;
         }
 
-        temp[i].irr_active = 0;
+        temp[i].irr_active = false;
         if (options.VEGPARAM_IFLAG) {
-            temp[i].irr_active = atoi(vegarr[j]);
+            temp[i].irr_active = bool(atoi(vegarr[j]));
         }
 
         veg_class = MISSING;

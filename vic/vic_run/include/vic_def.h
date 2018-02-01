@@ -654,7 +654,7 @@ typedef struct {
     double fetch;           /**< Average fetch length for each vegetation
                                class. */
     double firr[MONTHS_PER_YEAR];    /**< climatological irrigated area fraction within the tile (fraction) */
-    int irr_active; /**< TRUE = run irrigation model in this veg tile */
+    bool irr_active; /**< TRUE = run irrigation model in this veg tile */
     double LAI[MONTHS_PER_YEAR]; /**< climatological leaf area index (m2/m2) */
     int LAKE;               /**< TRUE = this tile is a lake/wetland tile */
     double lag_one;         /**< Lag one gradient autocorrelation of
@@ -681,6 +681,7 @@ typedef struct {
 typedef struct {
     double albedo[MONTHS_PER_YEAR];  /**< vegetation albedo (added for full
                                         energy) (fraction) */
+    bool crop_split; /**< TRUE = this tile should assume fractional crop coverage */
     double displacement[MONTHS_PER_YEAR]; /**< vegetation displacement
                                              height (m) */
     double emissivity[MONTHS_PER_YEAR]; /**< vegetation emissivity (fraction) */
@@ -688,6 +689,7 @@ typedef struct {
                                          canopy (fraction) */
     double fcrop[MONTHS_PER_YEAR];  /**< fractional area planted with crops (fraction) */
     double firr[MONTHS_PER_YEAR];  /**< fractional area that is irrigated (fraction) */
+    bool irr_active; /**< TRUE = run irrigation model in this veg tile */
     unsigned short int ithresh; /**< Irrigation soil moisture threshold;
                                      values listed in the veg library can be
                                      'CR' (critical point), 'FC' (field
