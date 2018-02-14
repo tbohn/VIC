@@ -1179,6 +1179,7 @@ vic_init(void)
             if (veg_con_map[i].Cv[j] > 0) {
                 veg_con_map[i].vidx[j] = k;
                 veg_con[i][k].Cv = veg_con_map[i].Cv[j];
+                veg_con[i][k].veg_class = veg_lib[i][j].veg_class;
                 veg_con[i][k].crop_split = veg_lib[i][j].crop_split;
                 veg_con[i][k].irr_active = veg_lib[i][j].irr_active;
                 for (m = 0; m < MONTHS_PER_YEAR; m++) {
