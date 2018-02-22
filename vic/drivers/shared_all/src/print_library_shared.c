@@ -570,8 +570,9 @@ print_stream(stream_struct   *stream,
     fprintf(LOG_DEST, "\tngridcells: %zu\n", stream->ngridcells);
     fprintf(LOG_DEST, "\tagg_alarm:\n    ");
     print_alarm(&(stream->agg_alarm));
-    fprintf(LOG_DEST,
-            "\t# \tVARID        \tVARNAME \tTYPE \tMULT \tFORMAT        \tAGGTYPE\n");
+    fprintf(
+        LOG_DEST,
+        "\t# \tVARID        \tVARNAME \tTYPE \tMULT \tFORMAT        \tAGGTYPE\n");
     for (i = 0; i < stream->nvars; i++) {
         varid = stream->varid[i];
         fprintf(LOG_DEST, "\t%zu \t%u \t%20s \t%hu \t%f \t%10s \t%hu\n",
@@ -756,6 +757,10 @@ print_parameters(parameters_struct *param)
             param->SNOW_LIQUID_WATER_CAPACITY);
     fprintf(LOG_DEST, "\tSNOW_NEW_SNOW_DENSITY: %.4f\n",
             param->SNOW_NEW_SNOW_DENSITY);
+    fprintf(LOG_DEST, "\tSNOW_NEW_SNOW_DENS_MAX: %.4f\n",
+            param->SNOW_NEW_SNOW_DENS_MAX);
+    fprintf(LOG_DEST, "\tSNOW_DEPTH_THRES: %.12f\n",
+            param->SNOW_DEPTH_THRES);
     fprintf(LOG_DEST, "\tSNOW_DENS_DMLIMIT: %.4f\n", param->SNOW_DENS_DMLIMIT);
     fprintf(LOG_DEST, "\tSNOW_DENS_MAX_CHANGE: %.4f\n",
             param->SNOW_DENS_MAX_CHANGE);

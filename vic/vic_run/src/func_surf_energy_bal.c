@@ -744,7 +744,7 @@ func_surf_energy_bal(double  Ts,
        Should evapotranspiration be active when the
        ground is only partially covered with snow????
     *************************************************/
-    for (i=0; i<options.Nlayer; i++) {
+    for (i = 0; i < options.Nlayer; i++) {
         layer[i].transp = 0;
         layer[i].esoil = 0;
     }
@@ -757,10 +757,11 @@ func_surf_energy_bal(double  Ts,
                                Wmax, Wcr, Wpwp, frost_fract, root,
                                dryFrac, shortwave, Catm, CanopLayerBnd);
             Evap *= veg_var->fcanopy;
-            for (i=0; i<options.Nlayer; i++) {
+            for (i = 0; i < options.Nlayer; i++) {
                 layer[i].transp *= veg_var->fcanopy;
             }
             // Account for canopy shading
+//            SurfRad = surf_atten * NetBareRad;
             SurfRad = NetBareRad + (surf_atten - 1) * NetShortBare;
         }
         else {
@@ -779,9 +780,6 @@ func_surf_energy_bal(double  Ts,
                                veg_var->fcanopy * veg_var->throughfall;
         veg_var->canopyevap *= veg_var->fcanopy;
         veg_var->Wdew *= veg_var->fcanopy;
-    }
-    else {
-        Evap = 0.;
     }
 
     /**********************************************************************
