@@ -281,7 +281,7 @@ transpiration(layer_data_struct *layer,
        Potential evapotranspiration not hindered by soil dryness.  If
        layer with less than half the roots is dryer than Wcr, extra
        transpiration is taken from the wetter layer.  Otherwise layers
-       contribute to transipration based on root fraction.
+       contribute to transpiration based on root fraction.
     ******************************************************************/
 
     if (options.SHARE_LAYER_MOIST &&
@@ -326,7 +326,7 @@ transpiration(layer_data_struct *layer,
         /* compute transpiration */
         transp = penman(air_temp, elevation, rad, vpd, ra, veg_var->rc,
                         vic_run_veg_lib[veg_class].rarc) *
-               delta_t / CONST_CDAY * dryFrac;
+                 delta_t / CONST_CDAY * dryFrac;
 
         /** divide up transp based on root distribution **/
         /** Note the indexing of the roots **/
@@ -368,7 +368,6 @@ transpiration(layer_data_struct *layer,
        Evapotranspiration is restricted by low soil moisture. Evaporation
        is computed independantly from each soil layer.
     *********************************************************************/
-
     else {
         /* Initialize conductances for aggregation over soil layers */
         gc = 0;
@@ -430,10 +429,10 @@ transpiration(layer_data_struct *layer,
 
                 /* compute transpiration */
                 layertransp[i] = penman(air_temp, elevation, rad, vpd, ra,
-                                      veg_var->rc,
-                                      vic_run_veg_lib[veg_class].rarc) *
-                               delta_t / CONST_CDAY * dryFrac *
-                               (double) root[i];
+                                        veg_var->rc,
+                                        vic_run_veg_lib[veg_class].rarc) *
+                                 delta_t / CONST_CDAY * dryFrac *
+                                 (double) root[i];
 
                 if (veg_var->rc > 0) {
                     gc += 1 / (veg_var->rc);
@@ -495,7 +494,7 @@ transpiration(layer_data_struct *layer,
     }
 
     /****************************************************************
-       Check that transipration does not cause soil moisture to
+       Check that transpiration does not cause soil moisture to
        fall below wilting point.
     ****************************************************************/
     for (i = 0; i < options.Nlayer; i++) {
