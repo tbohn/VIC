@@ -1146,6 +1146,13 @@ vic_init(void)
                 veg_con_map[i].vidx[j] = NODATA_VEG;
             }
         }
+        // check the number of nonzero veg tiles
+        if (k > local_domain.locations[i].nveg) {
+            sprint_location(locstr, &(local_domain.locations[i]));
+            log_err("Number of veg tiles with nonzero area (%zu) > nveg "
+                    "(%zu).\n%s", k, local_domain.locations[i].nveg,
+                    locstr);
+        }
     }
 
     // zone_depth: root zone depths
@@ -1252,7 +1259,9 @@ vic_init(void)
                      "...\n%s", Cv_sum[i], i, locstr);
             for (j = 0; j < options.NVEGTYPES; j++) {
                 vidx = veg_con_map[i].vidx[j];
-                veg_con[i][vidx].Cv /= Cv_sum[i];
+                if (vidx != NODATA_VEG) {
+                    veg_con[i][vidx].Cv /= Cv_sum[i];
+                }
             }
         }
     }
