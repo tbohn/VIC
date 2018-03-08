@@ -67,8 +67,10 @@ update_step_vars(all_vars_struct *all_vars,
             veg_var->fcanopy = veg_hist[iveg].fcanopy[NR];
             veg_var->LAI = veg_hist[iveg].LAI[NR];
             veg_var->roughness = veg_hist[iveg].roughness[NR];
-            veg_var->fcrop = veg_hist[iveg].fcrop[NR];
-            veg_var->firr = veg_hist[iveg].firr[NR];
+            if (options.IRRIGATION) {
+                veg_var->fcrop = veg_hist[iveg].fcrop[NR];
+                veg_var->firr = veg_hist[iveg].firr[NR];
+            }
 
             /* Convert parameters from spatial-average to plant-specific */
             if (options.CROPSPLIT && veg_con[iveg].crop_split) {
