@@ -81,7 +81,7 @@ double calc_surf_energy_bal(double, double, double, double, double, double,
                             double, double *, double *, double, double *,
                             double *, int, int, size_t, size_t, double, size_t,
                             unsigned short int, int, unsigned short int,
-                            double *, double *, force_data_struct *,
+                            double *, double, double *, force_data_struct *,
                             dmy_struct *, energy_bal_struct *,
                             layer_data_struct *, snow_data_struct *,
                             soil_con_struct *, veg_var_struct *);
@@ -231,7 +231,7 @@ void rhoinit(double *, double);
 double root_brent(double, double, double (*Function)(double, va_list), ...);
 double rtnewt(double x1, double x2, double xacc, double Ur, double Zr);
 int runoff(cell_data_struct *, energy_bal_struct *, soil_con_struct *, double,
-           double *, int);
+           double *, int, double, double);
 void set_node_parameters(double *, double *, double *, double *, double *,
                          double *, double *, double *, double *, double *,
                          double *, int, int);
@@ -299,7 +299,8 @@ int surface_fluxes(bool, double, double, double, double, double *, double *,
                    unsigned short int, force_data_struct *, dmy_struct *,
                    energy_bal_struct *, global_param_struct *,
                    cell_data_struct *, snow_data_struct *, soil_con_struct *,
-                   veg_var_struct *, double, double, double, double *);
+                   veg_var_struct *, double, double, double, double *,
+                   double, double);
 double svp(double);
 double svp_slope(double);
 void temp_area(double, double, double, double *, double *, double *, double *,

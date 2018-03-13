@@ -80,6 +80,7 @@ initialize_options()
     options.ALB_SRC = FROM_VEGLIB;
     options.BASEFLOW = ARNO;
     options.FCAN_SRC = FROM_DEFAULT;
+    options.FIMP_SRC = FROM_DEFAULT;
     options.GRID_DECIMAL = 2;
     options.JULY_TAVG_SUPPLIED = false;
     options.LAI_SRC = FROM_VEGLIB;

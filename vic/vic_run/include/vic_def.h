@@ -273,8 +273,12 @@ typedef struct {
     bool VEGPARAM_LAI;   /**< TRUE = veg param file contains monthly LAI values */
     unsigned short int ALB_SRC;        /**< FROM_VEGLIB = use albedo values from veg library file
                                           FROM_VEGPARAM = use albedo values from the veg param file */
-    unsigned short int FCAN_SRC;       /**< FROM_VEGLIB = use fcanopy values from veg library file
+    unsigned short int FCAN_SRC;       /**< FROM_DEFAULT = use default fcanopy values
+                                          FROM_VEGLIB = use fcanopy values from veg library file
                                           FROM_VEGPARAM = use fcanopy values from the veg param file */
+    unsigned short int FIMP_SRC;       /**< FROM_DEFAULT = use default fimperv and feffimperv values
+                                          FROM_VEGLIB = use fimperv and feffimperv values from veg library file
+                                          FROM_VEGPARAM = use fimperv and feffimperv values from the veg param file */
     unsigned short int LAI_SRC;        /**< FROM_VEGLIB = use LAI values from veg library file
                                           FROM_VEGPARAM = use LAI values from the veg param file */
     bool LAKE_PROFILE;   /**< TRUE = user-specified lake/area profile */
@@ -697,6 +701,9 @@ typedef struct {
                               above which photosynthesis experiencing
                               saturation inhibition, i.e. too wet for optimal
                               photosynthesis; only applies to top soil layer */
+    // Impervious surface fractions
+    double feffimperv;      /**< Effective impervious area fraction. */
+    double fimperv;         /**< Impervious area fraction. */
 } veg_lib_struct;
 
 /******************************************************************************

@@ -260,7 +260,7 @@ vic_init(void)
         }
     }
 
-    // default value for fcanopy
+    // fcanopy
     for (j = 0; j < options.NVEGTYPES; j++) {
         if (options.FCAN_SRC == FROM_DEFAULT) {
             for (k = 0; k < MONTHS_PER_YEAR; k++) {
@@ -285,6 +285,42 @@ vic_init(void)
                 for (i = 0; i < local_domain.ncells_active; i++) {
                     veg_lib[i][j].fcanopy[k] = (double) dvar[i];
                 }
+            }
+        }
+    }
+
+    // total impervious area
+    for (j = 0; j < options.NVEGTYPES; j++) {
+        if (options.FIMP_SRC == FROM_DEFAULT) {
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].fimperv = 0.0;
+            }
+        }
+        else if (options.FIMP_SRC == FROM_VEGLIB ||
+                 options.FIMP_SRC == FROM_VEGPARAM) {
+            d3start[0] = j;
+            get_scatter_nc_field_double(&(filenames.params), "fimperv",
+                                        d3start, d3count, dvar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].fimperv = (double) dvar[i];
+            }
+        }
+    }
+
+    // effective impervious area
+    for (j = 0; j < options.NVEGTYPES; j++) {
+        if (options.FIMP_SRC == FROM_DEFAULT) {
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].feffimperv = 0.0;
+            }
+        }
+        else if (options.FIMP_SRC == FROM_VEGLIB ||
+                 options.FIMP_SRC == FROM_VEGPARAM) {
+            d3start[0] = j;
+            get_scatter_nc_field_double(&(filenames.params), "feffimperv",
+                                        d3start, d3count, dvar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].feffimperv = (double) dvar[i];
             }
         }
     }

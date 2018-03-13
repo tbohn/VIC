@@ -512,6 +512,7 @@ print_option(option_struct *option)
     fprintf(LOG_DEST, "\tALB_SRC              : %d\n", option->ALB_SRC);
     fprintf(LOG_DEST, "\tLAI_SRC              : %d\n", option->LAI_SRC);
     fprintf(LOG_DEST, "\tFCAN_SRC             : %d\n", option->FCAN_SRC);
+    fprintf(LOG_DEST, "\tFIMP_SRC             : %d\n", option->FIMP_SRC);
     fprintf(LOG_DEST, "\tLAKE_PROFILE         : %s\n",
             option->LAKE_PROFILE ? "true" : "false");
     fprintf(LOG_DEST, "\tORGANIC_FRACT        : %s\n",

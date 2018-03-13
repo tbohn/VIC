@@ -488,6 +488,25 @@ get_global_param(FILE *gp)
                             "control file.");
                 }
             }
+            else if (strcasecmp("FIMP_SRC", optstr) == 0) {
+                sscanf(cmdstr, "%*s %s", flgstr);
+                if (strcasecmp("FROM_VEGHIST", flgstr) == 0) {
+                    options.FIMP_SRC = FROM_VEGHIST;
+                }
+                else if (strcasecmp("FROM_VEGPARAM", flgstr) == 0) {
+                    options.FIMP_SRC = FROM_VEGPARAM;
+                }
+                else if (strcasecmp("FROM_VEGLIB", flgstr) == 0) {
+                    options.FIMP_SRC = FROM_VEGLIB;
+                }
+                else if (strcasecmp("FROM_DEFAULT", flgstr) == 0) {
+                    options.FIMP_SRC = FROM_DEFAULT;
+                }
+                else {
+                    log_err("Unrecognized value of FIMP_SRC in the global "
+                            "control file.");
+                }
+            }
             else if (strcasecmp("SNOW_BAND", optstr) == 0) {
                 sscanf(cmdstr, "%*s %s", flgstr);
                 if (str_to_bool(flgstr)) {
