@@ -197,11 +197,12 @@ read_vegparam(FILE  *vegparam,
             }
         }
 
+        j = 2 + 2 * options.ROOT_ZONES;
+
         if (options.BLOWING) {
-            j = 2 * options.ROOT_ZONES;
-            temp[i].sigma_slope = atof(vegarr[2 + j]);
-            temp[i].lag_one = atof(vegarr[3 + j]);
-            temp[i].fetch = atof(vegarr[4 + j]);
+            temp[i].sigma_slope = atof(vegarr[j]);
+            temp[i].lag_one = atof(vegarr[j + 1]);
+            temp[i].fetch = atof(vegarr[j + 2]);
             if (temp[i].sigma_slope <= 0. || temp[i].lag_one <= 0.) {
                 log_err("Deviation of terrain slope must be greater than 0.");
             }
@@ -214,7 +215,7 @@ read_vegparam(FILE  *vegparam,
         temp[i].crop_split = false;
         temp[i].Nsubtiles = 1;
         if (options.VEGPARAM_CSPFLG) {
-            temp[i].crop_split = bool(atoi(vegarr[j]));
+            temp[i].crop_split = (bool)(atoi(vegarr[j]));
             if (temp[i].crop_split) {
                 temp[i].Nsubtiles = 2;
             }
@@ -223,7 +224,7 @@ read_vegparam(FILE  *vegparam,
 
         temp[i].irr_active = false;
         if (options.VEGPARAM_IFLAG) {
-            temp[i].irr_active = bool(atoi(vegarr[j]));
+            temp[i].irr_active = (bool)(atoi(vegarr[j]));
         }
 
         veg_class = MISSING;
