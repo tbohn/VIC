@@ -490,10 +490,7 @@ get_global_param(FILE *gp)
             }
             else if (strcasecmp("FIMP_SRC", optstr) == 0) {
                 sscanf(cmdstr, "%*s %s", flgstr);
-                if (strcasecmp("FROM_VEGHIST", flgstr) == 0) {
-                    options.FIMP_SRC = FROM_VEGHIST;
-                }
-                else if (strcasecmp("FROM_VEGPARAM", flgstr) == 0) {
+                if (strcasecmp("FROM_VEGPARAM", flgstr) == 0) {
                     options.FIMP_SRC = FROM_VEGPARAM;
                 }
                 else if (strcasecmp("FROM_VEGLIB", flgstr) == 0) {

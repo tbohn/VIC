@@ -355,10 +355,7 @@ display_current_settings(int mode)
     else if (options.ALB_SRC == FROM_VEGLIB) {
         fprintf(LOG_DEST, "ALB_SRC\t\tFROM_VEGLIB\n");
     }
-    if (options.FIMP_SRC == FROM_VEGHIST) {
-        fprintf(LOG_DEST, "FIMP_SRC\t\tFROM_VEGHIST\n");
-    }
-    else if (options.FIMP_SRC == FROM_VEGPARAM) {
+    if (options.FIMP_SRC == FROM_VEGPARAM) {
         fprintf(LOG_DEST, "FIMP_SRC\t\tFROM_VEGPARAM\n");
     }
     else if (options.FIMP_SRC == FROM_VEGLIB) {
