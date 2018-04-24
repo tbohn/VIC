@@ -44,15 +44,15 @@ compute_irrig_demand(cell_data_struct  *cell,
     double irr_sm_target;
     double irrig_est;
 
-    if (swq < 0.001 && force->air_temp[NR] > 7) { 
+    if (swq < 0.001 && force->air_temp[NR] > 7) {
 
         thresh_idx = 0;
         target_idx = 0;
-        moistfract = cell->layer[target_idx].moist;  
+        moistfract = cell->layer[target_idx].moist;
         if (veg_lib->ithresh == IRR_SAT)
             irr_sm_thresh = soil_con->max_moist[thresh_idx];
         else if (veg_lib->ithresh == IRR_FC)
-            irr_sm_thresh = soil_con->Wcr[thresh_idx] / 0.7; 
+            irr_sm_thresh = soil_con->Wcr[thresh_idx] / 0.7;
         else
             irr_sm_thresh = soil_con->Wcr[thresh_idx]; // critical point in most cases
         if (irr_sm_thresh > soil_con->max_moist[thresh_idx])

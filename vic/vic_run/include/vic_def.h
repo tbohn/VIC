@@ -224,7 +224,7 @@ typedef struct {
                               vegetation from higher elevations */
     bool CONTINUEONERROR; /**< TRUE = VIC will continue to run after a cell has an error */
     bool CORRPREC;       /**< TRUE = correct precipitation for gage undercatch */
-    bool CROPSPLIT;       /**< TRUE = account for fallow (non-planted) fraction */ 
+    bool CROPSPLIT;       /**< TRUE = account for fallow (non-planted) fraction */
     bool EQUAL_AREA;     /**< TRUE = RESOLUTION stores grid cell area in km^2;
                             FALSE = RESOLUTION stores grid cell side length in degrees */
     bool EXP_TRANS;      /**< TRUE = Uses grid transform for exponential node
@@ -236,8 +236,8 @@ typedef struct {
                                           "GF_410"  = use formulas from VIC 4.1.0 */
     bool IMPLICIT;       /**< TRUE = Use implicit solution when computing
                             soil thermal fluxes */
-    bool IRRIGATION;     /**< TRUE = apply irrigation (to crop veg tiles) */ 
-    bool IRR_FREE;       /**< TRUE = restrict irrigation to available water */ 
+    bool IRRIGATION;     /**< TRUE = apply irrigation (to crop veg tiles) */
+    bool IRR_FREE;       /**< TRUE = restrict irrigation to available water */
     bool JULY_TAVG_SUPPLIED; /**< If TRUE and COMPUTE_TREELINE is also true,
                                 then average July air temperature will be read
                                 from soil file and used in calculating treeline */

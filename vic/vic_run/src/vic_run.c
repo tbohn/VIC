@@ -224,11 +224,11 @@ vic_run(force_data_struct   *force,
             /* loop over subtiles **/
             for (cridx = 0; cridx < veg_con[iveg].Nsubtiles; cridx++) {
 
-                if (options.CROPSPLIT && veg_con[iveg].crop_split) { 
+                if (options.CROPSPLIT && veg_con[iveg].crop_split) {
                   if (cridx == 0)
-                    Cv = Cv_save * (1-all_vars->veg_var[iveg][0].firr); 
+                    Cv = Cv_save * (1-all_vars->veg_var[iveg][0].firr);
                   else
-                    Cv = Cv_save * all_vars->veg_var[iveg][0].firr; 
+                    Cv = Cv_save * all_vars->veg_var[iveg][0].firr;
                   veg_var = &(all_vars->veg_var_subtiles[iveg][cridx][0]);
                 }
                 else {
@@ -288,7 +288,7 @@ vic_run(force_data_struct   *force,
                     if (soil_con->AreaFract[band] > 0) {
 
                         /* Set local pointers */
-                        if (options.CROPSPLIT && veg_con[iveg].crop_split) { 
+                        if (options.CROPSPLIT && veg_con[iveg].crop_split) {
                             cell = &(all_vars->cell_subtiles[iveg][cridx][band]);
                             veg_var = &(all_vars->veg_var_subtiles[iveg][cridx][band]);
                             snow = &(all_vars->snow_subtiles[iveg][cridx][band]);
@@ -363,7 +363,7 @@ vic_run(force_data_struct   *force,
                         /* Limit irrigation to available water */
                         if (options.IRRIGATION &&
                             (!options.CROPSPLIT || cridx == 1) &&
-                            !options.IRR_FREE) { 
+                            !options.IRR_FREE) {
                             if (irr_demand_total > (force->prec[NR] +
                                                     force->irr_run[NR] +
                                                     force->irr_with[NR])) {
