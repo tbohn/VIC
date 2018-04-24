@@ -90,6 +90,8 @@ vic_run(force_data_struct   *force,
     double                   firr;
     double                   Cv_save;
     unsigned short           cridx;
+    double                   fimperv;
+    double                   feffimperv;
     size_t                   cidx;
     lake_var_struct         *lake_var;
     cell_data_struct        *cell;
@@ -255,6 +257,8 @@ vic_run(force_data_struct   *force,
                     roughness[0] = soil_con->rough;
                 }
                 overstory = vic_run_veg_lib[veg_class].overstory;
+                fimperv = vic_run_veg_lib[veg_class].fimperv;
+                feffimperv = vic_run_veg_lib[veg_class].feffimperv;
 
                 /* Estimate vegetation height */
                 height = calc_veg_height(displacement[0]);
@@ -414,7 +418,8 @@ vic_run(force_data_struct   *force,
                                                    dmy, energy, gp, cell,
                                                    snow, soil_con, veg_var,
                                                    lag_one, sigma_slope, fetch,
-                                                   veg_con[iveg].CanopLayerBnd);
+                                                   veg_con[iveg].CanopLayerBnd,
+                                                   fimperv, feffimperv);
 
                         if (ErrorFlag == ERROR) {
                             return (ERROR);

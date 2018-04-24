@@ -38,7 +38,9 @@ runoff(cell_data_struct  *cell,
        soil_con_struct   *soil_con,
        double             ppt,
        double            *frost_fract,
-       int                Nnodes)
+       int                Nnodes,
+       double             fimperv,
+       double             feffimperv)
 {
     extern option_struct       options;
     extern global_param_struct global_param;
@@ -80,6 +82,10 @@ runoff(cell_data_struct  *cell,
     layer_data_struct         *layer;
     layer_data_struct          tmp_layer;
     unsigned short             runoff_steps_per_dt;
+    double                     runoff_imp;
+    double                     runoff_imp_con;
+    double                     runoff_imp_dis;
+    double                     factor;
 
     /** Set Residual Moisture **/
     for (lindex = 0; lindex < options.Nlayer; lindex++) {
@@ -100,6 +106,50 @@ runoff(cell_data_struct  *cell,
     for (fidx = 0; fidx < (int)options.Nfrost; fidx++) {
         baseflow[fidx] = 0;
     }
+
+    // Estimate runoff coming from impervious surfaces
+    // Total runoff from impervious surfaces
+    runoff_imp = ppt * fimperv; // mm over veg tile
+    // Runoff from connected impervious surfaces - this never enters soil
+    if (fimperv > 0) {
+        runoff_imp_con = runoff_imp * (feffimperv / fimperv); // mm over veg tile
+    }
+    else {
+        runoff_imp_con = 0;
+    }
+    // Runoff from disconnected impervious surfaces - this enters nearby soil
+    runoff_imp_dis = runoff_imp - runoff_imp_con; // mm over veg tile
+
+    // Now, VIC curve will only apply to non-impervious surfaces
+    // The non-impervious surfaces occupy (1 - fimperv) of tile area
+    // Inflow to soil is sum of throughfall and runoff from disconnected
+    // but adjust it to be mm over non-impervious portion of tile
+    // (ppt is already in mm over whatever portion of the tile we're examining)
+    ppt += runoff_imp_dis / (1 - fimperv); // mm over pervious fraction of tile
+
+    // Rescale soil moisture levels to pertain to non-impervious portion only;
+    // Assume that impervious portion's soils are dry
+    for (lindex = 0; lindex < options.Nlayer; lindex++) {
+        layer[lindex].evap /= (1 - fimperv);
+        layer[lindex].moist /= (1 - fimperv);
+        // Assign excess moisture to runoff
+        if (layer[lindex].moist > soil_con->max_moist[lindex]) {
+            runoff_imp_con += (1 - fimperv) * (layer[lindex].moist -
+                              soil_con->max_moist[lindex]);
+            factor = soil_con->max_moist[lindex] / layer[lindex].moist;
+            layer[lindex].moist = soil_con->max_moist[lindex];
+        }
+        else {
+            factor = 1.0;
+        }
+        for (fidx = 0; fidx < (int)options.Nfrost; fidx++) {
+            layer[lindex].ice[fidx] *= factor / (1 - fimperv);
+        }
+    }
+
+    /******************************************************
+      Compute runoff and baseflow over non-impervious portion
+    ******************************************************/
 
     for (lindex = 0; lindex < options.Nlayer; lindex++) {
         evap[lindex][0] = layer[lindex].evap / (double) runoff_steps_per_dt;
@@ -391,6 +441,27 @@ runoff(cell_data_struct  *cell,
         cell->runoff += runoff[fidx] * frost_fract[fidx];
         cell->baseflow += baseflow[fidx] * frost_fract[fidx];
     }
+
+    // Rescale states and fluxes back to mm over whole tile
+    for (lindex = 0; lindex < options.Nlayer; lindex++) {
+        layer[lindex].evap *= (1 - fimperv);
+        layer[lindex].moist *= (1 - fimperv);
+        for (fidx = 0; fidx < (int)options.Nfrost; fidx++) {
+            layer[lindex].ice[fidx] *= (1 - fimperv);
+        }
+    }
+    cell->asat *= (1 - fimperv);
+    cell->runoff *= (1 - fimperv);
+    cell->baseflow *= (1 - fimperv);
+
+    // Add runoff from connected impervious area to the total runoff
+    cell->runoff += runoff_imp_con;
+
+    // NOTE: not sure whether to modify water table depth computation
+    // to account for impervious surfaces; if it's shallow, then should
+    // be computed from soil moisture while it's rescaled to pertain to
+    // non-impervious portion; if it's deep, might be more accurate to
+    // use tile-wide average soil moisture...
 
     /** Compute water table depth **/
     wrap_compute_zwt(soil_con, cell);

@@ -67,7 +67,9 @@ surface_fluxes(bool                 overstory,
                double               lag_one,
                double               sigma_slope,
                double               fetch,
-               double              *CanopLayerBnd)
+               double              *CanopLayerBnd,
+               double               fimperv,
+               double               feffimperv)
 {
     extern veg_lib_struct   *vic_run_veg_lib;
     extern option_struct     options;
@@ -615,7 +617,8 @@ surface_fluxes(bool                 overstory,
                                              UnderStory, options.Nnode, Nveg,
                                              step_dt, hidx, iveg,
                                              (int) overstory, veg_class,
-                                             CanopLayerBnd, &dryFrac, force,
+                                             CanopLayerBnd, fimperv,
+                                             &dryFrac, force,
                                              dmy, &iter_soil_energy,
                                              iter_layer,
                                              &(iter_snow), soil_con,
@@ -1081,7 +1084,7 @@ surface_fluxes(bool                 overstory,
     ppt += cell->irr_applied;
 
     ErrorFlag = runoff(cell, energy, soil_con, ppt, soil_con->frost_fract,
-                       options.Nnode);
+                       options.Nnode, fimperv, feffimperv);
 
     return(ErrorFlag);
 }

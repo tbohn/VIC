@@ -116,6 +116,7 @@ func_surf_energy_bal(double  Ts,
     double            *ref_height;
     double            *roughness;
     double            *wind;
+    double             fimperv;
 
     /* latent heat terms */
     double             Le;
@@ -213,6 +214,8 @@ func_surf_energy_bal(double  Ts,
     double             ga_veg;
     double             ga_bare;
     double             ga_average;
+    double             fcanopy_adj;
+    double             fexposed;
 
     /************************************
        Read variables from variable list
@@ -273,6 +276,7 @@ func_surf_energy_bal(double  Ts,
     ref_height = (double *) va_arg(ap, double *);
     roughness = (double *) va_arg(ap, double *);
     wind = (double *) va_arg(ap, double *);
+    fimperv = (double) va_arg(ap, double);
 
     /* latent heat terms */
     Le = (double) va_arg(ap, double);
@@ -750,15 +754,22 @@ func_surf_energy_bal(double  Ts,
     }
     Evap = 0.;
     if (!SNOWING) {
+        // Rescale soil moisture levels to represent those in
+        // non-impervious portion
+        for (i = 0; i < options.Nlayer; i++) {
+            layer[i].moist /= (1 - fimperv); // mm over non-impervious
+        }
+        // Compute canopy_evap and transpiration (over canopy portion only)
         if (VEG && veg_var->fcanopy > 0) {
             Evap = canopy_evap(layer, veg_var, true, veg_class, Wdew,
                                delta_t, NetBareRad, vpd, NetShortBare,
                                Tair, Ra_veg[1], elevation, rainfall,
                                Wmax, Wcr, Wpwp, frost_fract, root,
                                dryFrac, shortwave, Catm, CanopLayerBnd);
-            Evap *= veg_var->fcanopy;
+            fcanopy_adj = veg_var->fcanopy / (1 - fimperv);
+            Evap *= fcanopy_adj;
             for (i = 0; i < options.Nlayer; i++) {
-                layer[i].transp *= veg_var->fcanopy;
+                layer[i].transp *= fcanopy_adj;
             }
             // Account for canopy shading
 //            SurfRad = surf_atten * NetBareRad;
@@ -767,15 +778,29 @@ func_surf_energy_bal(double  Ts,
         else {
             SurfRad = NetBareRad;
         }
-        Evap += (1 - veg_var->fcanopy) *
+        // Compute esoil in canopy gaps
+        // Assume that the impervious portion accounts for some of the
+        // estimated space between plants; esoil can't take place there
+        fexposed = (1 - veg_var->fcanopy - fimperv) / (1 - fimperv);
+        if (fexposed < 0) {
+            fexposed = 0;
+        }
+        Evap += fexposed *
                 arno_evap(layer, SurfRad, Tair, vpd,
                           depth[0], max_moist * depth[0] * MM_PER_M,
                           elevation, b_infilt, Ra_used[0], delta_t,
                           resid_moist[0], frost_fract);
         for (i = 0; i < options.Nlayer; i++) {
-            layer[i].esoil *= (1 - veg_var->fcanopy);
+            layer[i].esoil *= fexposed;
             layer[i].evap = layer[i].transp + layer[i].esoil;
         }
+        for (i = 0; i < options.Nlayer; i++) {
+            layer[i].esoil *= (1 - fimperv);
+            layer[i].transp *= (1 - fimperv);
+            layer[i].evap *= (1 - fimperv);
+            layer[i].moist *= (1 - fimperv); // mm over tile
+        }
+        Evap *= (1 - fimperv);
         veg_var->throughfall = (1 - veg_var->fcanopy) * rainfall +
                                veg_var->fcanopy * veg_var->throughfall;
         veg_var->canopyevap *= veg_var->fcanopy;
