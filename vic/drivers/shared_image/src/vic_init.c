@@ -1183,9 +1183,15 @@ vic_init(void)
             }
         }
         // check the number of nonzero veg tiles
-        if (k > local_domain.locations[i].nveg) {
+        if (k > local_domain.locations[i].nveg + 1) {
             sprint_location(locstr, &(local_domain.locations[i]));
-            log_err("Number of veg tiles with nonzero area (%zu) > nveg "
+            log_err("Number of veg tiles with nonzero area (%zu) > nveg + 1 "
+                    "(%zu).\n%s", k, local_domain.locations[i].nveg,
+                    locstr);
+        }
+        else if (k < local_domain.locations[i].nveg) {
+            sprint_location(locstr, &(local_domain.locations[i]));
+            log_err("Number of veg tiles with nonzero area (%zu) < nveg "
                     "(%zu).\n%s", k, local_domain.locations[i].nveg,
                     locstr);
         }
@@ -1242,7 +1248,7 @@ vic_init(void)
                 if (sum <= 0) {
                     sprint_location(locstr, &(local_domain.locations[i]));
                     log_err("Root zone depths must sum to a value greater "
-                            "than 0 (sum = %.2f) - Type: %zd.\n%s", sum, j,
+                            "than 0 (sum = %.16f) - Type: %zd.\n%s", sum, j,
                             locstr);
                 }
                 sum = 0;
@@ -1251,10 +1257,10 @@ vic_init(void)
                 }
                 if (!assert_close_double(sum, 1.0, 0., AREA_SUM_ERROR_THRESH)) {
                     sprint_location(locstr, &(local_domain.locations[i]));
-                    log_warn("Root zone fractions sum to more than 1 (%f), "
-                             "normalizing fractions.  If the sum is large, "
-                             "check your vegetation parameter file.\n%s",
-                             sum, locstr);
+                    log_warn("Sum of root zone fractions !=  1.0 (%.16f) at "
+                             "grid cell %zd. Normalizing fractions. If the "
+                             "sum is large, check your vegetation parameter "
+                             "file.\n%s", sum, i, locstr);
                     for (k = 0; k < options.ROOT_ZONES; k++) {
                         veg_con[i][vidx].zone_fract[k] /= sum;
                     }
@@ -1291,8 +1297,9 @@ vic_init(void)
         // readjust Cvs to sum to 1.0
         if (!assert_close_double(Cv_sum[i], 1., 0., AREA_SUM_ERROR_THRESH)) {
             sprint_location(locstr, &(local_domain.locations[i]));
-            log_warn("Cv !=  1.0 (%f) at grid cell %zd. Adjusting fractions "
-                     "...\n%s", Cv_sum[i], i, locstr);
+            log_warn("Sum of veg tile area fractions !=  1.0 (%.16f) at grid "
+                     "cell %zd. Adjusting fractions ...\n%s", Cv_sum[i], i,
+                     locstr);
             for (j = 0; j < options.NVEGTYPES; j++) {
                 vidx = veg_con_map[i].vidx[j];
                 if (vidx != NODATA_VEG) {
@@ -1616,6 +1623,12 @@ vic_init(void)
                             &(all_vars[i].cell[tmp_lake_idx][0]), false);
         }
         initialize_energy(all_vars[i].energy, nveg);
+    }
+
+    // Canopy Iterations
+    if (!options.CLOSE_ENERGY) {
+        // do not iterate to close energy balance
+        param.MAX_ITER_GRND_CANOPY = 0;
     }
 
     // set state metadata structure
