@@ -832,7 +832,6 @@ typedef struct {
     double esoil;           /**< soil evaporation from soil layer (mm) */
     double evap;            /**< evapotranspiration from soil layer (mm) */
     double transp;          /**< transpiration from soil layer (mm) */
-
 } layer_data_struct;
 
 /******************************************************************************
