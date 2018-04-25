@@ -56,12 +56,12 @@ make_all_vars(size_t nveg,
         temp.cell_subtiles = (cell_data_struct ***) calloc(Nitems, sizeof(cell_data_struct **));
 
         for (v = 0; v < Nitems; v++) {
-            if (veg_con[v].crop_split) {
+//            if (veg_con[v].crop_split) {
                 temp.snow_subtiles[v]   = make_snow_data(MAX_SUBTILES);
                 temp.energy_subtiles[v] = make_energy_bal(MAX_SUBTILES);
                 temp.veg_var_subtiles[v]  = make_veg_var(MAX_SUBTILES);
                 temp.cell_subtiles[v]     = make_cell_data(MAX_SUBTILES);
-            }
+//            }
         }
 
     }

@@ -350,6 +350,20 @@ vic_init(void)
             }
         }
     }
+    else {
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].ithresh = IRR_CR;
+                veg_lib[i][j].itarget = IRR_FC;
+                veg_lib[i][j].crop_split = (bool) 0;
+                veg_lib[i][j].irr_active = (bool) 0;
+                for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                    veg_lib[i][j].fcrop[k] = 1.0;
+                    veg_lib[i][j].firr[k] = 0.0;
+                }
+            }
+        }
+    }
 
     // total impervious area
     for (j = 0; j < options.NVEGTYPES; j++) {
@@ -1217,6 +1231,12 @@ vic_init(void)
                 veg_con[i][k].Cv = veg_con_map[i].Cv[j];
                 veg_con[i][k].veg_class = j;
                 veg_con[i][k].crop_split = veg_lib[i][j].crop_split;
+                if (veg_con[i][k].crop_split) {
+                    veg_con[i][k].Nsubtiles = 2;
+                }
+                else {
+                    veg_con[i][k].Nsubtiles = 1;
+                }
                 veg_con[i][k].irr_active = veg_lib[i][j].irr_active;
                 for (m = 0; m < MONTHS_PER_YEAR; m++) {
                     if (options.ALB_SRC == FROM_VEGLIB ||
