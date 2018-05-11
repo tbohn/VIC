@@ -164,12 +164,15 @@ vic_run(force_data_struct   *force,
                             veg_var = &(all_vars->veg_var[iveg][band]);
                             snow = &(all_vars->snow[iveg][band]);
                         }
-                        compute_irrig_demand(cell, soil_con, veg_lib,
-                                             force, snow->swq);
-                        firr = all_vars->veg_var[iveg][band].firr;
-                        irr_demand_total += cell->irr_demand * firr *
-                                            veg_con[iveg].Cv *
-                                            soil_con->AreaFract[band];
+                        cell->irr_apply = false;
+                        if (!options.CROPSPLIT || all_vars->veg_var[iveg][band].firr > 0) {
+                            compute_irrig_demand(cell, soil_con, veg_lib,
+                                                 force, snow->swq);
+                            firr = all_vars->veg_var[iveg][band].firr;
+                            irr_demand_total += cell->irr_demand * firr *
+                                                veg_con[iveg].Cv *
+                                                soil_con->AreaFract[band];
+                        }
                     }
                 }
             }
@@ -452,49 +455,54 @@ vic_run(force_data_struct   *force,
                         veg_var->LAI *= veg_var->fcanopy;
                         veg_var->Wdmax *= veg_var->fcanopy;
 
-                        /* Recombine crop subtiles */
-                        if (options.CROPSPLIT &&
-                            veg_con[iveg].crop_split) {
-                            wtavg_cell_data(
-                                &(all_vars->cell_subtiles[iveg][0][band]),
-                                (1 - all_vars->veg_var[iveg][band].fcrop),
-                                &(all_vars->cell_subtiles[iveg][1][band]),
-                                all_vars->veg_var[iveg][band].fcrop,
-                                true,
-                                &(all_vars->cell[iveg][band]));
-                            wtavg_veg_var(
-                                &(all_vars->veg_var_subtiles[iveg][0][band]),
-                                (1 - all_vars->veg_var[iveg][band].fcrop),
-                                &(all_vars->veg_var_subtiles[iveg][1][band]),
-                                all_vars->veg_var[iveg][band].fcrop,
-                                true,
-                                &(all_vars->veg_var[iveg][band]));
-                            wtavg_snow_data(
-                                &(all_vars->snow_subtiles[iveg][0][band]),
-                                false,
-                                (1 - all_vars->veg_var[iveg][band].fcrop),
-                                &(all_vars->snow_subtiles[iveg][1][band]),
-                                overstory,
-                                all_vars->veg_var[iveg][band].fcrop,
-                                true,
-                                &(all_vars->snow[iveg][band]));
-                            wtavg_energy_bal(
-                                &(all_vars->energy_subtiles[iveg][0][band]),
-                                veg_con[iveg].LAKE,
-                                soil_con->FS_ACTIVE,
-                                (1 - all_vars->veg_var[iveg][band].fcrop),
-                                &(all_vars->energy_subtiles[iveg][1][band]),
-                                veg_con[iveg].LAKE,
-                                soil_con->FS_ACTIVE,
-                                all_vars->veg_var[iveg][band].fcrop,
-                                soil_con->Zsum_node,
-                                true,
-                                &(all_vars->energy[iveg][band]));
-                        }
-
                     } /** End non-zero area band **/
                 } /** End Loop Through Elevation Bands **/
             } /** End loop over subtiles **/
+
+            for (band = 0; band < Nbands; band++) {
+                if (soil_con->AreaFract[band] > 0) {
+                    /* Recombine crop subtiles */
+                    if (options.CROPSPLIT &&
+                        veg_con[iveg].crop_split) {
+                        wtavg_cell_data(
+                            &(all_vars->cell_subtiles[iveg][0][band]),
+                            (1 - all_vars->veg_var[iveg][band].fcrop),
+                            &(all_vars->cell_subtiles[iveg][1][band]),
+                            all_vars->veg_var[iveg][band].fcrop,
+                            true,
+                            &(all_vars->cell[iveg][band]));
+                        wtavg_veg_var(
+                            &(all_vars->veg_var_subtiles[iveg][0][band]),
+                            (1 - all_vars->veg_var[iveg][band].fcrop),
+                            &(all_vars->veg_var_subtiles[iveg][1][band]),
+                            all_vars->veg_var[iveg][band].fcrop,
+                            true,
+                            &(all_vars->veg_var[iveg][band]));
+                        wtavg_snow_data(
+                            &(all_vars->snow_subtiles[iveg][0][band]),
+                            false,
+                            (1 - all_vars->veg_var[iveg][band].fcrop),
+                            &(all_vars->snow_subtiles[iveg][1][band]),
+                            overstory,
+                            all_vars->veg_var[iveg][band].fcrop,
+                            true,
+                            &(all_vars->snow[iveg][band]));
+                        wtavg_energy_bal(
+                            &(all_vars->energy_subtiles[iveg][0][band]),
+                            veg_con[iveg].LAKE,
+                            soil_con->FS_ACTIVE,
+                            (1 - all_vars->veg_var[iveg][band].fcrop),
+                            &(all_vars->energy_subtiles[iveg][1][band]),
+                            veg_con[iveg].LAKE,
+                            soil_con->FS_ACTIVE,
+                            all_vars->veg_var[iveg][band].fcrop,
+                            soil_con->Zsum_node,
+                            true,
+                            &(all_vars->energy[iveg][band]));
+                    }
+
+                }
+            }
         } /** end non-zero area veg tile **/
     } /** end of vegetation loop **/
 

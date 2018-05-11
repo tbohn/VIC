@@ -273,6 +273,12 @@ vic_force(void)
                         veg_con[i][vidx].LAI[dmy[current].month - 1];
                     veg_hist[i][vidx].roughness[j] =
                         veg_con[i][vidx].roughness[dmy[current].month - 1];
+                    if (options.IRRIGATION && options.CROPSPLIT) {
+                        veg_hist[i][vidx].fcrop[j] =
+                            veg_con[i][vidx].fcrop[dmy[current].month - 1];
+                        veg_hist[i][vidx].firr[j] =
+                            veg_con[i][vidx].firr[dmy[current].month - 1];
+                    }
                 }
             }
         }
