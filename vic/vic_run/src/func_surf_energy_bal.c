@@ -680,6 +680,7 @@ func_surf_energy_bal(double  Ts,
         Ra_veg[0] = param.HUGE_RESIST;
     }
     Ra_used[0] = Ra_veg[0];
+//fprintf(stderr,"func_surf: Ra_veg %f %f %f\n",Ra_veg[0],Ra_veg[1],Ra_veg[2]);
 
     /*************************************************
        Compute aerodynamic resistance for the case of exposed soil between
@@ -699,6 +700,7 @@ func_surf_energy_bal(double  Ts,
        exposed soil) are 0, then Ra_used must necessarily be 0 as well.
     *************************************************/
     if (veg_var->fcanopy < 1) {
+//fprintf(stderr,"func_surf: fcanopy %f\n",veg_var->fcanopy);
         /** If Ra_veg is non-zero, use it to compute area-weighted average **/
         if (Ra_veg[0] > 0) {
             /** aerodynamic conductance under vegetation **/
@@ -711,6 +713,7 @@ func_surf_energy_bal(double  Ts,
             tmp_displacement[0] = calc_veg_displacement(tmp_height);
             tmp_roughness[0] = soil_con->rough;
             tmp_ref_height[0] = param.SOIL_WINDH; // wind height over bare soil
+//fprintf(stderr,"before CalcAero: snow_rough %f soil_rough %f Ra_bare %f %f %f wind %f %f %f disp %f ref_height %f tmp_height %f\n",soil_con->snow_rough,soil_con->rough,Ra_bare[0],Ra_bare[1],Ra_bare[2],tmp_wind[0],tmp_wind[1],tmp_wind[2],tmp_displacement[0],tmp_ref_height[0],tmp_height);
             Error = CalcAerodynamic(0, 0, 0, soil_con->snow_rough,
                                     soil_con->rough, 0, Ra_bare, tmp_wind,
                                     tmp_displacement, tmp_ref_height,
@@ -719,6 +722,7 @@ func_surf_energy_bal(double  Ts,
                                               tmp_displacement[0], TMean,
                                               Tair, tmp_wind[0],
                                               tmp_roughness[0]);
+//fprintf(stderr,"func_surf: Ra_bare %f %f %f\n",Ra_bare[0],Ra_bare[1],Ra_bare[2]);
 
             /** if Ra_bare is non-zero, compute area-weighted average
                 aerodynamic conductance **/
@@ -741,6 +745,7 @@ func_surf_energy_bal(double  Ts,
             Ra_used[0] = 0;
         }
     }
+//fprintf(stderr,"func_surf: Ra_used %f %f %f\n",Ra_used[0],Ra_used[1],Ra_used[2]);
 
     /*************************************************
        Compute Evapotranspiration if not snow covered
@@ -761,6 +766,7 @@ func_surf_energy_bal(double  Ts,
         }
         // Compute canopy_evap and transpiration (over canopy portion only)
         if (VEG && veg_var->fcanopy > 0) {
+//fprintf(stderr,"before canopy_evap: fcanopy %f LAI %f veg_class %d\n",veg_var->fcanopy,veg_var->LAI,veg_class);
             Evap = canopy_evap(layer, veg_var, true, veg_class, Wdew,
                                delta_t, NetBareRad, vpd, NetShortBare,
                                Tair, Ra_veg[1], elevation, rainfall,
@@ -785,13 +791,22 @@ func_surf_energy_bal(double  Ts,
         if (fexposed < 0) {
             fexposed = 0;
         }
-        Evap += fexposed *
-                arno_evap(layer, SurfRad, Tair, vpd,
-                          depth[0], max_moist * depth[0] * MM_PER_M,
-                          elevation, b_infilt, Ra_used[0], delta_t,
-                          resid_moist[0], frost_fract);
+        if (fexposed > 0) {
+            Evap += fexposed *
+                    arno_evap(layer, SurfRad, Tair, vpd,
+                              depth[0], max_moist * depth[0] * MM_PER_M,
+                              elevation, b_infilt, Ra_used[0], delta_t,
+                              resid_moist[0], frost_fract);
+            for (i = 0; i < options.Nlayer; i++) {
+                layer[i].esoil *= fexposed;
+            }
+        }
+        else {
+            for (i = 0; i < options.Nlayer; i++) {
+                layer[i].esoil = 0;
+            }
+        }
         for (i = 0; i < options.Nlayer; i++) {
-            layer[i].esoil *= fexposed;
             layer[i].evap = layer[i].transp + layer[i].esoil;
         }
         for (i = 0; i < options.Nlayer; i++) {

@@ -127,9 +127,6 @@ main(int    argc,
     // populate model state, either using a cold start or from a restart file
     vic_populate_model_state(&(dmy[0]));
 
-    // initialize output structures
-    vic_init_output(&(dmy[0]));
-
     // Initialization is complete, print settings
     log_info(
         "Initialization is complete, print global param, parameters and options structures");
@@ -148,6 +145,11 @@ main(int    argc,
         timer_continue(&(global_timers[TIMER_VIC_FORCE]));
         vic_force();
         timer_stop(&(global_timers[TIMER_VIC_FORCE]));
+
+        if (current == 0) {
+            // initialize output structures
+            vic_init_output(&(dmy[0]));
+        }
 
         // run vic over the domain
         vic_image_run(&(dmy[current]));

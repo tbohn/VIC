@@ -748,6 +748,10 @@ vic_init(void)
                                 d2start, d2count, dvar);
     for (i = 0; i < local_domain.ncells_active; i++) {
         soil_con[i].rough = (double) dvar[i];
+        if (soil_con[i].rough <= 0) {
+            log_err("Model will not function with soil roughness %f <= 0 "
+                    "m.\n%s", soil_con[i].rough, locstr);
+        }
     }
 
     // snow_rough: snow roughness
@@ -755,6 +759,10 @@ vic_init(void)
                                 d2start, d2count, dvar);
     for (i = 0; i < local_domain.ncells_active; i++) {
         soil_con[i].snow_rough = (double) dvar[i];
+        if (soil_con[i].snow_rough <= 0) {
+            log_err("Model will not function with snow roughness %f <= 0 "
+                    "m.\n%s", soil_con[i].snow_rough, locstr);
+        }
     }
 
     // annual_prec: annual precipitation
@@ -1238,6 +1246,7 @@ vic_init(void)
                     veg_con[i][k].Nsubtiles = 1;
                 }
                 veg_con[i][k].irr_active = veg_lib[i][j].irr_active;
+//fprintf(stderr,"i %zu j %zu k %zu veg_lib[i][j].crop_split %d veg_con[i][k].crop_split %d veg_con[i][k].Nsubtiles %zu veg_lib[i][j].irr_active %d veg_con[i][k].irr_active %d\n",i,j,k,veg_lib[i][j].crop_split,veg_con[i][k].crop_split,veg_con[i][k].Nsubtiles,veg_lib[i][j].irr_active,veg_con[i][k].irr_active);
                 for (m = 0; m < MONTHS_PER_YEAR; m++) {
                     if (options.ALB_SRC == FROM_VEGLIB ||
                         options.ALB_SRC == FROM_VEGPARAM) {
@@ -1261,6 +1270,7 @@ vic_init(void)
                     veg_con[i][k].roughness[m] = veg_lib[i][j].roughness[m];
                     veg_con[i][k].fcrop[m] = veg_lib[i][j].fcrop[m];
                     veg_con[i][k].firr[m] = veg_lib[i][j].firr[m];
+//fprintf(stderr,"i %zu j %zu k %zu m %zu veg_lib[i][j].fcrop[m] %f veg_con[i][k].fcrop[m] %f veg_lib[i][j].firr[m] %f veg_con[i][k].firr[m] %f\n",i,j,k,m,veg_lib[i][j].fcrop[m],veg_con[i][k].fcrop[m],veg_lib[i][j].firr[m],veg_con[i][k].firr[m]);
                 }
                 k++;
             }

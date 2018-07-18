@@ -84,8 +84,11 @@ get_global_domain(nameid_struct *domain_nc_nameid,
     // Check whether cells with run_cell == 1 are all within the mask domain
     for (i = 0; i < global_domain->ncells_total; i++) {
         if (run[i] == 1 && mask[i] != 1) {
-            log_err("Run_cell = 1 should only appear within the mask of the "
-                    "domain file.");
+//            log_err("Run_cell = 1 should only appear within the mask of the "
+//                    "domain file.");
+            log_warn("i %zu: Run_cell = 1 should only appear within the mask of the "
+                     "domain file; setting to 0.",i);
+            run[i] = 0;
         }
     }
 

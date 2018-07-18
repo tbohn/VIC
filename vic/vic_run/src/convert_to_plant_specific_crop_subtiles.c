@@ -48,7 +48,7 @@ convert_to_plant_specific_crop_subtiles(veg_var_struct   *veg_var_whole,
 
     // Start by setting up planted and fallow parameter values
     if (veg_var_whole->fcrop > 0) {
-        tmp_fallow_fcanopy = MIN_FCANOPY;
+        tmp_fallow_fcanopy = 0;
         tmp_crop_fcanopy = veg_var_whole->fcanopy / veg_var_whole->fcrop;
         tmp_fallow_albedo = veg_var_whole->albedo;
         tmp_crop_albedo = veg_var_whole->albedo;
@@ -64,9 +64,9 @@ convert_to_plant_specific_crop_subtiles(veg_var_struct   *veg_var_whole,
         tmp_crop_LAI = veg_var_whole->LAI;
     }
     if (tmp_fallow_fcanopy > 1) tmp_fallow_fcanopy = 1;
-    if (tmp_fallow_fcanopy < MIN_FCANOPY) tmp_fallow_fcanopy = MIN_FCANOPY;
+    if (tmp_fallow_fcanopy < MIN_FCANOPY) tmp_fallow_fcanopy = 0;
     if (tmp_crop_fcanopy > 1) tmp_crop_fcanopy = 1;
-    if (tmp_crop_fcanopy < MIN_FCANOPY) tmp_crop_fcanopy = MIN_FCANOPY;
+    if (tmp_crop_fcanopy < MIN_FCANOPY) tmp_crop_fcanopy = 0;
     if (tmp_fallow_albedo > 1) tmp_fallow_albedo = 1;
     if (tmp_fallow_albedo < param.ALBEDO_H2O_SURF) tmp_fallow_albedo = param.ALBEDO_H2O_SURF;
     if (tmp_crop_albedo > 1) tmp_crop_albedo = 1;
@@ -84,14 +84,20 @@ convert_to_plant_specific_crop_subtiles(veg_var_struct   *veg_var_whole,
         veg_var_sub1->fcrop = (veg_var_whole->fcrop - veg_var_whole->firr)/(1 - veg_var_whole->firr);
     }
     else {
-        veg_var_sub1->fcanopy = MIN_FCANOPY;
+        veg_var_sub1->fcanopy = 0;
         veg_var_sub1->albedo = param.ALBEDO_BARE_SOIL;
         veg_var_sub1->LAI = 0;
         veg_var_sub1->Wdmax = 0;
         veg_var_sub1->fcrop = 0;
     }
-    veg_var_sub1->Wdew /= veg_var_sub1->fcanopy;
-    snow_sub1->snow_canopy /= veg_var_sub1->fcanopy;
+    if (veg_var_sub1->fcanopy > 0) {
+        veg_var_sub1->Wdew /= veg_var_sub1->fcanopy;
+        snow_sub1->snow_canopy /= veg_var_sub1->fcanopy;
+    }
+    else {
+        veg_var_sub1->Wdew = 0;
+        snow_sub1->snow_canopy = 0;
+    }
 
     // irrigated sub-tile
     veg_var_sub2->fcanopy = tmp_crop_fcanopy;
@@ -100,7 +106,13 @@ convert_to_plant_specific_crop_subtiles(veg_var_struct   *veg_var_whole,
     veg_var_sub2->Wdmax = tmp_crop_LAI*param.VEG_LAI_WATER_FACTOR;
     veg_var_sub2->firr = 1;
     veg_var_sub2->fcrop = 1;
-    veg_var_sub2->Wdew /= veg_var_sub2->fcanopy;
-    snow_sub2->snow_canopy /= veg_var_sub2->fcanopy;
+    if (veg_var_sub2->fcanopy > 0) {
+        veg_var_sub2->Wdew /= veg_var_sub2->fcanopy;
+        snow_sub2->snow_canopy /= veg_var_sub2->fcanopy;
+    }
+    else {
+        veg_var_sub2->Wdew = 0;
+        snow_sub2->snow_canopy = 0;
+    }
 
 }

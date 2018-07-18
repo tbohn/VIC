@@ -239,15 +239,15 @@ func_canopy_energy_bal(double  Tfoliage,
 
         *Wdew = IntRain * MM_PER_M;
         prec = Rainfall * MM_PER_M;
-        // NOTE: this is missing the accounting for fcanopy
-        // (canopy_evap should be rescaled by fcanopy since LAI here
-        // is plant-specific)
         *Evap = canopy_evap(layer, veg_var, false,
                             veg_class, Wdew, delta_t, *NetRadiation,
                             Vpd, NetShortOver, Tcanopy, Ra_used[1],
                             elevation, prec, Wmax, Wcr, Wpwp, frost_fract,
                             root, dryFrac, shortwave, Catm, CanopLayerBnd);
         *Wdew /= MM_PER_M;
+        // Account for fractional canopy cover
+        *Evap *= veg_var->fcanopy;
+        *Wdew *= veg_var->fcanopy;
 
         *LatentHeat = Le * (*Evap) * CONST_RHOFW;
         *LatentHeatSub = 0;

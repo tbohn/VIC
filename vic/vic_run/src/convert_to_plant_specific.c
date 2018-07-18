@@ -36,9 +36,11 @@ convert_to_plant_specific(veg_var_struct   *veg_var,
 
     extern parameters_struct param;
 
-    veg_var->LAI /= veg_var->fcanopy;
-    veg_var->Wdew /= veg_var->fcanopy;
+    if (veg_var->fcanopy > 0) {
+        veg_var->LAI /= veg_var->fcanopy;
+        veg_var->Wdew /= veg_var->fcanopy;
+        snow->snow_canopy /= veg_var->fcanopy;
+    }
     veg_var->Wdmax = veg_var->LAI * param.VEG_LAI_WATER_FACTOR;
-    snow->snow_canopy /= veg_var->fcanopy;
 
 }
