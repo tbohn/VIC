@@ -568,7 +568,6 @@ vic_run(force_data_struct   *force,
         lake_var->baseflow_in =
             (sum_baseflow * lake_con->rpercent +
              wetland_baseflow) * soil_con->cell_area / MM_PER_M;                                                 // m3
-        /**  Calculate mannual irrigation influex **/
         /**  Calculate manually applied irrigation influx **/
         lake_var->influx = lake_con.maxvolume - lake_var.volume - (lake_var->runoff_in + lake_var->baseflow_in)                                                 // m3
         lake_var->channel_in = force->channel_in[NR] * soil_con->cell_area /
