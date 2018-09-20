@@ -571,6 +571,9 @@ vic_run(force_data_struct   *force,
         /**  Calculate mannual irrigation influex **/
         lake_var->influx = lake_con.maxvolume - lake_var.volume - (lake_var->runoff_in + lake_var->baseflow_in)                                                 // m3
         lake_var->channel_in = force->channel_in[NR] * soil_con->cell_area /
+                               MM_PER_M + lake_var->influx;                                  // m3
+        /** add to irrigation **/
+        cell[iveg][band].irr_applied += lake_var->influx * MM_PER_M / soil_con->cell_area                                                                                      
         lake_var->prec = force->prec[NR] * lake_var->sarea / MM_PER_M; // m3
         rainonly = calc_rainonly(force->air_temp[NR], force->prec[NR],
                                  param.SNOW_MAX_SNOW_TEMP,
