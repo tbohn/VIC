@@ -2041,7 +2041,7 @@ water_balance(lake_var_struct *lake,
     if (baseflow_out_mm < 0) {
         baseflow_out_mm = 0;
     }
-
+    baseflow_out_mm = 0
     // extract baseflow volume from the lake m^3
     // baseflow will only come from under the liquid portion of the lake
     ErrorFlag = get_depth(lake_con, lake->volume - lake->ice_water_eq, &ldepth);
