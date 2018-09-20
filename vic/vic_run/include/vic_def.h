@@ -1131,7 +1131,7 @@ typedef struct {
     double aero_resist;           /**< Aerodynamic resistance (s/m) after stability correction */
     double density[MAX_LAKE_NODES]; /**< Lake water density profile (kg/m^3) */
     // Moisture fluxes
-    double influx                 /**< Volume of additional irrigation water amount into lake (m3) */
+    double influx;                 /**< Volume of additional irrigation water amount into lake (m3) */
     double baseflow_in;           /**< Volume of baseflow into lake from the rest of the grid cell (m3) */
     double baseflow_out;          /**< Volume of baseflow out of lake to channel network (m3) */
     double channel_in;            /**< Volume of channel inflow into lake (m3) */
