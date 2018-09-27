@@ -451,9 +451,11 @@ vic_force(void)
                         if (current == 0 || options.FCAN_SRC == FROM_VEGHIST) {
                             // Only issue this warning once
                             log_warn(
-                                "cell %zu, veg %d substep %zu fcanopy %f < "
-                                "minimum of %f; setting = 0", i, vidx, j,
-                                veg_hist[i][vidx].fcanopy[j], MIN_FCANOPY);
+                                "cell %zu, veg %d substep %zu either fcanopy "
+                                "%f < minimum of %f or LAI %f == 0; setting "
+                                "both LAI and fcanopy to 0", i, vidx, j,
+                                veg_hist[i][vidx].fcanopy[j], MIN_FCANOPY,
+                                veg_hist[i][vidx].LAI[j]);
                         }
                         veg_hist[i][vidx].fcanopy[j] = 0;
                         veg_hist[i][vidx].LAI[j] = 0;
@@ -462,6 +464,7 @@ vic_force(void)
             }
         }
     }
+
 
 
     // Put average value in NR field

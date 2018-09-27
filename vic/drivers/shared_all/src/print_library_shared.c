@@ -517,6 +517,8 @@ print_option(option_struct *option)
             option->LAKE_PROFILE ? "true" : "false");
     fprintf(LOG_DEST, "\tORGANIC_FRACT        : %s\n",
             option->ORGANIC_FRACT ? "true" : "false");
+    fprintf(LOG_DEST, "\tBULK_DENSITY_COMB        : %s\n",
+            option->BULK_DENSITY_COMB ? "true" : "false");
     fprintf(LOG_DEST, "\tNEW_SNOW_ALB_SUPPLIED: %s\n",
             option->NEW_SNOW_ALB_SUPPLIED ? "true" : "false");
     fprintf(LOG_DEST, "\tSTATE_FORMAT         : %d\n", option->STATE_FORMAT);

@@ -72,6 +72,8 @@ initialize_options()
     // Model dimensions
     options.Ncanopy = 3;
     options.Nfrost = 1;
+    options.Nlakebasnode = MAX_LAKE_BASIN_NODES;
+    options.Nlakenode = MAX_LAKE_NODES;
     options.Nlayer = 3;
     options.Nnode = 3;
     options.ROOT_ZONES = 0;
@@ -86,6 +88,7 @@ initialize_options()
     options.LAI_SRC = FROM_VEGLIB;
     options.NEW_SNOW_ALB_SUPPLIED = false;
     options.ORGANIC_FRACT = false;
+    options.BULK_DENSITY_COMB = false;
     options.VEGLIB_FCAN = false;
     options.VEGLIB_PHOTO = false;
     options.VEGPARAM_ALB = false;

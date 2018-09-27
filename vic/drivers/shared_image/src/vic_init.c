@@ -720,6 +720,29 @@ vic_init(void)
             }
         }
     }
+    // bulk density of mineral and organic soil
+    if (options.BULK_DENSITY_COMB) {
+        for (j = 0; j < options.Nlayer; j++) {
+            d3start[0] = j;
+            get_scatter_nc_field_double(&(filenames.params),
+                                        "bulk_density_comb",
+                                        d3start, d3count, dvar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                soil_con[i].bulk_density[j] = (double) dvar[i];
+            }
+        }
+    }
+    else {
+        for (i = 0; i < local_domain.ncells_active; i++) {
+            for (j = 0; j < options.Nlayer; j++) {
+                soil_con[i].bulk_density[j] =
+                    (1 - soil_con[i].organic[j]) *
+                    soil_con[i].bulk_dens_min[j] +
+                    soil_con[i].organic[j] * soil_con[i].bulk_dens_org[j];
+            }
+        }
+    }
+
 
     // Wcr: critical point for each layer
     // Note this value is  multiplied with the maximum moisture in each layer
@@ -843,9 +866,6 @@ vic_init(void)
     for (i = 0; i < local_domain.ncells_active; i++) {
         for (j = 0; j < options.Nlayer; j++) {
             // compute layer properties
-            soil_con[i].bulk_density[j] =
-                (1 - soil_con[i].organic[j]) * soil_con[i].bulk_dens_min[j] +
-                soil_con[i].organic[j] * soil_con[i].bulk_dens_org[j];
             soil_con[i].soil_density[j] =
                 (1 - soil_con[i].organic[j]) * soil_con[i].soil_dens_min[j] +
                 soil_con[i].organic[j] * soil_con[i].soil_dens_org[j];
@@ -1488,15 +1508,15 @@ vic_init(void)
             if (lake_con[i].lake_idx >= 0 &&
                 lake_con[i].lake_idx < (int) veg_con[i][0].vegetat_type_num) {
                 if (!(lake_con[i].numnod > 0 &&
-                      lake_con[i].numnod < MAX_LAKE_NODES)) {
+                      lake_con[i].numnod < MAX_LAKE_BASIN_NODES)) {
                     log_err("cell %zu numnod is %zu but we must have 1 "
                             "<= numnod < %d.", i, lake_con[i].numnod,
-                            MAX_LAKE_NODES);
+                            MAX_LAKE_BASIN_NODES);
                 }
-                else if (!(lake_con[i].numnod <= options.NLAKENODES)) {
+                else if (!(lake_con[i].numnod <= options.Nlakebasnode)) {
                     log_err("cell %zu numnod is %zu but this exceeds "
                             "the file lake_node dimension length of %zu.",
-                            i, lake_con[i].numnod, options.NLAKENODES);
+                            i, lake_con[i].numnod, options.Nlakebasnode);
                 }
                 if (lake_con[i].numnod > max_numnod) {
                     max_numnod = lake_con[i].numnod;
@@ -1563,7 +1583,7 @@ vic_init(void)
 
         // lake depth-area relationship
         for (i = 0; i < local_domain.ncells_active; i++) {
-            for (j = 0; j <= MAX_LAKE_NODES; j++) {
+            for (j = 0; j <= MAX_LAKE_BASIN_NODES; j++) {
                 lake_con[i].z[j] = 0;
                 lake_con[i].Cl[j] = 0;
             }

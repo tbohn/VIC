@@ -745,7 +745,6 @@ func_surf_energy_bal(double  Ts,
             Ra_used[0] = 0;
         }
     }
-//fprintf(stderr,"func_surf: Ra_used %f %f %f\n",Ra_used[0],Ra_used[1],Ra_used[2]);
 
     /*************************************************
        Compute Evapotranspiration if not snow covered
@@ -765,8 +764,7 @@ func_surf_energy_bal(double  Ts,
             layer[i].moist /= (1 - fimperv); // mm over non-impervious
         }
         // Compute canopy_evap and transpiration (over canopy portion only)
-        if (VEG && veg_var->fcanopy > 0) {
-//fprintf(stderr,"before canopy_evap: fcanopy %f LAI %f veg_class %d\n",veg_var->fcanopy,veg_var->LAI,veg_class);
+        if (VEG) { // if VEG is TRUE, then fcanopy > 0 and lAI > 0
             Evap = canopy_evap(layer, veg_var, true, veg_class, Wdew,
                                delta_t, NetBareRad, vpd, NetShortBare,
                                Tair, Ra_veg[1], elevation, rainfall,
