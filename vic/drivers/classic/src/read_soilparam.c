@@ -623,8 +623,8 @@ read_soilparam(FILE            *soilparam,
                 token = strtok(NULL, delimiters);
             }
             if (token == NULL) {
-                log_err("Can't find values for average new_snow_albedo Tair "
-                        " in soil file");
+                log_err("Can't find values for average new_snow_albedo "
+                        "in soil file");
             }
             sscanf(token, "%lf", &tempdbl);
             temp->new_snow_albedo = tempdbl;
