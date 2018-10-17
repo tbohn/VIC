@@ -482,6 +482,10 @@ read_soilparam(FILE            *soilparam,
             log_err("Can't find values for SOIL ROUGHNESS in soil file");
         }
         sscanf(token, "%lf", &(temp->rough));
+        if (temp->rough <= 0) {
+            log_err("Model will not function with soil roughness %f <= 0 "
+                    "m.\n", temp->rough);
+        }
 
         /* Overwrite default bare soil aerodynamic resistance parameters
            with the values taken from the soil parameter file */
@@ -501,6 +505,10 @@ read_soilparam(FILE            *soilparam,
             log_err("Can't find values for SNOW ROUGHNESS in soil file");
         }
         sscanf(token, "%lf", &(temp->snow_rough));
+        if (temp->snow_rough <= 0) {
+            log_err("Model will not function with snow roughness %f <= 0 "
+                    "m.\n", temp->snow_rough);
+        }
 
         /* read cell annual precipitation */
         token = strtok(NULL, delimiters);
@@ -592,7 +600,7 @@ read_soilparam(FILE            *soilparam,
                 token = strtok(NULL, delimiters);
             }
             if (token == NULL) {
-                log_err("Can't find values for average new_snow_albedo Tair "
+                log_err("Can't find values for average new_snow_albedo "
                         " in soil file");
             }
             sscanf(token, "%lf", &tempdbl);
