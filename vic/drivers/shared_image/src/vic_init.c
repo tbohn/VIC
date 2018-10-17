@@ -672,6 +672,10 @@ vic_init(void)
                                 d2start, d2count, dvar);
     for (i = 0; i < local_domain.ncells_active; i++) {
         soil_con[i].rough = (double) dvar[i];
+        if (soil_con[i].rough <= 0) {
+            log_err("cell %zu: Model will not function with soil roughness "
+                    "%f <= 0 m.\n%s", i, soil_con[i].rough, locstr);
+        }
     }
 
     // snow_rough: snow roughness
@@ -679,6 +683,10 @@ vic_init(void)
                                 d2start, d2count, dvar);
     for (i = 0; i < local_domain.ncells_active; i++) {
         soil_con[i].snow_rough = (double) dvar[i];
+        if (soil_con[i].snow_rough <= 0) {
+            log_err("cell %zu: Model will not function with snow roughness "
+                    "%f <= 0 m.\n%s", i, soil_con[i].snow_rough, locstr);
+        }
     }
 
     // annual_prec: annual precipitation
@@ -751,6 +759,11 @@ vic_init(void)
                                     d2start, d2count, dvar);
         for (i = 0; i < local_domain.ncells_active; i++) {
             soil_con[i].new_snow_albedo = (double) dvar[i];
+        }
+    }
+    else {
+        for (i = 0; i < local_domain.ncells_active; i++) {
+            soil_con[i].new_snow_albedo = param.SNOW_NEW_SNOW_ALB;
         }
     }
 
