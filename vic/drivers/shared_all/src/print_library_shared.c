@@ -458,6 +458,8 @@ print_option(option_struct *option)
             option->CONTINUEONERROR ? "true" : "false");
     fprintf(LOG_DEST, "\tCORRPREC             : %s\n",
             option->CORRPREC ? "true" : "false");
+    fprintf(LOG_DEST, "\tCROPSPLIT            : %s\n",
+            option->CROPSPLIT ? "true" : "false");
     fprintf(LOG_DEST, "\tEQUAL_AREA           : %s\n",
             option->EQUAL_AREA ? "true" : "false");
     fprintf(LOG_DEST, "\tEXP_TRANS            : %s\n",
@@ -469,6 +471,10 @@ print_option(option_struct *option)
     fprintf(LOG_DEST, "\tGRND_FLUX_TYPE       : %d\n", option->GRND_FLUX_TYPE);
     fprintf(LOG_DEST, "\tIMPLICIT             : %s\n",
             option->IMPLICIT ? "true" : "false");
+    fprintf(LOG_DEST, "\tIRRIGATION           : %s\n",
+            option->IRRIGATION ? "true" : "false");
+    fprintf(LOG_DEST, "\tIRR_FREE             : %s\n",
+            option->IRR_FREE ? "true" : "false");
     fprintf(LOG_DEST, "\tJULY_TAVG_SUPPLIED   : %s\n",
             option->JULY_TAVG_SUPPLIED ? "true" : "false");
     fprintf(LOG_DEST, "\tLAKES                : %s\n",
@@ -499,19 +505,34 @@ print_option(option_struct *option)
             option->TFALLBACK ? "true" : "false");
     fprintf(LOG_DEST, "\tBASEFLOW             : %d\n", option->BASEFLOW);
     fprintf(LOG_DEST, "\tGRID_DECIMAL         : %d\n", option->GRID_DECIMAL);
-    fprintf(LOG_DEST, "\tVEGLIB_PHOTO         : %s\n",
-            option->VEGLIB_PHOTO ? "true" : "false");
     fprintf(LOG_DEST, "\tVEGLIB_FCAN          : %s\n",
             option->VEGLIB_FCAN ? "true" : "false");
+    fprintf(LOG_DEST, "\tVEGLIB_IPRM          : %s\n",
+            option->VEGLIB_IPRM ? "true" : "false");
+    fprintf(LOG_DEST, "\tVEGLIB_PHOTO         : %s\n",
+            option->VEGLIB_PHOTO ? "true" : "false");
     fprintf(LOG_DEST, "\tVEGPARAM_ALB         : %s\n",
             option->VEGPARAM_ALB ? "true" : "false");
-    fprintf(LOG_DEST, "\tVEGPARAM_LAI         : %s\n",
-            option->VEGPARAM_LAI ? "true" : "false");
+    fprintf(LOG_DEST, "\tVEGPARAM_CSPFLG      : %s\n",
+            option->VEGPARAM_CSPFLG ? "true" : "false");
     fprintf(LOG_DEST, "\tVEGPARAM_FCAN        : %s\n",
             option->VEGPARAM_FCAN ? "true" : "false");
+    fprintf(LOG_DEST, "\tVEGPARAM_FCROP       : %s\n",
+            option->VEGPARAM_FCROP ? "true" : "false");
+    fprintf(LOG_DEST, "\tVEGPARAM_FIMP        : %s\n",
+            option->VEGPARAM_FIMP ? "true" : "false");
+    fprintf(LOG_DEST, "\tVEGPARAM_FIRR        : %s\n",
+            option->VEGPARAM_FIRR ? "true" : "false");
+    fprintf(LOG_DEST, "\tVEGPARAM_IFLAG       : %s\n",
+            option->VEGPARAM_IFLAG ? "true" : "false");
+    fprintf(LOG_DEST, "\tVEGPARAM_LAI         : %s\n",
+            option->VEGPARAM_LAI ? "true" : "false");
     fprintf(LOG_DEST, "\tALB_SRC              : %d\n", option->ALB_SRC);
     fprintf(LOG_DEST, "\tLAI_SRC              : %d\n", option->LAI_SRC);
     fprintf(LOG_DEST, "\tFCAN_SRC             : %d\n", option->FCAN_SRC);
+    fprintf(LOG_DEST, "\tFCROP_SRC            : %d\n", option->FCROP_SRC);
+    fprintf(LOG_DEST, "\tFIMP_SRC             : %d\n", option->FIMP_SRC);
+    fprintf(LOG_DEST, "\tFIRR_SRC             : %d\n", option->FIRR_SRC);
     fprintf(LOG_DEST, "\tLAKE_PROFILE         : %s\n",
             option->LAKE_PROFILE ? "true" : "false");
     fprintf(LOG_DEST, "\tORGANIC_FRACT        : %s\n",

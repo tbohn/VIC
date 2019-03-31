@@ -101,6 +101,10 @@ enum
     VP,          /**< vapor pressure [kPa] */
     SWDOWN,      /**< incoming shortwave [W/m2] */
     WIND,        /**< wind speed [m/s] */
+    FCROP,       /**< fractional area that is planted [fraction] */
+    FIRR,        /**< fractional area of irrigation [fraction] */
+    IRR_RUN,     /**< water available for irrigation taken from local runoff [mm] */
+    IRR_WITH,    /**< water available for irrigation taken from external withdrawals [mm] */
     SKIP,        /**< place holder for unused data columns */
     // Last value of enum - DO NOT ADD ANYTHING BELOW THIS LINE!!
     // used as a loop counter and must be >= the largest value in this enum
@@ -154,6 +158,10 @@ enum
     OUT_EVAP_BARE,        /**< net evaporation from bare soil [mm] */
     OUT_EVAP_CANOP,       /**< net evaporation from canopy interception [mm] */
     OUT_INFLOW,           /**< moisture that reaches top of soil column [mm] */
+    OUT_IRR_DEMAND,       /**< Water needed for irrigation [mm] */
+    OUT_IRR_APPLIED,      /**< Water actually used for irrigation [mm] */
+    OUT_IRR_RUN,          /**< Water available for irrigation from local stream network [mm] */
+    OUT_IRR_WITH,         /**< Water available for irrigation from external withdrawals [mm] */
     OUT_LAKE_BF_IN,       /**< incoming baseflow from lake catchment [mm] */
     OUT_LAKE_BF_IN_V,     /**< incoming volumetric baseflow from lake catchment [m3] */
     OUT_LAKE_BF_OUT,      /**< outgoing baseflow from lake [mm] */
@@ -603,7 +611,7 @@ void collect_wb_terms(cell_data_struct, veg_var_struct, snow_data_struct,
                       double, double, double, bool, double, bool, double *,
                       double **);
 void compute_derived_state_vars(all_vars_struct *, soil_con_struct *,
-                                veg_con_struct *);
+                                veg_hist_struct *, veg_con_struct *);
 void compute_lake_params(lake_con_struct *, soil_con_struct);
 void compute_treeline(force_data_struct *, dmy_struct *, double, double *,
                       bool *);
@@ -627,7 +635,7 @@ void dt_seconds_to_time_units(unsigned short int time_units, double dt_seconds,
                               double *dt_time_units);
 void display_current_settings(int);
 double fractional_day_from_dmy(dmy_struct *dmy);
-void free_all_vars(all_vars_struct *all_vars, int Nveg);
+void free_all_vars(all_vars_struct *all_vars, veg_con_struct *, int Nveg);
 void free_dmy(dmy_struct **dmy);
 void free_out_data(size_t ngridcells, double ***out_data);
 void free_streams(stream_struct **streams);
@@ -638,8 +646,12 @@ void generate_default_lake_state(lake_var_struct *, soil_con_struct *,
                                  lake_con_struct);
 void get_default_nstreams_nvars(size_t *nstreams, size_t nvars[]);
 void get_parameters(FILE *paramfile);
+void handle_subarea_changes(all_vars_struct *, veg_con_struct  *,
+                            veg_hist_struct *);
 void init_output_list(double **out_data, int write, char *format, int type,
                       double mult);
+void initialize_crop_subtiles(all_vars_struct *, veg_hist_struct *,
+                              veg_con_struct  *);
 void initialize_energy(energy_bal_struct **energy, size_t nveg);
 void initialize_global(void);
 void initialize_options(void);

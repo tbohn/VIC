@@ -33,13 +33,14 @@ void
 vic_populate_model_state(char       *runtype_str,
                          dmy_struct *dmy_current)
 {
-    extern all_vars_struct *all_vars;
-    extern lake_con_struct *lake_con;
-    extern domain_struct    local_domain;
-    extern option_struct    options;
-    extern soil_con_struct *soil_con;
-    extern veg_con_struct **veg_con;
-    extern filenames_struct filenames;
+    extern all_vars_struct  *all_vars;
+    extern lake_con_struct  *lake_con;
+    extern domain_struct     local_domain;
+    extern option_struct     options;
+    extern soil_con_struct  *soil_con;
+    extern veg_con_struct  **veg_con;
+    extern veg_hist_struct **veg_hist;
+    extern filenames_struct  filenames;
 
 
     size_t                  i;
@@ -81,7 +82,8 @@ vic_populate_model_state(char       *runtype_str,
 
     // compute those state variables that are derived from the others
     for (i = 0; i < local_domain.ncells_active; i++) {
-        compute_derived_state_vars(&(all_vars[i]), &(soil_con[i]), veg_con[i]);
+        compute_derived_state_vars(&(all_vars[i]), &(soil_con[i]),
+                                   veg_hist[i], veg_con[i]);
         if (options.LAKES) {
             compute_derived_lake_dimensions(&(all_vars[i].lake_var),
                                             lake_con[i]);

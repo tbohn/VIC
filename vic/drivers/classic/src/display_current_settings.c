@@ -309,7 +309,6 @@ display_current_settings(int mode)
         fprintf(LOG_DEST, "MAX_SNOW_ALBEDO\t\tFALSE\n");
     }
 
-
     fprintf(LOG_DEST, "\n");
     fprintf(LOG_DEST, "Input Veg Data:\n");
     fprintf(LOG_DEST, "Veg library file\t%s\n", filenames.veglib);
@@ -324,6 +323,12 @@ display_current_settings(int mode)
     }
     else {
         fprintf(LOG_DEST, "VEGLIB_FCAN\t\tFALSE\n");
+    }
+    if (options.VEGLIB_IPRM) {
+        fprintf(LOG_DEST, "VEGLIB_IPRM\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "VEGLIB_IPRM\t\tFALSE\n");
     }
     fprintf(LOG_DEST, "Veg param file\t\t%s\n", filenames.veg);
     fprintf(LOG_DEST, "ROOT_ZONES\t\t%zu\n", options.ROOT_ZONES);
@@ -374,6 +379,64 @@ display_current_settings(int mode)
     }
     else if (options.ALB_SRC == FROM_VEGLIB) {
         fprintf(LOG_DEST, "ALB_SRC\t\tFROM_VEGLIB\n");
+    }
+
+    if (options.VEGPARAM_CSPFLG) {
+        fprintf(LOG_DEST, "VEGPARAM_CSPFLG\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "VEGPARAM_CSPFLG\t\tFALSE\n");
+    }
+    if (options.VEGPARAM_IFLAG) {
+        fprintf(LOG_DEST, "VEGPARAM_IFLAG\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "VEGPARAM_IFLAG\t\tFALSE\n");
+    }
+    if (options.VEGPARAM_FCROP) {
+        fprintf(LOG_DEST, "VEGPARAM_FCROP\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "VEGPARAM_FCROP\t\tFALSE\n");
+    }
+    if (options.FCROP_SRC == FROM_VEGHIST) {
+        fprintf(LOG_DEST, "FCROP_SRC\t\tFROM_VEGHIST\n");
+    }
+    else if (options.FCROP_SRC == FROM_VEGPARAM) {
+        fprintf(LOG_DEST, "FCROP_SRC\t\tFROM_VEGPARAM\n");
+    }
+    else if (options.FCROP_SRC == FROM_VEGLIB) {
+        fprintf(LOG_DEST, "FCROP_SRC\t\tFROM_VEGLIB\n");
+    }
+    if (options.VEGPARAM_FIRR) {
+        fprintf(LOG_DEST, "VEGPARAM_FIRR\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "VEGPARAM_FIRR\t\tFALSE\n");
+    }
+    if (options.FIRR_SRC == FROM_VEGHIST) {
+        fprintf(LOG_DEST, "FIRR_SRC\t\tFROM_VEGHIST\n");
+    }
+    else if (options.FIRR_SRC == FROM_VEGPARAM) {
+        fprintf(LOG_DEST, "FIRR_SRC\t\tFROM_VEGPARAM\n");
+    }
+    else if (options.FIRR_SRC == FROM_VEGLIB) {
+        fprintf(LOG_DEST, "FIRR_SRC\t\tFROM_VEGLIB\n");
+    }
+    if (options.VEGPARAM_FIMP) {
+        fprintf(LOG_DEST, "VEGPARAM_FIMP\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "VEGPARAM_FIMP\t\tFALSE\n");
+    }
+    if (options.FIMP_SRC == FROM_VEGHIST) {
+        fprintf(LOG_DEST, "FIMP_SRC\t\tFROM_VEGHIST\n");
+    }
+    else if (options.FIMP_SRC == FROM_VEGPARAM) {
+        fprintf(LOG_DEST, "FIMP_SRC\t\tFROM_VEGPARAM\n");
+    }
+    else if (options.FIMP_SRC == FROM_VEGLIB) {
+        fprintf(LOG_DEST, "FIMP_SRC\t\tFROM_VEGLIB\n");
     }
 
     fprintf(LOG_DEST, "\n");

@@ -52,12 +52,16 @@ initialize_options()
     options.COMPUTE_TREELINE = false;
     options.CONTINUEONERROR = true;
     options.CORRPREC = false;
+    options.CROPSPLIT = false;
+    options.DEEP_ESOIL = false;
     options.EQUAL_AREA = false;
     options.EXP_TRANS = true;
     options.FROZEN_SOIL = false;
     options.FULL_ENERGY = false;
     options.GRND_FLUX_TYPE = GF_410;
     options.IMPLICIT = true;
+    options.IRRIGATION = true;
+    options.IRR_FREE = true;
     options.LAKES = false;
     options.LAKE_PROFILE = false;
     options.NOFLUX = false;
@@ -82,6 +86,9 @@ initialize_options()
     options.ALB_SRC = FROM_VEGLIB;
     options.BASEFLOW = ARNO;
     options.FCAN_SRC = FROM_DEFAULT;
+    options.FCROP_SRC = FROM_DEFAULT;
+    options.FIMP_SRC = FROM_DEFAULT;
+    options.FIRR_SRC = FROM_DEFAULT;
     options.GRID_DECIMAL = 2;
     options.JULY_TAVG_SUPPLIED = false;
     options.LAI_SRC = FROM_VEGLIB;
@@ -89,9 +96,15 @@ initialize_options()
     options.BULK_DENSITY_COMB = false;
     options.MAX_SNOW_ALBEDO = false;
     options.VEGLIB_FCAN = false;
+    options.VEGLIB_IPRM = false;
     options.VEGLIB_PHOTO = false;
     options.VEGPARAM_ALB = false;
+    options.VEGPARAM_CSPFLG = false;
     options.VEGPARAM_FCAN = false;
+    options.VEGPARAM_FCROP = false;
+    options.VEGPARAM_FIMP = false;
+    options.VEGPARAM_FIRR = false;
+    options.VEGPARAM_IFLAG = false;
     options.VEGPARAM_LAI = false;
     // state options
     options.STATE_FORMAT = UNSET_FILE_FORMAT;

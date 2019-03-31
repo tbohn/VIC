@@ -385,6 +385,38 @@ set_output_met_data_info()
     strcpy(out_metadata[OUT_INFLOW].description,
            "moisture that reaches top of soil column");
 
+    /* Water needed for irrigation [mm] */
+    strcpy(out_metadata[OUT_IRR_DEMAND].varname, "OUT_IRR_DEMAND");
+    strcpy(out_metadata[OUT_IRR_DEMAND].long_name, "irr_demand");
+    strcpy(out_metadata[OUT_IRR_DEMAND].standard_name, "irrigation_demand");
+    strcpy(out_metadata[OUT_IRR_DEMAND].units, "mm");
+    strcpy(out_metadata[OUT_IRR_DEMAND].description,
+           "Water needed for irrigation");
+
+    /* Water actually used for irrigation [mm] */
+    strcpy(out_metadata[OUT_IRR_APPLIED].varname, "OUT_IRR_APPLIED");
+    strcpy(out_metadata[OUT_IRR_APPLIED].long_name, "irr_applied");
+    strcpy(out_metadata[OUT_IRR_APPLIED].standard_name, "irrigation_applied");
+    strcpy(out_metadata[OUT_IRR_APPLIED].units, "mm");
+    strcpy(out_metadata[OUT_IRR_APPLIED].description,
+           "Water actually used for irrigation");
+
+    /* Water available for irrigation from local stream network [mm] */
+    strcpy(out_metadata[OUT_IRR_RUN].varname, "OUT_IRR_RUN");
+    strcpy(out_metadata[OUT_IRR_RUN].long_name, "irr_run");
+    strcpy(out_metadata[OUT_IRR_RUN].standard_name, "irrigation_runoff_avail");
+    strcpy(out_metadata[OUT_IRR_RUN].units, "mm");
+    strcpy(out_metadata[OUT_IRR_RUN].description,
+           "Water available for irrigation from local stream network");
+
+    /* Water available for irrigation from external withdrawals [mm] */
+    strcpy(out_metadata[OUT_IRR_WITH].varname, "OUT_IRR_WITH");
+    strcpy(out_metadata[OUT_IRR_WITH].long_name, "irr_with");
+    strcpy(out_metadata[OUT_IRR_WITH].standard_name, "irrigation_external_avail");
+    strcpy(out_metadata[OUT_IRR_WITH].units, "mm");
+    strcpy(out_metadata[OUT_IRR_WITH].description,
+           "Water available for irrigation from external withdrawals");
+
     /* incoming baseflow from lake catchment [mm] */
     strcpy(out_metadata[OUT_LAKE_BF_IN].varname, "OUT_LAKE_BF_IN");
     strcpy(out_metadata[OUT_LAKE_BF_IN].long_name, "lake_bf_in");

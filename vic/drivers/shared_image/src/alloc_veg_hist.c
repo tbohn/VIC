@@ -32,6 +32,8 @@
 void
 alloc_veg_hist(veg_hist_struct *veg_hist)
 {
+    extern option_struct   options;
+
     veg_hist->albedo = calloc(NR + 1, sizeof(*(veg_hist->albedo)));
     check_alloc_status(veg_hist->albedo, "Memory allocation error.");
 
@@ -46,6 +48,14 @@ alloc_veg_hist(veg_hist_struct *veg_hist)
 
     veg_hist->roughness = calloc(NR + 1, sizeof(*(veg_hist->roughness)));
     check_alloc_status(veg_hist->roughness, "Memory allocation error.");
+
+    if (options.IRRIGATION) {
+        veg_hist->fcrop = calloc(NR + 1, sizeof(*(veg_hist->fcrop)));
+        check_alloc_status(veg_hist->fcrop, "Memory allocation error.");
+
+        veg_hist->firr = calloc(NR + 1, sizeof(*(veg_hist->firr)));
+        check_alloc_status(veg_hist->firr, "Memory allocation error.");
+    }
 }
 
 /******************************************************************************
@@ -54,6 +64,8 @@ alloc_veg_hist(veg_hist_struct *veg_hist)
 void
 free_veg_hist(veg_hist_struct *veg_hist)
 {
+    extern option_struct   options;
+
     if (veg_hist == NULL) {
         return;
     }
@@ -63,4 +75,8 @@ free_veg_hist(veg_hist_struct *veg_hist)
     free(veg_hist->fcanopy);
     free(veg_hist->LAI);
     free(veg_hist->roughness);
+    if (options.IRRIGATION) {
+        free(veg_hist->fcrop);
+        free(veg_hist->firr);
+    }
 }

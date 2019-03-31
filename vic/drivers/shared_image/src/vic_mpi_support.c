@@ -488,7 +488,7 @@ create_MPI_option_struct_type(MPI_Datatype *mpi_type)
     MPI_Datatype   *mpi_types;
 
     // nitems has to equal the number of elements in option_struct
-    nitems = 55;
+    nitems = 67;
     blocklengths = malloc(nitems * sizeof(*blocklengths));
     check_alloc_status(blocklengths, "Memory allocation error.");
 
@@ -558,6 +558,10 @@ create_MPI_option_struct_type(MPI_Datatype *mpi_type)
     offsets[i] = offsetof(option_struct, CORRPREC);
     mpi_types[i++] = MPI_C_BOOL;
 
+    // bool CROPSPLIT;
+    offsets[i] = offsetof(option_struct, CROPSPLIT);
+    mpi_types[i++] = MPI_C_BOOL;
+
     // bool EQUAL_AREA;
     offsets[i] = offsetof(option_struct, EQUAL_AREA);
     mpi_types[i++] = MPI_C_BOOL;
@@ -580,6 +584,14 @@ create_MPI_option_struct_type(MPI_Datatype *mpi_type)
 
     // bool IMPLICIT;
     offsets[i] = offsetof(option_struct, IMPLICIT);
+    mpi_types[i++] = MPI_C_BOOL;
+
+    // bool IRRIGATION;
+    offsets[i] = offsetof(option_struct, IRRIGATION);
+    mpi_types[i++] = MPI_C_BOOL;
+
+    // bool IRR_FREE;
+    offsets[i] = offsetof(option_struct, IRR_FREE);
     mpi_types[i++] = MPI_C_BOOL;
 
     // bool JULY_TAVG_SUPPLIED;
@@ -670,6 +682,10 @@ create_MPI_option_struct_type(MPI_Datatype *mpi_type)
     offsets[i] = offsetof(option_struct, VEGLIB_FCAN);
     mpi_types[i++] = MPI_C_BOOL;
 
+    // bool VEGLIB_IPRM;
+    offsets[i] = offsetof(option_struct, VEGLIB_IPRM);
+    mpi_types[i++] = MPI_C_BOOL;
+
     // bool VEGLIB_PHOTO;
     offsets[i] = offsetof(option_struct, VEGLIB_PHOTO);
     mpi_types[i++] = MPI_C_BOOL;
@@ -678,8 +694,28 @@ create_MPI_option_struct_type(MPI_Datatype *mpi_type)
     offsets[i] = offsetof(option_struct, VEGPARAM_ALB);
     mpi_types[i++] = MPI_C_BOOL;
 
+    // bool VEGPARAM_CSPFLG;
+    offsets[i] = offsetof(option_struct, VEGPARAM_CSPFLG);
+    mpi_types[i++] = MPI_C_BOOL;
+
     // bool VEGPARAM_FCAN;
     offsets[i] = offsetof(option_struct, VEGPARAM_FCAN);
+    mpi_types[i++] = MPI_C_BOOL;
+
+    // bool VEGPARAM_FCROP;
+    offsets[i] = offsetof(option_struct, VEGPARAM_FCROP);
+    mpi_types[i++] = MPI_C_BOOL;
+
+    // bool VEGPARAM_FIMP;
+    offsets[i] = offsetof(option_struct, VEGPARAM_FIMP);
+    mpi_types[i++] = MPI_C_BOOL;
+
+    // bool VEGPARAM_FIRR;
+    offsets[i] = offsetof(option_struct, VEGPARAM_FIRR);
+    mpi_types[i++] = MPI_C_BOOL;
+
+    // bool VEGPARAM_IFLAG;
+    offsets[i] = offsetof(option_struct, VEGPARAM_IFLAG);
     mpi_types[i++] = MPI_C_BOOL;
 
     // bool VEGPARAM_LAI;
@@ -692,6 +728,18 @@ create_MPI_option_struct_type(MPI_Datatype *mpi_type)
 
     // unsigned short FCAN_SRC;
     offsets[i] = offsetof(option_struct, FCAN_SRC);
+    mpi_types[i++] = MPI_UNSIGNED_SHORT;
+
+    // unsigned short FCROP_SRC;
+    offsets[i] = offsetof(option_struct, FCROP_SRC);
+    mpi_types[i++] = MPI_UNSIGNED_SHORT;
+
+    // unsigned short FIMP_SRC;
+    offsets[i] = offsetof(option_struct, FIMP_SRC);
+    mpi_types[i++] = MPI_UNSIGNED_SHORT;
+
+    // unsigned short FIRR_SRC;
+    offsets[i] = offsetof(option_struct, FIRR_SRC);
     mpi_types[i++] = MPI_UNSIGNED_SHORT;
 
     // unsigned short LAI_SRC;
@@ -763,7 +811,7 @@ create_MPI_param_struct_type(MPI_Datatype *mpi_type)
     MPI_Datatype   *mpi_types;
 
     // nitems has to equal the number of elements in parameters_struct
-    nitems = 156;
+    nitems = 157;
     blocklengths = malloc(nitems * sizeof(*blocklengths));
     check_alloc_status(blocklengths, "Memory allocation error.");
 
@@ -795,6 +843,10 @@ create_MPI_param_struct_type(MPI_Datatype *mpi_type)
 
     // double ALBEDO_BARE_SOIL;
     offsets[i] = offsetof(parameters_struct, ALBEDO_BARE_SOIL);
+    mpi_types[i++] = MPI_DOUBLE;
+
+    // double ALBEDO_H2O_SURF;
+    offsets[i] = offsetof(parameters_struct, ALBEDO_H2O_SURF);
     mpi_types[i++] = MPI_DOUBLE;
 
     // double EMISS_GRND;

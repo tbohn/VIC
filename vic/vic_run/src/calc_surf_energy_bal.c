@@ -79,6 +79,7 @@ calc_surf_energy_bal(double             Le,
                      int                overstory,
                      unsigned short     veg_class,
                      double            *CanopLayerBnd,
+                     double             fimperv,
                      double            *dryFrac,
                      force_data_struct *force,
                      dmy_struct        *dmy,
@@ -308,8 +309,8 @@ calc_surf_energy_bal(double             Le,
                            surf_atten, VPcanopy, VPDcanopy, atmos_shortwave,
                            atmos_Catm, dryFrac, &Wdew, displacement,
                            aero_resist, aero_resist_veg, aero_resist_used,
-                           rainfall, ref_height,
-                           roughness, wind, Le, energy->advection, OldTSurf,
+                           rainfall, ref_height, roughness, wind, fimperv,
+                           Le, energy->advection, OldTSurf,
                            Tsnow_surf, kappa_snow, melt_energy, snow_coverage,
                            snow->density, snow->swq, snow->surf_water,
                            &energy->deltaCC, &energy->refreeze_energy,
@@ -373,7 +374,8 @@ calc_surf_energy_bal(double             Le,
                                                    aero_resist_used,
                                                    rainfall, ref_height,
                                                    roughness,
-                                                   wind, Le, energy->advection,
+                                                   wind, fimperv,
+                                                   Le, energy->advection,
                                                    OldTSurf, snow->pack_temp,
                                                    Tsnow_surf,
                                                    kappa_snow, melt_energy,
@@ -431,8 +433,8 @@ calc_surf_energy_bal(double             Le,
                                atmos_shortwave, atmos_Catm, dryFrac, &Wdew,
                                displacement, aero_resist, aero_resist_veg,
                                aero_resist_used,
-                               rainfall, ref_height, roughness, wind, Le,
-                               energy->advection, OldTSurf, Tsnow_surf,
+                               rainfall, ref_height, roughness, wind, fimperv,
+                               Le, energy->advection, OldTSurf, Tsnow_surf,
                                kappa_snow, melt_energy, snow_coverage,
                                snow->density, snow->swq, snow->surf_water,
                                &energy->deltaCC, &energy->refreeze_energy,
@@ -495,7 +497,8 @@ calc_surf_energy_bal(double             Le,
                                                        aero_resist_veg,
                                                        aero_resist_used,
                                                        rainfall, ref_height,
-                                                       roughness, wind, Le,
+                                                       roughness, wind,
+                                                       fimperv, Le,
                                                        energy->advection,
                                                        OldTSurf,
                                                        snow->pack_temp,
@@ -560,8 +563,8 @@ calc_surf_energy_bal(double             Le,
                                   VPDcanopy, atmos_shortwave, atmos_Catm,
                                   dryFrac, &Wdew, displacement, aero_resist,
                                   aero_resist_veg, aero_resist_used, rainfall,
-                                  ref_height,
-                                  roughness, wind, Le, energy->advection,
+                                  ref_height, roughness, wind, fimperv,
+                                  Le, energy->advection,
                                   OldTSurf, Tsnow_surf, kappa_snow,
                                   melt_energy, snow_coverage, snow->density,
                                   snow->swq, snow->surf_water,
@@ -865,6 +868,7 @@ error_print_surf_energy_bal(double  Ts,
     double            *ref_height;
     double            *roughness;
     double            *wind;
+    double             fimperv;
 
     /* latent heat terms */
     double             Le;
@@ -1008,6 +1012,7 @@ error_print_surf_energy_bal(double  Ts,
     ref_height = (double *) va_arg(ap, double *);
     roughness = (double *) va_arg(ap, double *);
     wind = (double *) va_arg(ap, double *);
+    fimperv = (double) va_arg(ap, double);
 
     /* latent heat terms */
     Le = (double) va_arg(ap, double);
@@ -1148,6 +1153,7 @@ error_print_surf_energy_bal(double  Ts,
     fprintf(LOG_DEST, "*ref_height = %f\n", *ref_height);
     fprintf(LOG_DEST, "*roughness = %f\n", *roughness);
     fprintf(LOG_DEST, "*wind = %f\n", *wind);
+    fprintf(LOG_DEST, "fimperv = %f\n", fimperv);
 
     /* latent heat terms */
     fprintf(LOG_DEST, "Le = %f\n", Le);

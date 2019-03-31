@@ -230,6 +230,10 @@ vic_force(force_data_struct *force,
                     veg_con[v].LAI[dmy[rec].month - 1];
                 veg_hist[rec][v].roughness[i] =
                     veg_con[v].roughness[dmy[rec].month - 1];
+                veg_hist[rec][v].fcrop[i] =
+                    veg_con[v].fcrop[dmy[rec].month - 1];
+                veg_hist[rec][v].firr[i] =
+                    veg_con[v].firr[dmy[rec].month - 1];
             }
         }
     }
@@ -281,6 +285,10 @@ vic_force(force_data_struct *force,
                 veg_hist[rec][v].LAI[NR] = average(veg_hist[rec][v].LAI, NF);
                 veg_hist[rec][v].roughness[NR] = average(
                     veg_hist[rec][v].roughness, NF);
+                veg_hist[rec][v].fcrop[NR] = average(
+                    veg_hist[rec][v].fcrop, NF);
+                veg_hist[rec][v].firr[NR] = average(
+                    veg_hist[rec][v].firr, NF);
             }
         }
     }

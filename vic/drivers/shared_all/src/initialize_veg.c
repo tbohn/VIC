@@ -43,6 +43,9 @@ initialize_veg(veg_var_struct **veg_var,
             veg_var[i][j].albedo = 0.0;
             veg_var[i][j].displacement = 0.0;
             veg_var[i][j].fcanopy = 0.0;
+            veg_var[i][j].fcrop = 0.0;
+            veg_var[i][j].firr = 0.0;
+            veg_var[i][j].firr_save = -1.0;
             veg_var[i][j].LAI = 0.0;
             veg_var[i][j].roughness = 0.0;
             veg_var[i][j].Wdew = 0.0;

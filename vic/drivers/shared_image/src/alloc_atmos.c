@@ -81,6 +81,13 @@ alloc_force(force_data_struct *force)
         force->par = calloc(NR + 1, sizeof(*(force->par)));
         check_alloc_status(force->par, "Memory allocation error.");
     }
+    if (options.IRRIGATION) {
+        force->irr_run = calloc(NR + 1, sizeof(*(force->irr_run)));
+        check_alloc_status(force->irr_run, "Memory allocation error.");
+
+        force->irr_with = calloc(NR + 1, sizeof(*(force->irr_with)));
+        check_alloc_status(force->irr_with, "Memory allocation error.");
+    }
 }
 
 /******************************************************************************
@@ -113,5 +120,9 @@ free_force(force_data_struct *force)
         free(force->coszen);
         free(force->fdir);
         free(force->par);
+    }
+    if (options.IRRIGATION) {
+        free(force->irr_run);
+        free(force->irr_with);
     }
 }

@@ -97,6 +97,25 @@ The following options only apply to carbon cycling.
 | RC_MODE       | string            | RC_JARVIS or RC_PHOTO     | Determines how canopy resistance is computed. Options for RC_MODE: <li>**RC_JARVIS** = VIC computes canopy resistance by applying resistance factors to the veg class's minimum canopy resistance listed in the veg library file. <li>**RC_PHOTO** = VIC computes canopy resistance by applying resistance factors to the canopy resistance corresponding to photosynthetic demand (in the absence of moisture limitation). <br><br>Default = RC_JARVIS.                                                                                                                                                                  |
 | VEGLIB_PHOTO  | TRUE or FALSE     | string                    | Tells VIC about the contents of the veg library file. Options for VEGLIB_PHOTO: <li>**FALSE** = veg library file does not contain photosynthesis parameters. <li>**TRUE** = veg library file contains photosynthesis parameters. <br><br>Default = FALSE                                                                                                                                                                       |
 
+## Irrigation Parameters
+
+The following options apply to irrigation.
+
+| Name          | Type      | Units             | Description                                                                                                                                                                                                                                                                                   |
+|-------------- |--------   |---------------    |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    |
+| IRRIGATION    | string    | TRUE or FALSE     | Flag indicating whether to run the irrigation module.  <br><br>Default = FALSE.                                               |
+| IRR_FREE      | string    | TRUE or FALSE     | Flag indicating whether irrigation withdrawals are unconstrained (TRUE) or constrained (FALSE) by available runoff.  <br><br>Default = FALSE.                                               |
+| CROP_SPLIT    | string    | TRUE or FALSE     | Flag indicating whether to divide agricultural tiles into planted and fallow portions. <br><br>Default = FALSE.                                               |
+
+## Soil Evaporation Parameters
+
+The following options apply to irrigation.
+
+| Name          | Type      | Units             | Description                                                                                                                                                                                                                                                                                   |
+|-------------- |--------   |---------------    |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    |
+| SOIL_RARC     | float     | s/m               | Architectural resistance for soil evaporation |
+| DEEP_ESOIL    | string    | TRUE or FALSE     | Flag indicating whether soil evaporation should draw from only the top soil layer (FALSE) or the top 2 soil layers (TRUE).  <br><br>Default = FALSE.  |
+
 ## Miscellaneous Parameters
 
 Generally these default values do not need to be overridden.

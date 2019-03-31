@@ -66,10 +66,13 @@
 #define MAX_LAKE_BASIN_NODES 20 /**< maximum number of points to define lake basin shape */
 #define MAX_LAKE_NODES  20     /**< maximum number of lake thermal nodes */
 #define MAX_ZWTVMOIST   11     /**< maximum number of points in water table vs moisture curve for each soil layer; should include points at lower and upper boundaries of the layer */
+#define MAX_SUBTILES    2      /**< maximum number of sub-tiles per vegetation tile */
 
 /***** Define minimum values for model parameters *****/
 #define MINSOILDEPTH    0.001  /**< Minimum layer depth with which model can work (m) */
 #define MIN_FCANOPY    0.0001  /**< Minimum allowable canopy fraction */
+#define MIN_FCROP      0.01  /**< Minimum allowable crop fraction */
+#define MIN_FIRR       0.0  /**< Minimum allowable irrigated fraction */
 #define MIN_SNOW_WETFRAC 0.01  /**< Minimum fraction of snow depth to be considered wet */
 
 /***** Define minimum and maximum values for model timesteps *****/
@@ -160,6 +163,16 @@ enum
     PHOTO_C4
 };
 
+/******************************************************************************
+ * @brief   Irrigation Soil Moisture Thresholds
+ *****************************************************************************/
+enum
+{
+    IRR_SAT,
+    IRR_FC,
+    IRR_CR
+};
+
 /***** Data Structures *****/
 
 /******************************************************************************
@@ -212,6 +225,9 @@ typedef struct {
                               vegetation from higher elevations */
     bool CONTINUEONERROR; /**< TRUE = VIC will continue to run after a cell has an error */
     bool CORRPREC;       /**< TRUE = correct precipitation for gage undercatch */
+    bool CROPSPLIT;      /**< TRUE = account for fallow (non-planted) fraction */
+    bool DEEP_ESOIL;     /**< TRUE = soil evaporation draws from top 2 layers;
+                            FALSE = draw only from top layer */
     bool EQUAL_AREA;     /**< TRUE = RESOLUTION stores grid cell area in km^2;
                             FALSE = RESOLUTION stores grid cell side length in degrees */
     bool EXP_TRANS;      /**< TRUE = Uses grid transform for exponential node
@@ -223,6 +239,8 @@ typedef struct {
                                           "GF_410"  = use formulas from VIC 4.1.0 */
     bool IMPLICIT;       /**< TRUE = Use implicit solution when computing
                             soil thermal fluxes */
+    bool IRRIGATION;     /**< TRUE = apply irrigation (to crop veg tiles) */
+    bool IRR_FREE;       /**< TRUE = restrict irrigation to available water */
     bool JULY_TAVG_SUPPLIED; /**< If TRUE and COMPUTE_TREELINE is also true,
                                 then average July air temperature will be read
                                 from soil file and used in calculating treeline */
@@ -268,14 +286,27 @@ typedef struct {
     unsigned short int BASEFLOW;     /**< ARNO: read Ds, Dm, Ws, c; NIJSSEN2001: read d1, d2, d3, d4 */
     unsigned short int GRID_DECIMAL; /**< Number of decimal places in grid file extensions */
     bool VEGLIB_FCAN;    /**< TRUE = veg library file contains monthly fcanopy values */
+    bool VEGLIB_IPRM;    /**< TRUE = veg library contains irrigation parameters */
     bool VEGLIB_PHOTO;   /**< TRUE = veg library contains photosynthesis parameters */
     bool VEGPARAM_ALB;   /**< TRUE = veg param file contains monthly albedo values */
+    bool VEGPARAM_CSPFLG; /**< TRUE = veg param file contains flag indicating whether to split crop tile */
     bool VEGPARAM_FCAN;  /**< TRUE = veg param file contains monthly fcanopy values */
+    bool VEGPARAM_FCROP; /**< TRUE = veg param file contains monthly planted fractions */
+    bool VEGPARAM_FIMP;  /**< TRUE = veg param file contains impervious fractions */
+    bool VEGPARAM_FIRR;  /**< TRUE = veg param file contains monthly irrigated fractions */
+    bool VEGPARAM_IFLAG;   /**< TRUE = veg param file contains flag indicating whether to apply irrigation */
     bool VEGPARAM_LAI;   /**< TRUE = veg param file contains monthly LAI values */
     unsigned short int ALB_SRC;        /**< FROM_VEGLIB = use albedo values from veg library file
                                           FROM_VEGPARAM = use albedo values from the veg param file */
     unsigned short int FCAN_SRC;       /**< FROM_VEGLIB = use fcanopy values from veg library file
                                           FROM_VEGPARAM = use fcanopy values from the veg param file */
+    unsigned short int FCROP_SRC;      /**< FROM_VEGLIB = use fcrop values from veg library file
+                                          FROM_VEGPARAM = use fcrop values from the veg param file */
+    unsigned short int FIRR_SRC;       /**< FROM_VEGLIB = use firr values from veg library file
+                                          FROM_VEGPARAM = use firr values from the veg param file */
+    unsigned short int FIMP_SRC;       /**< FROM_DEFAULT = use default fimperv and feffimperv values
+                                          FROM_VEGLIB = use fimperv and feffimperv values from veg library file
+                                          FROM_VEGPARAM = use fimperv and feffimperv values from the veg param file */
     unsigned short int LAI_SRC;        /**< FROM_VEGLIB = use LAI values from veg library file
                                           FROM_VEGPARAM = use LAI values from the veg param file */
     bool LAKE_PROFILE;   /**< TRUE = user-specified lake/area profile */
@@ -352,6 +383,7 @@ typedef struct {
 
     // Surface Albedo Parameters
     double ALBEDO_BARE_SOIL;  /**< Broadband albedo of bare soil */
+    double ALBEDO_H2O_SURF;  /**< Broadband albedo of open water surface */
 
     // Surface Emissivities
     double EMISS_GRND;  /**< Emissivity of bare soil */
@@ -624,17 +656,22 @@ typedef struct {
                                          (fraction) */
     double *CanopLayerBnd;  /**< Upper boundary of each canopy layer,
                                expressed as fraction of total LAI */
+    bool crop_split; /**< TRUE = this tile should assume fractional crop coverage */
     double Cv;              /**< fraction of vegetation coverage */
     double displacement[MONTHS_PER_YEAR]; /**< climatological vegetation
                                              displacement height (m) */
     double fcanopy[MONTHS_PER_YEAR]; /**< climatological fractional area
                                         covered by plant canopy (fraction) */
+    double fcrop[MONTHS_PER_YEAR];    /**< climatological crop area fraction within the tile (fraction) */
     double fetch;           /**< Average fetch length for each vegetation
                                class. */
+    double firr[MONTHS_PER_YEAR];    /**< climatological irrigated area fraction within the tile (fraction) */
+    bool irr_active; /**< TRUE = run irrigation model in this veg tile */
     double LAI[MONTHS_PER_YEAR]; /**< climatological leaf area index (m2/m2) */
     int LAKE;               /**< TRUE = this tile is a lake/wetland tile */
     double lag_one;         /**< Lag one gradient autocorrelation of
                                terrain slope */
+    size_t Nsubtiles;       /**< Total number of crop sub-tiles in the cell */
     double root[MAX_LAYERS]; /**< percent of roots in each soil layer
                                 (fraction) */
     double roughness[MONTHS_PER_YEAR]; /**< climatological vegetation
@@ -648,6 +685,9 @@ typedef struct {
                                       capacity (mm) */
     double *zone_depth;     /**< depth of root zone */
     double *zone_fract;     /**< fraction of roots within root zone */
+    // Impervious surface fractions
+    double feffimperv;      /**< Effective impervious area fraction. */
+    double fimperv;         /**< Impervious area fraction. */
 } veg_con_struct;
 
 /******************************************************************************
@@ -656,11 +696,23 @@ typedef struct {
 typedef struct {
     double albedo[MONTHS_PER_YEAR];  /**< vegetation albedo (added for full
                                         energy) (fraction) */
+    bool crop_split; /**< TRUE = this tile should assume fractional crop coverage */
     double displacement[MONTHS_PER_YEAR]; /**< vegetation displacement
                                              height (m) */
     double emissivity[MONTHS_PER_YEAR]; /**< vegetation emissivity (fraction) */
     double fcanopy[MONTHS_PER_YEAR];  /**< fractional area covered by plant
                                          canopy (fraction) */
+    double fcrop[MONTHS_PER_YEAR];  /**< fractional area planted with crops (fraction) */
+    double firr[MONTHS_PER_YEAR];  /**< fractional area that is irrigated (fraction) */
+    bool irr_active; /**< TRUE = run irrigation model in this veg tile */
+    unsigned short int ithresh; /**< Irrigation soil moisture threshold;
+                                     values listed in the veg library can be
+                                     'CR' (critical point), 'FC' (field
+                                     capacity), or 'SAT' (saturation) */
+    unsigned short int itarget; /**< Irrigation soil moisture target;
+                                     values listed in the veg library can be
+                                     'CR' (critical point), 'FC' (field
+                                     capacity), or 'SAT' (saturation) */
     double LAI[MONTHS_PER_YEAR];  /**< leaf area index */
     size_t NVegLibTypes;   /**< number of vegetation classes defined in
                               library */
@@ -700,6 +752,9 @@ typedef struct {
                               above which photosynthesis experiencing
                               saturation inhibition, i.e. too wet for optimal
                               photosynthesis; only applies to top soil layer */
+    // Impervious surface fractions
+    double feffimperv;      /**< Effective impervious area fraction. */
+    double fimperv;         /**< Impervious area fraction. */
 } veg_lib_struct;
 
 /******************************************************************************
@@ -714,6 +769,8 @@ typedef struct {
     double *displacement; /**< vegetation displacement height (m) */
     double *fcanopy;      /**< fractional area covered by plant canopy
                              (fraction) */
+    double *fcrop;        /**< fractional area planted with crops (fraction) */
+    double *firr;         /**< fractional area that is irrigated (fraction) */
     double *LAI;          /**< leaf area index (m2/m2) */
     double *roughness;    /**< vegetation roughness length (m) */
 } veg_hist_struct;
@@ -732,6 +789,8 @@ typedef struct {
     double *coszen;  /**< cosine of the solar zenith angle */
     double *density; /**< atmospheric density (kg/m^3) */
     double *fdir;    /**< fraction of incoming shortwave that is direct (fraction) */
+    double *irr_run;  /**< water available for irrigation, taken from local channel (mm) */
+    double *irr_with; /**< water available for irrigation, taken from withdrawals external to cell (mm) */
     double *longwave; /**< incoming longwave radiation (W/m^2) (net incoming
                          longwave for water balance model) */
     double out_prec;  /**< Total precipitation for time step - accounts
@@ -798,6 +857,7 @@ typedef struct {
     double CLitter;                    /**< carbon storage in litter pool [gC/m2] */
     double CInter;                     /**< carbon storage in intermediate pool [gC/m2] */
     double CSlow;                      /**< carbon storage in slow pool [gC/m2] */
+    bool irr_apply;                    /**< TRUE = irrigation should be applied on this time step */
     layer_data_struct layer[MAX_LAYERS]; /**< structure containing soil variables
                                             for each layer (see above; including both
                                             state and flux variables) */
@@ -815,6 +875,10 @@ typedef struct {
     double runoff;                     /**< runoff from current cell (mm/TS) */
     double inflow;                     /**< moisture that reaches the top of
                                           the soil column (mm) */
+    double irr_applied;                /**< current irrigation water actually applied (mm) */
+    double irr_demand;                 /**< current irrigation water needed (mm) */
+    double irr_run_used;               /**< local runoff used for irrigation (mm) */
+    double irr_with_used;              /**< external withdrawals for irrigation (mm) */
     double RhLitter;                   /**< soil respiration from litter pool [gC/m2] */
     double RhLitter2Atm;               /**< soil respiration from litter pool [gC/m2] that goes to atmosphere */
     double RhInter;                    /**< soil respiration from intermediate pool [gC/m2] */
@@ -908,6 +972,9 @@ typedef struct {
                                    (m) */
     double fcanopy;             /**< current fractional area of plant canopy
                                    (fraction) */
+    double fcrop;               /**< current crop area fraction within veg tile (fraction) */
+    double firr;                /**< current irrigated area fraction within veg tile (fraction) */
+    double firr_save;           /**< previous irrigated area fraction within veg tile (fraction) */
     double LAI;                 /**< current leaf area index (m2/m2) */
     double roughness;           /**< current vegetation roughness length
                                    (m) */
@@ -1101,6 +1168,11 @@ typedef struct {
     snow_data_struct **snow;      /**< Stores snow variables */
     veg_var_struct **veg_var;     /**< Stores vegetation variables */
     gridcell_avg_struct gridcell_avg;   /**< Stores gridcell average variables */
+    /* Dynamically-allocated sub-tile structures */
+    cell_data_struct  ***cell_subtiles;    /**< Stores soil layer variables for sub-tiles */
+    veg_var_struct    ***veg_var_subtiles; /**< Stores vegetation variables for sub-tiles */
+    energy_bal_struct ***energy_subtiles;  /**< Stores energy balance variables sub-tiles */
+    snow_data_struct  ***snow_subtiles;    /**< Stores snow variables for sub-tiles */
 } all_vars_struct;
 
 #endif

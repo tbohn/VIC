@@ -225,7 +225,8 @@ main(int   argc,
             **************************************************/
 
             vic_populate_model_state(&all_vars, filep, soil_con.gridcel,
-                                     &soil_con, veg_con, lake_con, &(dmy[0]));
+                                     &soil_con, veg_con, veg_hist, lake_con,
+                                     &(dmy[0]));
 
             /** Initialize the storage terms in the water and energy balances **/
             initialize_save_data(&all_vars, &force[0], &soil_con, veg_con,
@@ -310,7 +311,7 @@ main(int   argc,
 
             free_veg_hist(global_param.nrecs, veg_con[0].vegetat_type_num,
                           &veg_hist);
-            free_all_vars(&all_vars, veg_con[0].vegetat_type_num);
+            free_all_vars(&all_vars, veg_con, veg_con[0].vegetat_type_num);
             free_vegcon(&veg_con);
             free((char *) soil_con.AreaFract);
             free((char *) soil_con.BandElev);

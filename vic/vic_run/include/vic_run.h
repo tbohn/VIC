@@ -40,8 +40,8 @@ double advected_sensible_heat(double, double, double, double, double);
 void alblake(double, double, double *, double *, double *, double *, double,
              double, double, unsigned int *, double, bool *, unsigned short int,
              double);
-double arno_evap(layer_data_struct *, double, double, double, double, double,
-                 double, double, double, double, double *);
+double arno_evap(layer_data_struct *, double, double, double, double *, double,
+                 double, double, double, double *, double *);
 bool assert_close_double(double x, double y, double rtol, double abs_tol);
 bool assert_close_float(float x, float y, float rtol, float abs_tol);
 double calc_atmos_energy_bal(double, double, double, double, double, double,
@@ -81,7 +81,7 @@ double calc_surf_energy_bal(double, double, double, double, double, double,
                             double, double *, double *, double, double *,
                             double *, int, int, size_t, size_t, double, size_t,
                             unsigned short int, int, unsigned short int,
-                            double *, double *, force_data_struct *,
+                            double *, double, double *, force_data_struct *,
                             dmy_struct *, energy_bal_struct *,
                             layer_data_struct *, snow_data_struct *,
                             soil_con_struct *, veg_var_struct *);
@@ -123,7 +123,19 @@ void compute_soil_layer_thermal_properties(layer_data_struct *, double *,
                                            double *, double *, double *,
                                            double *, double *, double *,
                                            double *, size_t);
+void compute_irrig_demand(cell_data_struct *, soil_con_struct *,
+                          veg_lib_struct *, force_data_struct *, double);
 double compute_zwt(soil_con_struct *, int, double);
+void convert_to_plant_specific(veg_var_struct *, snow_data_struct *);
+void convert_to_plant_specific_crop_subtiles(veg_var_struct *,
+                                             veg_var_struct *,
+                                             veg_var_struct *,
+                                             snow_data_struct *,
+                                             snow_data_struct *);
+void copy_cell_data(cell_data_struct *, cell_data_struct *);
+void copy_energy_bal(energy_bal_struct *, energy_bal_struct *);
+void copy_snow_data(snow_data_struct *, snow_data_struct *);
+void copy_veg_var(veg_var_struct *, veg_var_struct *);
 void correct_precip(double *, double, double, double, double);
 double darkinhib(double);
 int distribute_node_moisture_properties(double *, double *, double *, double *,
@@ -230,7 +242,7 @@ void rhoinit(double *, double);
 double root_brent(double, double, double (*Function)(double, va_list), ...);
 double rtnewt(double x1, double x2, double xacc, double Ur, double Zr);
 int runoff(cell_data_struct *, energy_bal_struct *, soil_con_struct *, double,
-           double *, int);
+           double *, int, double, double);
 void set_node_parameters(double *, double *, double *, double *, double *,
                          double *, double *, double *, double *, double *,
                          double *, int, int);
@@ -298,7 +310,8 @@ int surface_fluxes(bool, double, double, double, double, double *, double *,
                    unsigned short int, force_data_struct *, dmy_struct *,
                    energy_bal_struct *, global_param_struct *,
                    cell_data_struct *, snow_data_struct *, soil_con_struct *,
-                   veg_var_struct *, double, double, double, double *);
+                   veg_var_struct *, double, double, double, double *,
+                   double, double);
 double svp(double);
 double svp_slope(double);
 void temp_area(double, double, double, double *, double *, double *, double *,
@@ -334,5 +347,14 @@ int water_under_ice(int, double, double, double *, double *, double, int,
 void wrap_compute_zwt(soil_con_struct *, cell_data_struct *);
 void write_layer(layer_data_struct *, int, double *);
 void write_vegvar(veg_var_struct *, int);
+void wtavg_cell_data(cell_data_struct *, double, cell_data_struct *, double,
+                     bool, cell_data_struct *);
+void wtavg_energy_bal(energy_bal_struct *, bool, bool, double,
+                      energy_bal_struct *, bool, bool, double, double *, bool,
+                      energy_bal_struct *);
+void wtavg_snow_data(snow_data_struct *, bool, double, snow_data_struct *,
+                     bool, double, bool, snow_data_struct *);
+void wtavg_veg_var(veg_var_struct *, double, veg_var_struct *, double, bool,
+                   veg_var_struct *);
 
 #endif

@@ -40,12 +40,12 @@ arno_evap(layer_data_struct *layer,
           double             rad,
           double             air_temp,
           double             vpd,
-          double             max_moist,
+          double            *max_moist,
           double             elevation,
           double             b_infilt,
           double             ra,
           double             delta_t,
-          double             resid_moist,
+          double            *resid_moist,
           double            *frost_fract)
 {
     extern parameters_struct param;
@@ -54,6 +54,8 @@ arno_evap(layer_data_struct *layer,
     int                      num_term;
     int                      i;
     size_t                   frost_area;
+    size_t                   lidx;
+    size_t                   Nlayers_esoil;
     double                   tmp, beta_asp, dummy;
     double                   ratio, as;
     double                   Epot; /* potential bare soil evaporation */
@@ -62,18 +64,33 @@ arno_evap(layer_data_struct *layer,
     double                   max_infil;
     double                   Evap;
     double                   tmpsum;
+    double                   tmpesoil;
+    double                   max_moist_tot;
+    double                   resid_moist_tot;
 
     Evap = 0;
 
     /* moist = liquid soil moisture */
     moist = 0;
-    for (frost_area = 0; frost_area < options.Nfrost; frost_area++) {
-        moist +=
-            (layer[0].moist -
-             layer[0].ice[frost_area]) * frost_fract[frost_area];
+    max_moist_tot = 0;
+    resid_moist_tot = 0;
+    if (options.DEEP_ESOIL) {
+        Nlayers_esoil = 2;
     }
-    if (moist > max_moist) {
-        moist = max_moist;
+    else {
+        Nlayers_esoil = 1;
+    }
+    for (lidx = 0; lidx < Nlayers_esoil; lidx++) {
+        for (frost_area = 0; frost_area < options.Nfrost; frost_area++) {
+            moist +=
+                (layer[lidx].moist -
+                 layer[lidx].ice[frost_area]) * frost_fract[frost_area];
+        }
+        max_moist_tot += max_moist[lidx];
+        resid_moist_tot += resid_moist[lidx];
+    }
+    if (moist > max_moist_tot) {
+        moist = max_moist_tot;
     }
 
     /* Calculate the potential bare soil evaporation (mm/time step) */
@@ -85,22 +102,22 @@ arno_evap(layer_data_struct *layer,
     /**********************************************************************/
     /*  Compute temporary infiltration rate based on given soil_moist.    */
     /**********************************************************************/
-    max_infil = (1.0 + b_infilt) * max_moist;
+    max_infil = (1.0 + b_infilt) * max_moist_tot;
     if (b_infilt == -1.0) {
         tmp = max_infil;
     }
     else {
-        ratio = 1.0 - (moist) / (max_moist);
+        ratio = 1.0 - (moist) / (max_moist_tot);
         if (ratio > 1.0) {
             log_err("SOIL RATIO GREATER THAN 1.0: moisture %f  "
                     "max_moisture %f -> ratio = %f",
-                    moist, max_moist, ratio);
+                    moist, max_moist_tot, ratio);
         }
         else {
             if (ratio < 0.0) {
                 log_err("SOIL RATIO LESS THAN 0.0: moisture %f   "
                         "max_moisture %f -> ratio = %e",
-                        moist, max_moist, ratio);
+                        moist, max_moist_tot, ratio);
             }
             else {
                 ratio = pow(ratio, (1.0 / (b_infilt + 1.0)));
@@ -168,10 +185,10 @@ arno_evap(layer_data_struct *layer,
 
     /* only consider positive evaporation; we won't put limits on condensation */
     if (esoil > 0.0) {
-        if (moist > resid_moist) {
+        if (moist > resid_moist_tot) {
             /* there is liquid moisture available; cap esoil at available liquid moisture */
-            if (esoil > moist - resid_moist) {
-                esoil = moist - resid_moist;
+            if (esoil > moist - resid_moist_tot) {
+                esoil = moist - resid_moist_tot;
             }
         }
         else {
@@ -180,7 +197,17 @@ arno_evap(layer_data_struct *layer,
         }
     }
 
-    layer[0].esoil = esoil;
+    tmpesoil = esoil;
+    for (lidx = 0; lidx < Nlayers_esoil; lidx++) {
+        if (layer[lidx].moist - resid_moist[lidx] > tmpesoil) {
+            layer[lidx].esoil = tmpesoil;
+            tmpesoil = 0;
+        }
+        else {
+            layer[lidx].esoil = layer[lidx].moist - resid_moist[lidx];
+            tmpesoil -= layer[lidx].moist - resid_moist[lidx];
+        }
+    }
     Evap += esoil / MM_PER_M / delta_t;
 
     return(Evap);

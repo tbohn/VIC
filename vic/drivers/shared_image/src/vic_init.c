@@ -301,6 +301,118 @@ vic_init(void)
         }
     }
 
+    // read irrigation parameters
+    if (options.IRRIGATION) {
+        // ithresh and itarget
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d3start[0] = j;
+            get_scatter_nc_field_int(&(filenames.params), "ithresh",
+                                     d3start, d3count, ivar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].ithresh = ivar[i];
+            }
+        }
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d3start[0] = j;
+            get_scatter_nc_field_int(&(filenames.params), "itarget",
+                                     d3start, d3count, ivar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].itarget = ivar[i];
+            }
+        }
+        // crop_split
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d3start[0] = j;
+            get_scatter_nc_field_int(&(filenames.params), "crop_split",
+                                     d3start, d3count, ivar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].crop_split = (bool) ivar[i];
+            }
+        }
+        // irr_active
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d3start[0] = j;
+            get_scatter_nc_field_int(&(filenames.params), "irr_active",
+                                     d3start, d3count, ivar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].irr_active = (bool) ivar[i];
+            }
+        }
+        // fcrop and firr
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d4start[0] = j;
+            for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                d4start[1] = k;
+                get_scatter_nc_field_double(&(filenames.params), "fcrop",
+                                            d4start, d4count, dvar);
+                for (i = 0; i < local_domain.ncells_active; i++) {
+                    veg_lib[i][j].fcrop[k] = (double) dvar[i];
+                }
+            }
+        }
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            d4start[0] = j;
+            for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                d4start[1] = k;
+                get_scatter_nc_field_double(&(filenames.params), "firr",
+                                            d4start, d4count, dvar);
+                for (i = 0; i < local_domain.ncells_active; i++) {
+                    veg_lib[i][j].firr[k] = (double) dvar[i];
+                }
+            }
+        }
+    }
+    else {
+        for (j = 0; j < options.NVEGTYPES; j++) {
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].ithresh = IRR_CR;
+                veg_lib[i][j].itarget = IRR_FC;
+                veg_lib[i][j].crop_split = (bool) 0;
+                veg_lib[i][j].irr_active = (bool) 0;
+                for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                    veg_lib[i][j].fcrop[k] = 1.0;
+                    veg_lib[i][j].firr[k] = 0.0;
+                }
+            }
+        }
+    }
+
+    // total impervious area
+    for (j = 0; j < options.NVEGTYPES; j++) {
+        if (options.FIMP_SRC == FROM_DEFAULT) {
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].fimperv = 0.0;
+            }
+        }
+        else if (options.FIMP_SRC == FROM_VEGLIB ||
+                 options.FIMP_SRC == FROM_VEGPARAM) {
+            d3start[0] = j;
+            get_scatter_nc_field_double(&(filenames.params), "fimperv",
+                                        d3start, d3count, dvar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].fimperv = (double) dvar[i];
+            }
+        }
+    }
+
+    // effective impervious area
+    for (j = 0; j < options.NVEGTYPES; j++) {
+        if (options.FIMP_SRC == FROM_DEFAULT) {
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].feffimperv = 0.0;
+            }
+        }
+        else if (options.FIMP_SRC == FROM_VEGLIB ||
+                 options.FIMP_SRC == FROM_VEGPARAM) {
+            d3start[0] = j;
+            get_scatter_nc_field_double(&(filenames.params), "feffimperv",
+                                        d3start, d3count, dvar);
+            for (i = 0; i < local_domain.ncells_active; i++) {
+                veg_lib[i][j].feffimperv = (double) dvar[i];
+            }
+        }
+    }
+
     // read carbon cycle parameters
     if (options.CARBON) {
         // Ctype
@@ -674,6 +786,10 @@ vic_init(void)
                                 d2start, d2count, dvar);
     for (i = 0; i < local_domain.ncells_active; i++) {
         soil_con[i].rough = (double) dvar[i];
+        if (soil_con[i].rough <= 0) {
+            log_err("cell %zu: Model will not function with soil roughness "
+                    "%f <= 0 m.\n%s", i, soil_con[i].rough, locstr);
+        }
     }
 
     // snow_rough: snow roughness
@@ -681,6 +797,10 @@ vic_init(void)
                                 d2start, d2count, dvar);
     for (i = 0; i < local_domain.ncells_active; i++) {
         soil_con[i].snow_rough = (double) dvar[i];
+        if (soil_con[i].snow_rough <= 0) {
+            log_err("cell %zu: Model will not function with snow roughness "
+                    "%f <= 0 m.\n%s", i, soil_con[i].snow_rough, locstr);
+        }
     }
 
     // annual_prec: annual precipitation
@@ -792,7 +912,7 @@ vic_init(void)
         for (j = 0; j < options.Nlayer; j++) {
             soil_con[i].Wcr[j] *= soil_con[i].max_moist[j];
             soil_con[i].Wpwp[j] *= soil_con[i].max_moist[j];
-            soil_con[i].resid_moist[j] *= soil_con[i].max_moist[j];
+            soil_con[i].resid_moist[j] *= soil_con[i].depth[j] * MM_PER_M;
             if (soil_con[i].Wpwp[j] > soil_con[i].Wcr[j]) {
                 sprint_location(locstr, &(local_domain.locations[i]));
                 log_err("Calculated wilting point moisture (%f mm) is "
@@ -1119,6 +1239,7 @@ vic_init(void)
         nveg = veg_con_map[i].nv_active - 1;
         for (j = 0; j < veg_con_map[i].nv_active; j++) {
             veg_con[i][j].vegetat_type_num = (int) nveg;
+            veg_con[i][j].Cv = 0;
         }
     }
 
@@ -1143,6 +1264,14 @@ vic_init(void)
                 veg_con_map[i].vidx[j] = k;
                 veg_con[i][k].Cv = veg_con_map[i].Cv[j];
                 veg_con[i][k].veg_class = j;
+                veg_con[i][k].crop_split = veg_lib[i][j].crop_split;
+                if (veg_con[i][k].crop_split) {
+                    veg_con[i][k].Nsubtiles = 2;
+                }
+                else {
+                    veg_con[i][k].Nsubtiles = 1;
+                }
+                veg_con[i][k].irr_active = veg_lib[i][j].irr_active;
                 for (m = 0; m < MONTHS_PER_YEAR; m++) {
                     if (options.ALB_SRC == FROM_VEGLIB ||
                         options.ALB_SRC == FROM_VEGPARAM) {
@@ -1164,7 +1293,11 @@ vic_init(void)
                     veg_con[i][k].displacement[m] =
                         veg_lib[i][j].displacement[m];
                     veg_con[i][k].roughness[m] = veg_lib[i][j].roughness[m];
+                    veg_con[i][k].fcrop[m] = veg_lib[i][j].fcrop[m];
+                    veg_con[i][k].firr[m] = veg_lib[i][j].firr[m];
                 }
+                veg_con[i][k].fimperv = veg_lib[i][j].fimperv;
+                veg_con[i][k].feffimperv = veg_lib[i][j].feffimperv;
                 k++;
             }
             else {
@@ -1218,11 +1351,6 @@ vic_init(void)
         }
     }
 
-    // calculate root fractions
-    for (i = 0; i < local_domain.ncells_active; i++) {
-        calc_root_fractions(veg_con[i], &(soil_con[i]));
-    }
-
     // Run some checks and corrections for vegetation
     for (i = 0; i < local_domain.ncells_active; i++) {
         // Only run to options.NVEGTYPES - 1, assuming bare soil
@@ -1237,8 +1365,8 @@ vic_init(void)
                 if (sum <= 0) {
                     sprint_location(locstr, &(local_domain.locations[i]));
                     log_err("Root zone depths must sum to a value greater "
-                            "than 0 (sum = %.16f) - Type: %zd.\n%s", sum, j,
-                            locstr);
+                            "than 0 (sum = %.16f) - veg_class: %zd.\n%s",
+                            sum, j, locstr);
                 }
                 sum = 0;
                 for (k = 0; k < options.ROOT_ZONES; k++) {
@@ -1296,6 +1424,10 @@ vic_init(void)
                 }
             }
         }
+
+        // calculate root fractions
+        calc_root_fractions(veg_con[i], &(soil_con[i]));
+
     }
 
     // read blowing snow parameters

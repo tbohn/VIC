@@ -45,21 +45,12 @@ read_soilparam(FILE            *soilparam,
     const char               delimiters[] = " \t";
     char                    *token;
     size_t                   layer;
-    int                      i, tempint, j;
+    int                      tempint, j;
     double                   off_gmt;
     double                   tempdbl;
     size_t                   length;
     int                      Nbands, band;
     int                      flag;
-    double                   tmp_depth;
-    double                   tmp_depth2, tmp_depth2_save;
-    double                   b, b_save;
-    double                   bubble, bub_save;
-    double                   tmp_max_moist;
-    double                   tmp_resid_moist;
-    double                   zwt_prime, zwt_prime_eff;
-    double                   tmp_moist;
-    double                   w_avg;
     double                   Zsum, dp;
     double                   tmpdp, tmpadj, Bexp;
     size_t                   k;
@@ -504,6 +495,10 @@ read_soilparam(FILE            *soilparam,
             log_err("Can't find values for SOIL ROUGHNESS in soil file");
         }
         sscanf(token, "%lf", &(temp->rough));
+        if (temp->rough <= 0) {
+            log_err("Model will not function with soil roughness %f <= 0 "
+                    "m.\n", temp->rough);
+        }
 
         /* Overwrite default bare soil aerodynamic resistance parameters
            with the values taken from the soil parameter file */
@@ -523,6 +518,10 @@ read_soilparam(FILE            *soilparam,
             log_err("Can't find values for SNOW ROUGHNESS in soil file");
         }
         sscanf(token, "%lf", &(temp->snow_rough));
+        if (temp->snow_rough <= 0) {
+            log_err("Model will not function with snow roughness %f <= 0 "
+                    "m.\n", temp->snow_rough);
+        }
 
         /* read cell annual precipitation */
         token = strtok(NULL, delimiters);
@@ -661,7 +660,7 @@ read_soilparam(FILE            *soilparam,
         for (layer = 0; layer < options.Nlayer; layer++) {
             temp->Wcr[layer] *= temp->max_moist[layer];
             temp->Wpwp[layer] *= temp->max_moist[layer];
-            temp->resid_moist[layer] *= temp->max_moist[layer];
+            temp->resid_moist[layer] *= temp->depth[layer] * MM_PER_M;
             if (temp->Wpwp[layer] > temp->Wcr[layer]) {
                 log_err("Calculated wilting point moisture (%f mm) is "
                         "greater than calculated critical point moisture "
@@ -674,9 +673,8 @@ read_soilparam(FILE            *soilparam,
                         "less than calculated residual moisture (%f mm) "
                         "for layer %zu.\n\tIn the soil parameter file, "
                         "Wpwp_FRACT MUST be >= resid_moist / (1.0 - "
-                        "bulk_density/soil_density).",
-                        temp->Wpwp[layer], temp->resid_moist[layer] *
-                        temp->depth[layer] * MM_PER_M, layer);
+                        "bulk_density/soil_density).", temp->Wpwp[layer],
+                        temp->resid_moist[layer], layer);
             }
         }
 

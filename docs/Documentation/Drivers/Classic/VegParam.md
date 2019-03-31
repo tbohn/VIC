@@ -31,6 +31,25 @@ OPTIONAL - If BLOWING_SNOW is TRUE in global parameter file, then for each veget
 | lag_one         | N/A     | Lag-one autocorrelation of terrain slope within vegetation tile                       |
 | fetch           | m       | Average fetch (distance the wind blows without obstructions) within vegetation tile   |
 
+OPTIONAL - If VEGPARAM_FIMP is TRUE in global parameter file, then for each vegetation tile, the following parameters must appear:
+
+| Variable Name   | Units   | Description                                                                           |
+|---------------  |-------  |-------------------------------------------------------------------------------------  |
+| fimperv         | N/A     | Impervious area fraction                                                              |
+| feffimperv      | N/A     | Fraction of impervious area that is effective (connected to channel network)          |
+
+OPTIONAL - If VEGPARAM_CSPFLG is TRUE in global parameter file, then for each vegetation tile, the following parameter must appear:
+
+| Variable Name   | Units   | Description                                                                           |
+|---------------  |-------  |-------------------------------------------------------------------------------------  |
+| crop_split      | 0 or 1  | Flag indicating if agricultural tile should be split into planted/fallow fractions    |
+
+OPTIONAL - If VEGPARAM_IFLAG is TRUE in global parameter file, then for each vegetation tile, the following parameter must appear:
+
+| Variable Name   | Units   | Description                                                                           |
+|---------------  |-------  |-------------------------------------------------------------------------------------  |
+| irr_active      | 0 or 1  | Flag indicating if irrigation is active in this tile                                  |
+
 OPTIONAL - If VEGPARAM_LAI is TRUE in global parameter file, then for each vegetation tile, there must be a line containing the following parameters:
 
 | Variable Name   | Units     | Description                     |
@@ -48,6 +67,13 @@ OPTIONAL - If VEGPARAM_ALBEDO is TRUE in global parameter file, then for each ve
 | Variable Name | Units    | Description           |
 |---------------|----------|-----------------------|
 | ALBEDO        | fraction | Albedo, one per month |
+
+OPTIONAL - If VEGPARAM_FIRR is TRUE in global parameter file, then for each vegetation tile, there must be two lines, one for each of the following parameters:
+
+| Variable Name | Units    | Description                       |
+|---------------|----------|-----------------------------------|
+| fcrop         | fraction | Planted fraction, one per month   |
+| firr          | fraction | Irrigated fraction, one per month |
 
 ## Example Vegetation Parameter File:
 

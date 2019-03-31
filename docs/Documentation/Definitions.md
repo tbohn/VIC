@@ -113,7 +113,9 @@ Default value is set to 0 m/s, which works well when the model is forced with da
 The parameter `phi_s` is the unitless soil moisture diffusion coefficient. This parameter is designed for the future inclusion of soil moisture diffusion in the VIC model moisture trasport equations. Currently this feature has not been implemented so a value of -999 can be used as a placeholder.
 
 ### resid_moist
-Residual moisture content is the amount of soil moisture that cannot be removed from the soil by drainage or evapotranspiration. Values are provided to the model as soil moisture contents (volume of residual soil moisture content / total volume of soil) [mm/mm]. When residual soil moisture is defined as 0 mm/mm the soil hydraulic conductivity relationship collapses to Campbell (1974), otherwise it follows Brooks and Corey (1964).
+Residual moisture content is the amount of soil moisture that cannot be removed from the soil by drainage or evapotranspiration. When residual soil moisture is defined as 0 mm/mm the soil hydraulic conductivity relationship collapses to Campbell (1974), otherwise it follows Brooks and Corey (1964).
+
+Values are provided to the model as soil moisture contents (volume of residual soil moisture content / total volume of soil) [mm/mm]. Note that these units are different from the input units of critical (Wcr_FRACT) and wilting point (Wpwp_FRACT), which are fractions of porosity [mm/mm].
 
 Brooks, R. H. and A. T. Corey, Hydraulic Properties of Porous Media, Hydrology Paper 3, Colorado State University, Fort Collins, Colo, 1964.
 
@@ -184,7 +186,32 @@ The parameter `Nveg` describes the number of active vegetation classes (or types
 The parameter `Cv` describes the fraction of the grid cell covered by each active vegetation class. 
 
 ### LAI 
-LAI is the leaf area index, typically one value per month is used. If `VEGPARAM_LAI` is `TRUE` in the global parameter file, then each vegetation tile must inluce a line for LAI.  
+`LAI` is the monthly leaf area index; 12 monthly values are supplied.
+
+In the classic driver, `LAI` is supplied in the veg library file (one set of monthly values for each land cover class) and optionally can be supplied in the veg parameter file (one set of monthly values for each land cover class in each grid cell). If `LAI` values are included in the veg parameter file, `VEGPARAM_LAI` must be set to `TRUE` in the global parameter file. To tell VIC which values of `LAI` to use, `LAI_SRC` in the global parameter file can be set to `FROM_VEGLIB` (from veg library file), `FROM_VEGPARAM` (from veg parameter file - this is the default), or `FROM_VEGHIST` (from the veg history file).
+
+In the image driver, `LAI` is supplied in the parameter file (one set of monthly values for each land cover class in each grid cell).
+
+### fcanopy 
+`fcanopy` is the canopy fraction; 12 monthly values are supplied.
+
+In the classic driver, `fcanopy` is optionally supplied in either the veg library file (one set of monthly values for each land cover class) or the veg parameter file (one set of monthly values for each land cover class in each grid cell). If `fcanopy` values are included in the veg library file, `VEGLIB_FCAN` must be set to `TRUE` in the global parameter file. If `fcanopy` values are included in the veg parameter file, `VEGPARAM_FCAN` must be set to `TRUE` in the global parameter file. To tell VIC which values of `fcanopy` to use, `FCAN_SRC` in the global parameter file can be set to `FROM_DEFAULT` (ignore all supplied values and use a constant value of 1.0 everywhere - this is the default), `FROM_VEGLIB` (from veg library file), `FROM_VEGPARAM` (from veg parameter file), or `FROM_VEGHIST` (from the veg history file).
+
+In the image driver, `fcanopy` is supplied in the parameter file (one set of monthly values for each land cover class in each grid cell). To tell VIC to use these values, `FCAN_SRC` must be set to `FROM_VEGPARAM` in the global parameter file; else set it to `FROM_DEFAULT` in which case VIC will use a constant value of 1.0.
+
+### albedo 
+`albedo` refers to the shortwave albedo and is specific to each vegetation type; 12 monthly values are supplied.
+
+In the classic driver, `albedo` is supplied in the veg library file (one set of monthly values for each land cover class) and optionally can be supplied in the veg parameter file (one set of monthly values for each land cover class in each grid cell). If `albedo` values are included in the veg parameter file, `VEGPARAM_ALB` must be set to `TRUE` in the global parameter file. To tell VIC which values of `albedo` to use, `ALB_SRC` in the global parameter file can be set to `FROM_VEGLIB` (from veg library file), `FROM_VEGPARAM` (from veg parameter file - this is the default), or `FROM_VEGHIST` (from the veg history file).
+
+In the image driver, `albedo` is supplied in the parameter file (one set of monthly values for each land cover class in each grid cell).
+
+### fimperv and feffimperv
+`fimperv` is the area fraction of each land cover class that is impervious, and `feffimperv` is the fraction of the impervious area that is effective (connected to the channel network).
+
+In the classic driver, `fimperv` and `feffimperv` optionally can be supplied in the veg parameter file (one value of each parameter for each land cover class) or. If `fimperv` and `feffimperv` values are included in the veg parameter file, `VEGPARAM_FIMP` must be set to `TRUE` in the global parameter file. To tell VIC which values of `fimperv` and `feffimperv` to use, `FIMP_SRC` in the global parameter file can be set to `FROM_VEGPARAM` (from veg parameter file - this is the default), or `FROM_DEFAULT` in which case VIC will use a constant value of 0.0 for both.
+
+In the image driver, `fimperv` and `feffimperv` are supplied in the parameter file (one value of each parameter for each land cover class in each grid cell). To tell VIC to use these values, `FIMP_SRC` must be set to `FROM_VEGPARAM` in the global parameter file; else set it to `FROM_DEFAULT` in which case VIC will use a contant value of 0.0 for each.
 
 ### overstory
 `Overstory` is a flag to indicate if the current vegetation type has an overstory or not. A value of 1 indicates an overstory, a value of 0 indicates no overstory. 
@@ -206,9 +233,6 @@ The paraemeter `wind_atten` is the wind speed attenuation through the overstory.
 
 ### trunk_ratio 
 The parameter `trunk_ratio` is the ratio of total tree height that refers to the trunk (does not include branches). The default value is typically 0.2.
-
-### albedo 
-`albedo` refers to the shortwave albedo and is specific to each vegetation type.
 
 ### veg_rough 
 The parameter `veg_rough` refers to the roughness length of the vegetation type and is typically 0.123 * vegetation height.
