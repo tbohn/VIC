@@ -186,7 +186,25 @@ The parameter `Nveg` describes the number of active vegetation classes (or types
 The parameter `Cv` describes the fraction of the grid cell covered by each active vegetation class. 
 
 ### LAI 
-LAI is the leaf area index, typically one value per month is used. If `VEGPARAM_LAI` is `TRUE` in the global parameter file, then each vegetation tile must inluce a line for LAI.  
+`LAI` is the monthly leaf area index; 12 monthly values are supplied.
+
+In the classic driver, `LAI` is supplied in the veg library file (one set of monthly values for each land cover class) and optionally can be supplied in the veg parameter file (one set of monthly values for each land cover class in each grid cell). If `LAI` values are included in the veg parameter file, `VEGPARAM_LAI` must be set to `TRUE` in the global parameter file. To tell VIC which values of `LAI` to use, `LAI_SRC` in the global parameter file can be set to `FROM_VEGLIB` (from veg library file), `FROM_VEGPARAM` (from veg parameter file - this is the default), or `FROM_VEGHIST` (from the veg history file).
+
+In the image driver, `LAI` is supplied in the parameter file (one set of monthly values for each land cover class in each grid cell).
+
+### fcanopy 
+`fcanopy` is the canopy fraction; 12 monthly values are supplied.
+
+In the classic driver, `fcanopy` is optionally supplied in either the veg library file (one set of monthly values for each land cover class) or the veg parameter file (one set of monthly values for each land cover class in each grid cell). If `fcanopy` values are included in the veg library file, `VEGLIB_FCAN` must be set to `TRUE` in the global parameter file. If `fcanopy` values are included in the veg parameter file, `VEGPARAM_FCAN` must be set to `TRUE` in the global parameter file. To tell VIC which values of `fcanopy` to use, `FCAN_SRC` in the global parameter file can be set to `FROM_DEFAULT` (ignore all supplied values and use a constant value of 1.0 everywhere - this is the default), `FROM_VEGLIB` (from veg library file), `FROM_VEGPARAM` (from veg parameter file), or `FROM_VEGHIST` (from the veg history file).
+
+In the image driver, `fcanopy` is supplied in the parameter file (one set of monthly values for each land cover class in each grid cell). To tell VIC to use these values, `FCAN_SRC` must be set to `FROM_VEGPARAM` in the global parameter file; else set it to `FROM_DEFAULT` in which case VIC will use a constant value of 1.0.
+
+### albedo 
+`albedo` refers to the shortwave albedo and is specific to each vegetation type; 12 monthly values are supplied.
+
+In the classic driver, `albedo` is supplied in the veg library file (one set of monthly values for each land cover class) and optionally can be supplied in the veg parameter file (one set of monthly values for each land cover class in each grid cell). If `albedo` values are included in the veg parameter file, `VEGPARAM_ALB` must be set to `TRUE` in the global parameter file. To tell VIC which values of `albedo` to use, `ALB_SRC` in the global parameter file can be set to `FROM_VEGLIB` (from veg library file), `FROM_VEGPARAM` (from veg parameter file - this is the default), or `FROM_VEGHIST` (from the veg history file).
+
+In the image driver, `albedo` is supplied in the parameter file (one set of monthly values for each land cover class in each grid cell).
 
 ### overstory
 `Overstory` is a flag to indicate if the current vegetation type has an overstory or not. A value of 1 indicates an overstory, a value of 0 indicates no overstory. 
@@ -208,9 +226,6 @@ The paraemeter `wind_atten` is the wind speed attenuation through the overstory.
 
 ### trunk_ratio 
 The parameter `trunk_ratio` is the ratio of total tree height that refers to the trunk (does not include branches). The default value is typically 0.2.
-
-### albedo 
-`albedo` refers to the shortwave albedo and is specific to each vegetation type.
 
 ### veg_rough 
 The parameter `veg_rough` refers to the roughness length of the vegetation type and is typically 0.123 * vegetation height.
