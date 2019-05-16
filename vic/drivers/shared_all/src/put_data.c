@@ -540,7 +540,8 @@ put_data(all_vars_struct   *all_vars,
     /********************
        Check Water Balance
     ********************/
-    inflow = out_data[OUT_PREC][0] + out_data[OUT_LAKE_CHAN_IN][0];  // mm over grid cell
+    inflow = out_data[OUT_PREC][0] + out_data[OUT_LAKE_CHAN_IN][0] +
+             out_data[OUT_IRR_APPLIED][0]; // mm over grid cell
     outflow = out_data[OUT_EVAP][0] + out_data[OUT_RUNOFF][0] +
               out_data[OUT_BASEFLOW][0];  // mm over grid cell
     storage = 0.;
