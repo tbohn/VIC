@@ -53,15 +53,18 @@ compute_irrig_demand(cell_data_struct  *cell,
             irr_sm_thresh = soil_con->max_moist[thresh_idx];
         else if (veg_lib->ithresh == IRR_FC)
             irr_sm_thresh = soil_con->Wcr[thresh_idx] / 0.7;
-        else
-            irr_sm_thresh = soil_con->Wcr[thresh_idx]; // critical point in most cases
+        else if (veg_lib->ithresh == IRR_CR)
+            irr_sm_thresh = soil_con->Wcr[thresh_idx]; // critical point in urban area
+        else 
+            irr_sm_thresh = soil_con->Wpwp[thresh_idx]; // wilting point in most cases
         if (irr_sm_thresh > soil_con->max_moist[thresh_idx])
             irr_sm_thresh = soil_con->max_moist[thresh_idx];
         if (veg_lib->itarget == IRR_SAT)
             irr_sm_target = soil_con->max_moist[target_idx];
-        else
+        else if (veg_lib->itarget == IRR_FC)
             irr_sm_target = soil_con->Wcr[target_idx] / 0.7; // field capacity in most cases
-
+        else
+            irr_sm_target = soil_con->Wcr[thresh_idx];  // critical point in urban area
         if (irr_sm_target > soil_con->max_moist[target_idx])
             irr_sm_target = soil_con->max_moist[target_idx];
         if (moistfract < irr_sm_thresh)
