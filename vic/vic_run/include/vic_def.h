@@ -170,7 +170,8 @@ enum
 {
     IRR_SAT,
     IRR_FC,
-    IRR_CR
+    IRR_CR,
+    IRR_WP
 };
 
 /***** Data Structures *****/
