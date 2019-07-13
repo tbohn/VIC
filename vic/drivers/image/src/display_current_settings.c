@@ -348,6 +348,9 @@ display_current_settings(int mode)
     else if (options.FCROP_SRC == FROM_VEGLIB) {
         fprintf(LOG_DEST, "FCROP_SRC\t\tFROM_VEGLIB\n");
     }
+    else if (options.FCROP_SRC == FROM_DEFAULT) {
+        fprintf(LOG_DEST, "FCROP_SRC\t\tFROM_DEFAULT\n");
+    }
     if (options.FIRR_SRC == FROM_VEGHIST) {
         fprintf(LOG_DEST, "FIRR_SRC\t\tFROM_VEGHIST\n");
     }
@@ -357,6 +360,9 @@ display_current_settings(int mode)
     else if (options.FIRR_SRC == FROM_VEGLIB) {
         fprintf(LOG_DEST, "FIRR_SRC\t\tFROM_VEGLIB\n");
     }
+    else if (options.FIRR_SRC == FROM_DEFAULT) {
+        fprintf(LOG_DEST, "FIRR_SRC\t\tFROM_DEFAULT\n");
+    }
     if (options.FIMP_SRC == FROM_VEGHIST) {
         fprintf(LOG_DEST, "FIMP_SRC\t\tFROM_VEGHIST\n");
     }
@@ -365,6 +371,9 @@ display_current_settings(int mode)
     }
     else if (options.FIMP_SRC == FROM_VEGLIB) {
         fprintf(LOG_DEST, "FIMP_SRC\t\tFROM_VEGLIB\n");
+    }
+    else if (options.FIMP_SRC == FROM_DEFAULT) {
+        fprintf(LOG_DEST, "FIMP_SRC\t\tFROM_DEFAULT\n");
     }
 
     fprintf(LOG_DEST, "\n");

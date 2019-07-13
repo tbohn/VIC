@@ -427,6 +427,9 @@ get_global_param(FILE *gp)
                 else if (strcasecmp("FROM_VEGLIB", flgstr) == 0) {
                     options.FCROP_SRC = FROM_VEGLIB;
                 }
+                else if (strcasecmp("FROM_DEFAULT", flgstr) == 0) {
+                    options.FCROP_SRC = FROM_DEFAULT;
+                }
                 else {
                     log_err("Unrecognized value of FCROP_SRC in the global "
                             "control file.");
@@ -443,6 +446,9 @@ get_global_param(FILE *gp)
                 else if (strcasecmp("FROM_VEGLIB", flgstr) == 0) {
                     options.FIRR_SRC = FROM_VEGLIB;
                 }
+                else if (strcasecmp("FROM_DEFAULT", flgstr) == 0) {
+                    options.FIRR_SRC = FROM_DEFAULT;
+                }
                 else {
                     log_err("Unrecognized value of FIRR_SRC in the global "
                             "control file.");
@@ -458,6 +464,9 @@ get_global_param(FILE *gp)
                 }
                 else if (strcasecmp("FROM_VEGLIB", flgstr) == 0) {
                     options.FIMP_SRC = FROM_VEGLIB;
+                }
+                else if (strcasecmp("FROM_DEFAULT", flgstr) == 0) {
+                    options.FIMP_SRC = FROM_DEFAULT;
                 }
                 else {
                     log_err("Unrecognized value of FIMP_SRC in the global "

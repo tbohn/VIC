@@ -285,6 +285,10 @@ vic_run(force_data_struct   *force,
                     return (ERROR);
                 }
 
+                /* Impervious area fractions */
+                fimperv = veg_con[iveg].fimperv;
+                feffimperv = veg_con[iveg].feffimperv;
+
                 /**************************************************
                    Loop over elevation bands
                 **************************************************/
@@ -401,8 +405,6 @@ vic_run(force_data_struct   *force,
                         lag_one = veg_con[iveg].lag_one;
                         sigma_slope = veg_con[iveg].sigma_slope;
                         fetch = veg_con[iveg].fetch;
-                        fimperv = veg_con[iveg].fimperv;
-                        feffimperv = veg_con[iveg].feffimperv;
 
                         ErrorFlag = surface_fluxes(overstory, bare_albedo,
                                                    ice0, moist0,

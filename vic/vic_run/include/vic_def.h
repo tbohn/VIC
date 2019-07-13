@@ -300,9 +300,11 @@ typedef struct {
                                           FROM_VEGPARAM = use albedo values from the veg param file */
     unsigned short int FCAN_SRC;       /**< FROM_VEGLIB = use fcanopy values from veg library file
                                           FROM_VEGPARAM = use fcanopy values from the veg param file */
-    unsigned short int FCROP_SRC;      /**< FROM_VEGLIB = use fcrop values from veg library file
+    unsigned short int FCROP_SRC;      /**< FROM_DEFAULT = use default fcrop values of 1.0
+                                          FROM_VEGLIB = use fcrop values from veg library file
                                           FROM_VEGPARAM = use fcrop values from the veg param file */
-    unsigned short int FIRR_SRC;       /**< FROM_VEGLIB = use firr values from veg library file
+    unsigned short int FIRR_SRC;       /**< FROM_DEFAULT = use default firr values of 0.0
+                                          FROM_VEGLIB = use firr values from veg library file
                                           FROM_VEGPARAM = use firr values from the veg param file */
     unsigned short int FIMP_SRC;       /**< FROM_DEFAULT = use default fimperv and feffimperv values
                                           FROM_VEGLIB = use fimperv and feffimperv values from veg library file

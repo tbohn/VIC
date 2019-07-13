@@ -340,24 +340,42 @@ vic_init(void)
         }
         // fcrop and firr
         for (j = 0; j < options.NVEGTYPES; j++) {
-            d4start[0] = j;
-            for (k = 0; k < MONTHS_PER_YEAR; k++) {
-                d4start[1] = k;
-                get_scatter_nc_field_double(&(filenames.params), "fcrop",
-                                            d4start, d4count, dvar);
+            if (options.FCROP_SRC == FROM_DEFAULT) {
                 for (i = 0; i < local_domain.ncells_active; i++) {
-                    veg_lib[i][j].fcrop[k] = (double) dvar[i];
+                    for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                        veg_lib[i][j].fcrop[k] = 1.0;
+                    }
+                }
+            }
+            else {
+                d4start[0] = j;
+                for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                    d4start[1] = k;
+                    get_scatter_nc_field_double(&(filenames.params), "fcrop",
+                                                d4start, d4count, dvar);
+                    for (i = 0; i < local_domain.ncells_active; i++) {
+                        veg_lib[i][j].fcrop[k] = (double) dvar[i];
+                    }
                 }
             }
         }
         for (j = 0; j < options.NVEGTYPES; j++) {
-            d4start[0] = j;
-            for (k = 0; k < MONTHS_PER_YEAR; k++) {
-                d4start[1] = k;
-                get_scatter_nc_field_double(&(filenames.params), "firr",
-                                            d4start, d4count, dvar);
+            if (options.FCROP_SRC == FROM_DEFAULT) {
                 for (i = 0; i < local_domain.ncells_active; i++) {
-                    veg_lib[i][j].firr[k] = (double) dvar[i];
+                    for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                        veg_lib[i][j].firr[k] = 0.0;
+                    }
+                }
+            }
+            else {
+                d4start[0] = j;
+                for (k = 0; k < MONTHS_PER_YEAR; k++) {
+                    d4start[1] = k;
+                    get_scatter_nc_field_double(&(filenames.params), "firr",
+                                                d4start, d4count, dvar);
+                    for (i = 0; i < local_domain.ncells_active; i++) {
+                        veg_lib[i][j].firr[k] = (double) dvar[i];
+                    }
                 }
             }
         }

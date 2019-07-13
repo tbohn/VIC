@@ -1,0 +1,340 @@
+drivers/image/src/display_current_settings.c:    fprintf(LOG_DEST, "NLAYER\t\t\t%zu\n", options.Nlayer);
+Binary file drivers/classic/vic_classic.exe matches
+drivers/classic/src/read_initial_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/read_initial_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/read_initial_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/read_initial_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/read_initial_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/read_initial_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/read_initial_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/read_initial_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/write_model_state.c:                 (Nveg + 1) * Nbands * options.Nlayer * sizeof(double) + // soil moisture
+drivers/classic/src/write_model_state.c:                  1) * Nbands * options.Nlayer * options.Nfrost *
+drivers/classic/src/write_model_state.c:                      options.Nlayer * sizeof(double) + // soil moisture
+drivers/classic/src/write_model_state.c:                      options.Nlayer * options.Nfrost * sizeof(double) + // soil ice
+drivers/classic/src/write_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/write_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/write_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/write_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/write_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/write_model_state.c:            for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:            for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:            for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:            for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:            for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:            for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:            for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:        if (options.Nlayer == 2) {
+drivers/classic/src/read_soilparam.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/classic/src/read_soilparam.c:            layer = options.Nlayer - 1;
+drivers/classic/src/read_soilparam.c:        soil_moisture_from_water_table(temp, options.Nlayer);
+drivers/classic/src/write_data.c:        n = N_OUTVAR_TYPES * options.Nlayer * options.SNOW_BAND;
+drivers/classic/src/get_global_param.c:            if (strcasecmp("NLAYER", optstr) == 0) {
+drivers/classic/src/get_global_param.c:                sscanf(cmdstr, "%*s %zu", &options.Nlayer);
+drivers/classic/src/get_global_param.c:         options.FROZEN_SOIL) && options.Nlayer < 3) {
+drivers/classic/src/get_global_param.c:                "Currently Nlayers is set to %zu.", options.Nlayer);
+drivers/classic/src/get_global_param.c:         !options.FROZEN_SOIL) && options.Nlayer < 1) {
+drivers/classic/src/get_global_param.c:                "the model.  Currently Nlayers is set to  %zu.",
+drivers/classic/src/get_global_param.c:                options.Nlayer);
+drivers/classic/src/get_global_param.c:    if (options.Nlayer > MAX_LAYERS) {
+drivers/classic/src/get_global_param.c:                "and recompile.", options.Nlayer,
+drivers/classic/src/vic_classic.c:                                            options.Nlayer, options.Nnode,
+drivers/classic/src/vic_classic.c:                                          options.Nlayer,
+drivers/classic/src/display_current_settings.c:    fprintf(LOG_DEST, "NLAYER\t\t\t%zu\n", options.Nlayer);
+drivers/classic/src/check_state_file.c:                 size_t Nlayer,
+drivers/classic/src/check_state_file.c:    size_t               tmp_Nlayer;
+drivers/classic/src/check_state_file.c:        fread(&tmp_Nlayer, sizeof(size_t), 1, init_state);
+drivers/classic/src/check_state_file.c:        fscanf(init_state, "%zu %zu\n", &tmp_Nlayer, &tmp_Nnodes);
+drivers/classic/src/check_state_file.c:    if (tmp_Nlayer != Nlayer) {
+drivers/classic/src/check_state_file.c:                "(%zu).  Check your input files.", tmp_Nlayer, Nlayer);
+drivers/classic/src/open_state_file.c:                size_t               Nlayer,
+drivers/classic/src/open_state_file.c:        fwrite(&Nlayer, sizeof(size_t), 1, statefile);
+drivers/classic/src/open_state_file.c:        fprintf(statefile, "%zu %zu\n", Nlayer, Nnodes);
+drivers/cesm/src/get_global_param.c:            if (strcasecmp("NLAYER", optstr) == 0) {
+drivers/cesm/src/get_global_param.c:                sscanf(cmdstr, "%*s %zu", &options.Nlayer);
+drivers/cesm/src/get_global_param.c:    if (options->Nlayer < 3) {
+drivers/cesm/src/get_global_param.c:                "Currently Nlayers is set to  %zu.", options->Nlayer);
+drivers/cesm/src/get_global_param.c:    if (options->Nlayer > MAX_LAYERS) {
+drivers/cesm/src/get_global_param.c:                "recompile.", options->Nlayer, MAX_LAYERS);
+drivers/cesm/src/display_current_settings.c:    fprintf(LOG_DEST, "NLAYER\t\t\t%zu\n", options.Nlayer);
+drivers/shared_all/include/vic_driver_shared_all.h:void print_cell_data(cell_data_struct *cell, size_t nlayers, size_t nfrost);
+drivers/shared_all/include/vic_driver_shared_all.h:                    size_t nlayers, size_t nnodes, size_t nfrost);
+drivers/shared_all/include/vic_driver_shared_all.h:void print_soil_con(soil_con_struct *scon, size_t nlayers, size_t nnodes,
+drivers/shared_all/include/vic_driver_shared_all.h:void soil_moisture_from_water_table(soil_con_struct *soil_con, size_t nlayers);
+drivers/shared_all/src/generate_default_state.c:        options.Nlayer, options.Nnode,
+drivers/shared_all/src/generate_default_state.c:        options.Nlayer, options.Nnode
+drivers/shared_all/src/generate_default_state.c:                    for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/shared_all/src/generate_default_state.c:                            options.Nlayer);
+drivers/shared_all/src/generate_default_state.c:                            options.Nlayer,
+drivers/shared_all/src/handle_subarea_changes.c:                        for(l = 0; l < options.Nlayer ; l++) {
+drivers/shared_all/src/handle_subarea_changes.c:                        for(l=0;l<options.Nlayer;l++) {
+drivers/shared_all/src/history_metadata.c:    out_metadata[OUT_SMLIQFRAC].nelem = options.Nlayer;
+drivers/shared_all/src/history_metadata.c:    out_metadata[OUT_SMFROZFRAC].nelem = options.Nlayer;
+drivers/shared_all/src/history_metadata.c:    out_metadata[OUT_SOIL_ICE].nelem = options.Nlayer;
+drivers/shared_all/src/history_metadata.c:    out_metadata[OUT_SOIL_LIQ].nelem = options.Nlayer;
+drivers/shared_all/src/history_metadata.c:    out_metadata[OUT_SOIL_ICE_FRAC].nelem = options.Nlayer;
+drivers/shared_all/src/history_metadata.c:    out_metadata[OUT_SOIL_LIQ_FRAC].nelem = options.Nlayer;
+drivers/shared_all/src/history_metadata.c:    out_metadata[OUT_SOIL_MOIST].nelem = options.Nlayer;
+drivers/shared_all/src/history_metadata.c:    out_metadata[OUT_SOIL_TEMP].nelem = options.Nlayer;
+drivers/shared_all/src/put_data.c:    for (index = 0; index < options.Nlayer; index++) {
+drivers/shared_all/src/put_data.c:    for (index = 0; index < options.Nlayer; index++) {
+drivers/shared_all/src/put_data.c:    for (index = 0; index < options.Nlayer; index++) {
+drivers/shared_all/src/put_data.c:    for (index = 0; index < options.Nlayer; index++) {
+drivers/shared_all/src/put_data.c:    for (index = 0; index < options.Nlayer; index++) {
+drivers/shared_all/src/put_data.c:    for (index = 0; index < options.Nlayer; index++) {
+drivers/shared_all/src/print_library_shared.c:                size_t            nlayers,
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:               size_t           nlayers,
+drivers/shared_all/src/print_library_shared.c:    print_cell_data(&(lvar->soil), nlayers, nfrost);
+drivers/shared_all/src/print_library_shared.c:    fprintf(LOG_DEST, "\tNlayer               : %zu\n", option->Nlayer);
+drivers/shared_all/src/print_library_shared.c:               size_t           nlayers,
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers + 2; i++) {
+drivers/shared_all/src/print_library_shared.c:    for (i = 0; i < nlayers + 2; i++) {
+drivers/shared_all/src/initialize_options.c:    options.Nlayer = 3;
+drivers/shared_all/src/calc_root_fraction.c:        while (layer < options.Nlayer || zone < options.ROOT_ZONES) {
+drivers/shared_all/src/calc_root_fraction.c:            if (Lsum <= Zsum && layer < options.Nlayer) {
+drivers/shared_all/src/calc_root_fraction.c:                (layer < options.Nlayer - 1 ||
+drivers/shared_all/src/calc_root_fraction.c:                if (layer >= options.Nlayer - 1) {
+drivers/shared_all/src/calc_root_fraction.c:                    ltmp = options.Nlayer - 1;
+drivers/shared_all/src/calc_root_fraction.c:                if (layer < options.Nlayer) {
+drivers/shared_all/src/calc_root_fraction.c:                if (layer < options.Nlayer) {
+drivers/shared_all/src/calc_root_fraction.c:        for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/shared_all/src/calc_root_fraction.c:            for (layer = 0; layer < options.Nlayer; layer++) {
+drivers/shared_all/src/soil_moisture_from_water_table.c:                               size_t           nlayers)
+drivers/shared_all/src/soil_moisture_from_water_table.c:    for (j = 0; j < nlayers; j++) {
+drivers/shared_all/src/soil_moisture_from_water_table.c:    for (j = 0; j < nlayers - 1; j++) {
+drivers/shared_all/src/soil_moisture_from_water_table.c:        soil_con->zwtvmoist_zwt[nlayers][i] = -zwt_prime;
+drivers/shared_all/src/soil_moisture_from_water_table.c:        soil_con->zwtvmoist_moist[nlayers][i] =
+drivers/shared_all/src/soil_moisture_from_water_table.c:    for (j = 0; j < nlayers; j++) {
+drivers/shared_all/src/soil_moisture_from_water_table.c:        soil_con->zwtvmoist_zwt[nlayers + 1][i] = -zwt_prime;
+drivers/shared_all/src/soil_moisture_from_water_table.c:            for (j = 0; j < nlayers; j++) {
+drivers/shared_all/src/soil_moisture_from_water_table.c:            soil_con->zwtvmoist_moist[nlayers + 1][i] = tmp_moist;
+drivers/shared_all/src/soil_moisture_from_water_table.c:            j = nlayers - 1;
+drivers/shared_all/src/soil_moisture_from_water_table.c:            soil_con->zwtvmoist_moist[nlayers + 1][i] = tmp_moist;
+drivers/shared_all/src/initialize_soil.c:            for (lindex = 0; lindex < options.Nlayer; lindex++) {
+drivers/shared_all/src/initialize_soil.c:            for (lindex = 0; lindex < options.Nlayer; lindex++) {
+drivers/shared_all/src/compute_derived_state_vars.c:        options.Nlayer
+drivers/shared_all/src/compute_derived_state_vars.c:        options.Nlayer, options.Nnode,
+drivers/shared_all/src/compute_derived_state_vars.c:        options.Nlayer, options.Nnode
+drivers/shared_all/src/compute_derived_state_vars.c:                    for (lidx = 0; lidx < options.Nlayer; lidx++) {
+drivers/shared_all/src/compute_derived_state_vars.c:                                            options.Nnode, options.Nlayer);
+drivers/shared_all/src/compute_derived_state_vars.c:                                options.Nnode, options.Nlayer,
+drivers/shared_all/src/compute_derived_state_vars.c:                            options.Nlayer);
+drivers/shared_all/src/compute_derived_state_vars.c:                            options.Nlayer);
+drivers/shared_image/src/vic_restore.c:            for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_restore.c:            for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_restore.c:        for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_restore.c:        for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_restore.c:        dimlen = get_nc_dimension(&(filenames.init_state), "nlayer");
+drivers/shared_image/src/vic_restore.c:        if (dimlen != options.Nlayer) {
+drivers/shared_image/src/vic_init_output.c:    status = nc_def_dim(nc->nc_id, "nlayer", nc->layer_size,
+drivers/shared_image/src/vic_init_output.c:    check_nc_status(status, "Error defining nlayer dimension in %s",
+drivers/shared_image/src/vic_init_output.c:    nc_file->layer_size = options.Nlayer;
+drivers/shared_image/src/vic_store.c:            for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_store.c:            for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_store.c:        for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_store.c:        for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_store.c:    nc_state_file->layer_size = options.Nlayer;
+drivers/shared_image/src/vic_store.c:        status = nc_def_dim(nc_state_file->nc_id, "nlayer",
+drivers/shared_image/src/vic_store.c:        check_nc_status(status, "Error defining nlayer in %s", filename);
+drivers/shared_image/src/vic_mpi_support.c:    // size_t Nlayer;
+drivers/shared_image/src/vic_mpi_support.c:    offsets[i] = offsetof(option_struct, Nlayer);
+drivers/shared_image/src/vic_init.c:    // Validate Nlayer
+drivers/shared_image/src/vic_init.c:         options.FROZEN_SOIL) && options.Nlayer < 3) {
+drivers/shared_image/src/vic_init.c:                "Currently Nlayers is set to  %zu.", options.Nlayer);
+drivers/shared_image/src/vic_init.c:         !options.FROZEN_SOIL) && options.Nlayer < 1) {
+drivers/shared_image/src/vic_init.c:                "the model.  Currently Nlayers is set to %zu.",
+drivers/shared_image/src/vic_init.c:                options.Nlayer);
+drivers/shared_image/src/vic_init.c:    if (options.Nlayer > MAX_LAYERS) {
+drivers/shared_image/src/vic_init.c:                "recompile.", options.Nlayer, MAX_LAYERS);
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:        for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:            for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:        for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:        for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:            for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:    for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:        for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:        if (options.Nlayer == 2) {
+drivers/shared_image/src/vic_init.c:        for (j = 0; j < options.Nlayer; j++) {
+drivers/shared_image/src/vic_init.c:            j = options.Nlayer - 1;
+drivers/shared_image/src/vic_init.c:        soil_moisture_from_water_table(&(soil_con[i]), options.Nlayer);
+drivers/shared_image/src/vic_start.c:        options.Nlayer = get_nc_dimension(&(filenames.params), "nlayer");
+drivers/python/src/display_current_settings.c:    fprintf(LOG_DEST, "NLAYER\t\t\t%zu\n", options.Nlayer);
+vic_run/include/vic_def.h:    size_t Nlayer;       /**< Number of layers in model */
+vic_run/src/data_struct_utilities.c:  for (l = 0; l < options.Nlayer; l++) {
+vic_run/src/data_struct_utilities.c:  for (l = 0; l < options.Nlayer; l++) {
+vic_run/src/data_struct_utilities.c:    for (l = 0; l < options.Nlayer; l++) {
+vic_run/src/soil_conduction.c:                    int     Nlayers)
+vic_run/src/soil_conduction.c:            Nlayers - 1) {
+vic_run/src/soil_conduction.c:            if (lidx == Nlayers) {
+vic_run/src/soil_conduction.c:                lidx = Nlayers - 1;
+vic_run/src/soil_conduction.c:                                    int     Nlayers,
+vic_run/src/soil_conduction.c:                Nlayers - 1) {
+vic_run/src/soil_conduction.c:            if (lidx == Nlayers) {
+vic_run/src/soil_conduction.c:                lidx = Nlayers - 1;
+vic_run/src/soil_conduction.c:                                     size_t    Nlayers)
+vic_run/src/soil_conduction.c:    for (lidx = 1; lidx <= Nlayers; lidx++) {
+vic_run/src/soil_conduction.c:    for (lidx = 0; lidx < Nlayers; lidx++) {
+vic_run/src/soil_conduction.c:                           size_t             Nlayers)
+vic_run/src/soil_conduction.c:    for (lidx = 1; lidx <= Nlayers; lidx++) {
+vic_run/src/soil_conduction.c:    for (lidx = 0; lidx < Nlayers; lidx++) {
+vic_run/src/soil_conduction.c:                           size_t             Nlayers,
+vic_run/src/soil_conduction.c:    for (lidx = 1; lidx <= Nlayers; lidx++) {
+vic_run/src/soil_conduction.c:    for (lidx = 0; lidx < Nlayers; lidx++) {
+vic_run/src/soil_conduction.c:    for (lidx = 1; lidx <= options.Nlayer; lidx++) {
+vic_run/src/soil_conduction.c:    for (lidx = 1; lidx < options.Nlayer; lidx++) {
+vic_run/src/soil_conduction.c:    for (lidx = 1; lidx <= options.Nlayer; lidx++) {
+vic_run/src/soil_conduction.c:    for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/soil_conduction.c:                                      size_t             Nlayers)
+vic_run/src/soil_conduction.c:    for (lidx = 0; lidx < Nlayers; lidx++) {
+vic_run/src/surface_fluxes.c:               size_t               Nlayers,
+vic_run/src/surface_fluxes.c:    for (lidx = 0; lidx < Nlayers; lidx++) {
+vic_run/src/surface_fluxes.c:    for (lidx = 0; lidx < Nlayers; lidx++) {
+vic_run/src/surface_fluxes.c:    for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/surface_fluxes.c:                for (lidx = 0; lidx < Nlayers; lidx++) {
+vic_run/src/surface_fluxes.c:                for (lidx = 0; lidx < Nlayers; lidx++) {
+vic_run/src/surface_fluxes.c:        for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/surface_fluxes.c:        for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/surface_fluxes.c:    for (lidx = 0; lidx < Nlayers; lidx++) {
+vic_run/src/canopy_evap.c:    for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/canopy_evap.c:    for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/canopy_evap.c:    for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/canopy_evap.c:    for (i = 0; i < options.Nlayer - 1; i++) {
+vic_run/src/canopy_evap.c:    i = options.Nlayer - 1;
+vic_run/src/canopy_evap.c:        ((moist1 >= Wcr1 && moist2 >= Wcr[options.Nlayer - 1] && Wcr1 > 0.) ||
+vic_run/src/canopy_evap.c:         (moist1 >= Wcr1 && (1 - root[options.Nlayer - 1]) >= 0.5) ||
+vic_run/src/canopy_evap.c:         (moist2 >= Wcr[options.Nlayer - 1] && root[options.Nlayer - 1] >=
+vic_run/src/canopy_evap.c:        for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/canopy_evap.c:            for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/canopy_evap.c:        for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/canopy_evap.c:    for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/soil_carbon_balance.c:    for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/compute_zwt.c:    for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/compute_zwt.c:    for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/compute_zwt.c:    if (cell->layer[options.Nlayer - 1].zwt == 999) {
+vic_run/src/compute_zwt.c:        cell->layer[options.Nlayer - 1].zwt = -total_depth * CM_PER_M;                                     // in cm
+vic_run/src/compute_zwt.c:    idx = options.Nlayer - 1;
+vic_run/src/compute_zwt.c:    else if (idx < (short) (options.Nlayer - 1)) {
+vic_run/src/compute_zwt.c:    for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/compute_zwt.c:    cell->zwt_lumped = compute_zwt(soil_con, options.Nlayer + 1, tmp_moist);
+vic_run/src/write_layer.c:    for (index = 0; index < options.Nlayer; index++) {
+vic_run/src/write_layer.c:    for (index = 0; index < options.Nlayer; index++) {
+vic_run/src/write_layer.c:    for (index = 0; index < options.Nlayer; index++) {
+vic_run/src/write_layer.c:    for (index = 0; index < options.Nlayer; index++) {
+vic_run/src/write_layer.c:    for (index = 0; index < options.Nlayer; index++) {
+vic_run/src/write_layer.c:    for (index = 0; index < options.Nlayer; index++) {
+vic_run/src/write_layer.c:        "\n---------------------------------------------------------------------------\nLayer Moist:\t");
+vic_run/src/write_layer.c:    for (index = 0; index < options.Nlayer; index++) {
+vic_run/src/arno_evap.c:    size_t                   Nlayers_esoil;
+vic_run/src/arno_evap.c:        Nlayers_esoil = 2;
+vic_run/src/arno_evap.c:        Nlayers_esoil = 1;
+vic_run/src/arno_evap.c:    for (lidx = 0; lidx < Nlayers_esoil; lidx++) {
+vic_run/src/arno_evap.c:    for (lidx = 0; lidx < Nlayers_esoil; lidx++) {
+vic_run/src/prepare_full_energy.c:    layer = calloc(options.Nlayer, sizeof(*layer));
+vic_run/src/prepare_full_energy.c:    for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/prepare_full_energy.c:                                          options.Nlayer);
+vic_run/src/vic_run.c:                                                   options.Nlayer, Nveg, band,
+vic_run/src/vic_run.c:                        for (l = 0; l < options.Nlayer; l++) {
+vic_run/src/vic_run.c:                        cell->wetness /= options.Nlayer;
+vic_run/src/frozen_soil.c:        options.Nlayer, Nnodes,
+vic_run/src/frozen_soil.c:        options.Nlayer, Nnodes
+vic_run/src/frozen_soil.c:                                             options.Nlayer);
+vic_run/src/frozen_soil.c:                                               options.Nlayer);
+vic_run/src/frozen_soil.c:                                               options.Nlayer,
+vic_run/src/frozen_soil.c:                 options.Nlayer);
+vic_run/src/frozen_soil.c:    static size_t  Nlayers;
+vic_run/src/frozen_soil.c:    depth, Nlayers, Ts, Tb, ice_new, Cs_new, kappa_new, DT, DT_down, DT_up, \
+vic_run/src/frozen_soil.c:        Nlayers = va_arg(arg_addr, size_t);
+vic_run/src/frozen_soil.c:                    if (lidx == Nlayers) {
+vic_run/src/frozen_soil.c:                        lidx = Nlayers - 1;
+vic_run/src/frozen_soil.c:                    if (lidx == Nlayers) {
+vic_run/src/frozen_soil.c:                        lidx = Nlayers - 1;
+vic_run/src/runoff.c:    for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/runoff.c:    for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/runoff.c:    for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/runoff.c:        for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/runoff.c:        for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/runoff.c:            for (lindex = 0; lindex < options.Nlayer - 1; lindex++) {
+vic_run/src/runoff.c:            for (lindex = 0; lindex < options.Nlayer - 1; lindex++) {
+vic_run/src/runoff.c:            lindex = options.Nlayer - 1;
+vic_run/src/runoff.c:        for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/runoff.c:        for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/runoff.c:    for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/runoff.c:        for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/runoff.c:                                                        options.Nlayer,
+vic_run/src/runoff.c:    for (lindex = 0; lindex < options.Nlayer - 1; lindex++) {
+vic_run/src/func_surf_energy_bal.c:    for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/func_surf_energy_bal.c:        for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/func_surf_energy_bal.c:            for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/func_surf_energy_bal.c:            for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/func_surf_energy_bal.c:            for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/func_surf_energy_bal.c:        for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/func_surf_energy_bal.c:        for (i = 0; i < options.Nlayer; i++) {
+vic_run/src/lakes.eb.c:    delta_moist = calloc(options.Nlayer, sizeof(*delta_moist));
+vic_run/src/lakes.eb.c:    moist = calloc(options.Nlayer, sizeof(*moist));
+vic_run/src/lakes.eb.c:    for (j = 0; j < options.Nlayer; j++) {
+vic_run/src/lakes.eb.c:        for (j = 0; j < options.Nlayer; j++) {
+vic_run/src/lakes.eb.c:        for (j = 0; j < options.Nlayer; j++) {
+vic_run/src/lakes.eb.c:            for (j = 0; j < options.Nlayer; j++) {
+vic_run/src/lakes.eb.c:    lindex = options.Nlayer - 1;
+vic_run/src/lakes.eb.c:        for (j = 0; j < options.Nlayer; j++) {
+vic_run/src/lakes.eb.c:            options.Nlayer,
+vic_run/src/lakes.eb.c:            for (j = 0; j < options.Nlayer; j++) {
+vic_run/src/lakes.eb.c:        for (lindex = 0; lindex < options.Nlayer; lindex++) {
+vic_run/src/lakes.eb.c:            for (k = 0; k < options.Nlayer; k++) {
+vic_run/src/lakes.eb.c:        for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/lakes.eb.c:                if (lidx < options.Nlayer - 1) {
+vic_run/src/lakes.eb.c:        for (ilidx = (int) options.Nlayer - 1; ilidx >= 0; ilidx--) {
+vic_run/src/lakes.eb.c:        for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/lakes.eb.c:        for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/lakes.eb.c:        for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/lakes.eb.c:    for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/lakes.eb.c:    cell->wetness /= options.Nlayer;
+vic_run/src/lakes.eb.c:        for (lidx = 0; lidx < options.Nlayer; lidx++) {
+vic_run/src/lakes.eb.c:        for (lidx = 0; lidx < options.Nlayer; lidx++) {
