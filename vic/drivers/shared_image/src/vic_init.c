@@ -360,7 +360,7 @@ vic_init(void)
             }
         }
         for (j = 0; j < options.NVEGTYPES; j++) {
-            if (options.FCROP_SRC == FROM_DEFAULT) {
+            if (options.FIRR_SRC == FROM_DEFAULT) {
                 for (i = 0; i < local_domain.ncells_active; i++) {
                     for (k = 0; k < MONTHS_PER_YEAR; k++) {
                         veg_lib[i][j].firr[k] = 0.0;
