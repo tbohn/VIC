@@ -60,8 +60,8 @@ initialize_options()
     options.FULL_ENERGY = false;
     options.GRND_FLUX_TYPE = GF_410;
     options.IMPLICIT = true;
-    options.IRRIGATION = true;
-    options.IRR_FREE = true;
+    options.IRRIGATION = false;
+    options.IRR_FREE = false;
     options.LAKES = false;
     options.LAKE_PROFILE = false;
     options.NOFLUX = false;
