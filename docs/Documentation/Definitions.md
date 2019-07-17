@@ -207,7 +207,7 @@ In the classic driver, `albedo` is supplied in the veg library file (one set of 
 In the image driver, `albedo` is supplied in the parameter file (one set of monthly values for each land cover class in each grid cell).
 
 ### fimperv and feffimperv
-`fimperv` is the area fraction of each land cover class that is impervious, and `feffimperv` is the fraction of the impervious area that is effective (connected to the channel network).
+`fimperv` is the area fraction of each land cover class that is impervious; `feffimperv` is the area fraction of each land cover class that is effectively impervious (connected to the channel network).
 
 In the classic driver, `fimperv` and `feffimperv` optionally can be supplied in the veg parameter file (one value of each parameter for each land cover class) or. If `fimperv` and `feffimperv` values are included in the veg parameter file, `VEGPARAM_FIMP` must be set to `TRUE` in the global parameter file. To tell VIC which values of `fimperv` and `feffimperv` to use, `FIMP_SRC` in the global parameter file can be set to `FROM_VEGPARAM` (from veg parameter file - this is the default), or `FROM_DEFAULT` in which case VIC will use a constant value of 0.0 for both.
 

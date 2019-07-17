@@ -113,12 +113,7 @@ runoff(cell_data_struct  *cell,
     // Total runoff from impervious surfaces
     runoff_imp = ppt * fimperv; // mm over veg tile
     // Runoff from connected impervious surfaces - this never enters soil
-    if (fimperv > 0) {
-        runoff_imp_con = runoff_imp * (feffimperv / fimperv); // mm over veg tile
-    }
-    else {
-        runoff_imp_con = 0;
-    }
+    runoff_imp_con = ppt * feffimperv; // mm over veg tile
     // Runoff from disconnected impervious surfaces - this enters nearby soil
     runoff_imp_dis = runoff_imp - runoff_imp_con; // mm over veg tile
 
