@@ -106,7 +106,7 @@ The following options apply to irrigation.
 |-------------- |--------   |---------------    |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    |
 | IRRIGATION    | string    | TRUE or FALSE     | Flag indicating whether to run the irrigation module.  <br><br>Default = FALSE.                                               |
 | IRR_FREE      | string    | TRUE or FALSE     | Flag indicating whether irrigation withdrawals are unconstrained (TRUE) or constrained (FALSE) by available runoff.  <br><br>Default = FALSE.                                               |
-| CROP_SPLIT    | string    | TRUE or FALSE     | Flag indicating whether to divide agricultural tiles into planted and fallow portions. <br><br>Default = FALSE.                                               |
+| CROPSPLIT     | string    | TRUE or FALSE     | Flag indicating whether to divide agricultural tiles into planted and fallow portions. <br><br>Default = FALSE.                                               |
 
 ## Soil Evaporation Parameters
 

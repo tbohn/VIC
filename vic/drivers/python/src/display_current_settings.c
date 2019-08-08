@@ -235,6 +235,25 @@ display_current_settings(int mode)
         fprintf(LOG_DEST, "SHARE_LAYER_MOIST\t\tFALSE\n");
     }
     fprintf(LOG_DEST, "Ncanopy\t\t%zu\n", options.Ncanopy);
+    if (options.CROPSPLIT) {
+        fprintf(LOG_DEST, "CROPSPLIT\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "CROPSPLIT\t\tFALSE\n");
+    }
+    if (options.IRRIGATION) {
+        fprintf(LOG_DEST, "IRRIGATION\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "IRRIGATION\t\tFALSE\n");
+    }
+    if (options.IRR_FREE) {
+        fprintf(LOG_DEST, "IRR_FREE\t\tTRUE\n");
+    }
+    else {
+        fprintf(LOG_DEST, "IRR_FREE\t\tFALSE\n");
+    }
+    fprintf(LOG_DEST, "SOIL_RARC\t\t%f\n", options.SOIL_RARC);
 
     fprintf(LOG_DEST, "\n");
     fprintf(LOG_DEST, "GRID_DECIMAL\t\t%hu\n", options.GRID_DECIMAL);
