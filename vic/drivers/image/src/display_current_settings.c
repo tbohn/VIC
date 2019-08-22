@@ -265,7 +265,7 @@ display_current_settings(int mode)
     else {
         fprintf(LOG_DEST, "IRR_FREE\t\tFALSE\n");
     }
-    fprintf(LOG_DEST, "SOIL_RARC\t\t%f\n", options.SOIL_RARC);
+    fprintf(LOG_DEST, "SOIL_RARC\t\t%f\n", global_param.SOIL_RARC);
 
     fprintf(LOG_DEST, "\n");
     fprintf(LOG_DEST, "Input Forcing Data:\n");
