@@ -38,6 +38,7 @@ display_current_settings(int mode)
     extern option_struct       options;
     extern param_set_struct    param_set;
     extern global_param_struct global_param;
+    extern parameters_struct   param;
     extern filenames_struct    filenames;
 
     int                        file_num;
@@ -265,7 +266,7 @@ display_current_settings(int mode)
     else {
         fprintf(LOG_DEST, "IRR_FREE\t\tFALSE\n");
     }
-    fprintf(LOG_DEST, "SOIL_RARC\t\t%f\n", global_param.SOIL_RARC);
+    fprintf(LOG_DEST, "SOIL_RARC\t\t%f\n", param.SOIL_RARC);
 
     fprintf(LOG_DEST, "\n");
     fprintf(LOG_DEST, "Input Forcing Data:\n");
