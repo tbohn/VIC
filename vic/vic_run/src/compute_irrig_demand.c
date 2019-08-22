@@ -69,7 +69,7 @@ compute_irrig_demand(cell_data_struct  *cell,
             irr_sm_target = soil_con->max_moist[target_idx];
         if (moistfract < irr_sm_thresh)
             cell->irr_apply = true;
-        else if (moistfract >= irr_sm_target)
+        else
             cell->irr_apply = false;
 
         irrig_est = soil_con->max_moist[0] - cell->layer[target_idx].moist;
